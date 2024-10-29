@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@portabletext/react": "^3.1.0",
+    "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
+    "@sanity/icons": "^3.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
@@ -21,6 +23,7 @@
     "next-themes": "^0.3.0",
     "react": "19.0.0-rc-65a56d0e-20241020",
     "react-dom": "19.0.0-rc-65a56d0e-20241020",
+    "react-player": "^2.16.0",
     "sanity": "^3.62.2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"

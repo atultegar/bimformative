@@ -36,14 +36,14 @@ export function Footer() {
                         BIMformative
                     </h5>
                     <div className="grid justify-between grid-cols-3 gap-4 py-2">
-                        <ul>
+                        <ul className="mb-5 flex flex-wrap">
                             <p className="block mb-1 text-base font-semibold text-primary">
                                 Quick Links
                             </p>
-                            <li>
+                            <li className="inline-flex">
                                 {navigationItems.map((item, index) => (
-                                    <div key={index}>
-                                        <Link href={item.href} className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm">
+                                    <div key={index} className="py-2">
+                                        <Link href={item.href} className="block text-slate-600 py-1 hover:text-slate-500 focus:text-slate-500 text-sm mr-12">
                                             {item.name}
                                         </Link>
                                     </div>
@@ -53,13 +53,13 @@ export function Footer() {
                     </div>
                 </div>
                 <div className="flex flex-col items-center justify-center w-full py-4 mt-8 border-t border-slate-200 md:flex-row md:justify-between">
-                    <p className="block mb-2 text-sm text-center text-slate-500 md:mb-0">
+                    <p className="block text-sm text-center text-slate-500 md:mb-0">
                         Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
                     </p>
-                    <div className=" flex gap-4 text-slate-600 sm:justify-center">
+                    <div className=" flex mb-2 gap-2 text-slate-600 sm:justify-center">
                         {socialMedia.map((item, index)=> (
                             <div key={index}>
-                                <Link href={item.link} className="block transition-opacity text-inherit hover:opacity-80">
+                                <Link href={item.link} className="block transition-opacity text-inherit hover:opacity-80 opacity-50">
                                     <Image src={item.icon} alt="Icon" className="w-8 h-8"/>
                                 </Link>
                             </div>

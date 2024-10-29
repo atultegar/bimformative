@@ -12,7 +12,8 @@ export interface simpleBlogCard {
     smallDescription: string;
     currentSlug: string;
     titleImage: any;
-    updatedAt: string;
+    date: string;
+    author: Author;
 }
 
 export interface fullBlog {
@@ -20,4 +21,9 @@ export interface fullBlog {
     title: string;
     content: any;
     titleImage: any;
+}
+
+export interface Author {
+    name: string;
+    picture: any;
 }

@@ -22,6 +22,13 @@ import { Button } from "@/components/ui/button";
 import autocad from "../../public/tech-icons/autocad.svg";
 import revit from "../../public/tech-icons/revit_grande.svg";
 
+import githubIcon from "../../public/square-github-brands-solid.svg";
+import youtubeIcon from "../../public/youtube-brands-solid.svg";
+import linkedinIcon from "../../public/linkedin-brands-solid.svg";
+import instagramIcon from "../../public/square-instagram-brands-solid.svg";
+import xIcon from "../../public/square-x-twitter-brands-solid.svg";
+import emailIcon from "../../public/envelope-solid.svg";
+
 const icons = [
     autocad,
     revit,
@@ -36,31 +43,45 @@ const icons = [
 export const socialMedia = [
     {
         id: 1,
-        icon: insta,
+        icon: instagramIcon,
         name: "Instagram",
         username: "@chaosatul",
         link: "https://www.instagram.com/chaosatul/"
     },
     {
         id: 2,
-        icon: twitter,
+        icon: xIcon,
         name: "X / Twitter",
         username: "@chaos_atul",
         link: "https://x.com/chaos_atul"
     },
     {
         id: 3,
-        icon: linkedin,
+        icon: linkedinIcon,
         name: "LinkedIn",
         username: "atultegar",
         link: "https://www.linkedin.com/in/atultegar/"
     },
     {
         id: 4,
-        icon: youtube,
+        icon: youtubeIcon,
         name: "YouTube",
         username: "@atultegar444",
         link: "https://www.youtube.com/@atultegar444"
+    },
+    {
+        id: 5,
+        icon: githubIcon,
+        name: "GitHub",
+        username: "atultegar",
+        link: "https://github.com/atultegar"
+    },
+    {
+        id: 6,
+        icon: emailIcon,
+        name: "Email",
+        username: "atul.tegar@gmail.com",
+        link: "mailto:atul.tegar@gmail.com"
     },
 
 ]

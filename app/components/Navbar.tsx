@@ -1,11 +1,13 @@
 "use client";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./MobileMenu";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import { cn } from "@/lib/utils"
 
 export const navigationItems = [
     {
@@ -17,8 +19,19 @@ export const navigationItems = [
         href: '/blog'
     },
     {
-        name: 'Docs',
-        href: '/docs'
+        name: 'Guides',
+        href: '/guides'
+    },
+    {
+        name: 'Resources',
+        href: '/resources',
+        submenu : [
+            { name: "Dynamo Scripts", href: '/resources/dynamo-scripts', description: "Downloadable Dynamo scripts"},
+            { name: "C# Snippets", href: '/resources/csharp-snippets', description: "C# code for BIM development"},
+            { name: "Python Scripts", href: '/resources/python-scripts', description: "Python scripts for BIM applications"},
+            { name: "Video Tutorials", href: '/resources/video-tutorials', description: "In-depth video tutorials"},
+            { name: "Other Assets", href: '/resources/other-assets', description: "Other assets for BIM"},
+        ]
     },
     {
         name: 'Projects',
@@ -43,9 +56,8 @@ export function Navbar() {
     return (
     <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-white shadow-lg`} max-w-7xl mx-auto px-4 md:px-8 py-2 grid grid-cols-12`}>
         <div className="col-span-6 flex md:col-span-3">
-            <Link href="/">
-                
-                <h1 className="text-3xl font-bold text-blue-950">
+            <Link href="/">                
+                <h1 className="text-4xl font-bold text-blue-950">
                     BIM<span className="text-blue-400 italic text-2xl">formative</span>
                 </h1>
             </Link>
@@ -54,14 +66,37 @@ export function Navbar() {
             <NavigationMenu>
                 <NavigationMenuList>
                     {navigationItems.map((item,index) => (
-                        <NavigationMenuItem key={index}>
-                            <Link href={item.href} legacyBehavior passHref>
-                            <NavigationMenuLink 
-                            active={pathname == item.href}
-                            className={navigationMenuTriggerStyle()}>
-                                {item.name}
-                            </NavigationMenuLink>
-                            </Link>
+                        <NavigationMenuItem key={index}>                            
+                            {item.submenu ? (
+                                <div>
+                                    <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
+                                    <NavigationMenuContent>
+                                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                            {item.submenu.map((subItem, subIndex) => (
+                                                <ListItem
+                                                key={subIndex}
+                                                title={subItem.name}
+                                                href={subItem.href}>
+                                                    {subItem.description}
+                                                </ListItem>
+                                            ))}
+                                        </ul>
+                                    </NavigationMenuContent>
+                                </div>
+                                // <div>
+                                //     {item.submenu.map((subItem, subIndex) => (
+                                //         <Link href={subItem.href} key={subIndex} legacyBehavior passHref>
+                                //             <a>{subItem.name}</a>
+                                //         </Link>
+                                //     ))}
+                                // </div>
+                            ) : <Link href={item.href} legacyBehavior passHref>
+                                    <NavigationMenuLink
+                                        active={pathname == item.href}
+                                        className={navigationMenuTriggerStyle()}>
+                                            {item.name}
+                                    </NavigationMenuLink>
+                            </Link>}
                         </NavigationMenuItem>
                     ))}
                 </NavigationMenuList>
@@ -80,3 +115,28 @@ export function Navbar() {
     </nav>
     )
 }
+
+const ListItem = React.forwardRef<
+React.ElementRef<"a">,
+React.ComponentPropsWithoutRef<"a">> (
+    ({ className, title, children, ...props}, ref) => {
+        return (
+            <li>
+                <NavigationMenuLink asChild>
+                    <a
+                        ref = {ref}
+                        className={cn(
+                            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",                            
+                        )}
+                        {...props}>
+                            <div className="text-sm font-medium leading-none">{title}</div>
+                            <p className="line-clamp-1 text-sm leading-snug text-muted-foreground">
+                                {children}
+                            </p>
+                        </a>
+                </NavigationMenuLink>
+            </li>
+        )
+    }
+)
+ListItem.displayName = "ListItem"

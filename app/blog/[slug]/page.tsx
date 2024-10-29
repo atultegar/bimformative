@@ -1,7 +1,14 @@
+
 import Image from "next/image";
 import { fullBlog } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
+import { youTube } from "@/sanity/schemaTypes/youTubeType";
+import React from 'react';
+import YoutubePlayer from 'react-player/youtube'
+import ReactPlayer from "react-player";
+import { YouTubePlayer } from "@/app/components/YouTubePlayer";
+
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -19,8 +26,18 @@ async function getData(slug: string){
     return data;
 }
 
+const serializers = {
+    types: {
+        youtube: ({ value }: { value: {url:string}}) => {
+            const {url} = value;
+            return <YouTubePlayer url={url} />;
+        }
+    }
+}
+
 export default async function BlogArticle({params}: {params: {slug: string } }) {
     const data: fullBlog = await getData(params.slug);
+    
 
     return (
         <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">
@@ -44,9 +61,8 @@ export default async function BlogArticle({params}: {params: {slug: string } }) 
                     />
             </div>            
 
-            <div className="mt-10 mx-auto prose prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
-                <PortableText value={data.content} />
-
+            <div className="mt-10 max-w-4xl mx-auto prose prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
+                <PortableText value={data.content} components={serializers}/>
             </div>
         </div>
     )
