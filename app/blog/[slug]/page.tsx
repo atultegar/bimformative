@@ -1,4 +1,3 @@
-"use client"
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -34,22 +33,8 @@ const serializers = {
     }
 }
 
-export default function BlogArticle() {
-    const [data, setData ]  = useState<fullBlog | null>(null);
-    const router = useRouter();
-    const {slug} = router.query;
-
-    useEffect(() => {
-        if (slug) {
-            const fetchData = async () => {
-                const fetchedData = await getData(slug as string);
-                setData(fetchedData);
-            };
-            fetchData()
-        }
-    }, [slug]);
-
-    if (!data) return <div>Loading...</div>;    
+export default async function BlogArticle({params}: {params: {slug:string}}) {
+    const data: fullBlog = await getData(params.slug) 
 
     return (
         <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">

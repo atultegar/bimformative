@@ -60,7 +60,7 @@ export function Footer() {
                         {socialMedia.map((item, index)=> (
                             <div key={index}>
                                 <Link href={item.link} className="block transition-opacity text-inherit hover:opacity-80 opacity-50">
-                                    <Image src={item.icon} alt="Icon" className="w-8 h-8 dark:bg-slate-200"/>
+                                    <Image src={item.icon} alt="Icon" className="w-8 h-8 dark:bg-foreground"/>
                                 </Link>
                             </div>
                         ))}                                
