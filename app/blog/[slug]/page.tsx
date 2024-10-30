@@ -1,6 +1,4 @@
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import { fullBlog } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
@@ -9,6 +7,12 @@ import React from 'react';
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 
 export const revalidate = 30; // revalidate at most 30 seconds
+
+interface BlogArticleProps {
+    params: {
+        slug: string;
+    };
+}
 
 async function getData(slug: string){
     const query = `
@@ -33,9 +37,11 @@ const serializers = {
     }
 }
 
-export default async function BlogArticle({params}: {params: {slug:string}}) {
-    const data: fullBlog = await getData(params.slug) 
 
+export default async function BlogArticle({params}: BlogArticleProps) {
+    const resolvedParams = await params;
+    const { slug } = resolvedParams;
+    const data: fullBlog = await getData(slug);    
     return (
         <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">
             <h1>                

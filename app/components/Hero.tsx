@@ -1,6 +1,15 @@
 import Image from "next/image";
+import profileImage from "../../public/intro.png";
+import * as React from 'react';
+import Autoplay from "embla-carousel-autoplay"
 
-import profileImage from "../../public/intro.png"
+
+import intro1 from "../../public/intro.png";
+import intro2 from "../../public/intro-2.png";
+import intro3 from "../../public/intro-3.png";
+import intro4 from "../../public/intro-4.png";
+import intro5 from "../../public/intro-5.png";
+
 
 export function Hero() {
     return (
