@@ -34,7 +34,7 @@ const serializers = {
     }
 }
 
-export default function BlogArticle({params}: {params: {slug: string}}) {
+export default function BlogArticle() {
     const [data, setData ]  = useState<fullBlog | null>(null);
     const router = useRouter();
     const {slug} = router.query;
