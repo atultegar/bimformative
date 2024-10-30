@@ -38,7 +38,7 @@ const serializers = {
     }
 }
 
-export default async function BlogArticle({params}: BlogArticleProps) {
+export default async function BlogArticle({params}: {params: {slug: string}}) {
     const data: fullBlog = await getData(params.slug);
     
 
