@@ -56,11 +56,11 @@ export function Footer() {
                     <p className="block text-sm text-center text-slate-500 md:mb-0">
                         Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
                     </p>
-                    <div className=" flex mb-2 gap-2 text-slate-600 sm:justify-center">
+                    <div className=" flex mb-2 gap-2 text-slate-600 dark:text-slate-300 sm:justify-center">
                         {socialMedia.map((item, index)=> (
                             <div key={index}>
                                 <Link href={item.link} className="block transition-opacity text-inherit hover:opacity-80 opacity-50">
-                                    <Image src={item.icon} alt="Icon" className="w-8 h-8"/>
+                                    <Image src={item.icon} alt="Icon" className="w-8 h-8 dark:bg-slate-200"/>
                                 </Link>
                             </div>
                         ))}                                

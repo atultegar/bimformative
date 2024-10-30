@@ -97,7 +97,7 @@ export function SectionTwo() {
                 className="w-full h-full object-cover rounded-2xl" />
             </div>
             <div className="flex flex-col w-full col-span-1 lg:col-span-2 gap-4">
-                <Card className="bg-gray-100 border-none">
+                <Card className="bg-gray-100 dark:bg-black border-none">
                     <CardHeader>
                         <CardTitle>Explore our stack</CardTitle>
                         <CardDescription>Check out the tool we use daily</CardDescription>

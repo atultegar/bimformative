@@ -72,7 +72,7 @@ export default async function BlogPage() {
 
         <section className="max-w-7xl w-full px-4 md:px-8 mx-auto">
             <h1>
-                <span className="block text-center font-bold text-3xl tracking-wide text-blue-950">Blog</span>
+                <span className="block text-center font-bold text-3xl tracking-wide text-blue-950 dark:text-blue-400">Blog</span>
             </h1>
             <div className="mt-5 mb-16 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-32 lg:gap-x-10 mx-auto">
                 {data.map((post, idx) => (
