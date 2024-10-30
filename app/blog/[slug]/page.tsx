@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -47,8 +49,7 @@ export default function BlogArticle({params}: {params: {slug: string}}) {
         }
     }, [slug]);
 
-    if (!data) return <div>Loading...</div>;
-    
+    if (!data) return <div>Loading...</div>;    
 
     return (
         <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">
