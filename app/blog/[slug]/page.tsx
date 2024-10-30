@@ -9,9 +9,7 @@ import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 export const revalidate = 30; // revalidate at most 30 seconds
 
 interface BlogArticleProps {
-    params: {
-        slug: string;
-    };
+    params: Promise<{ slug: string}>;
 }
 
 async function getData(slug: string){
@@ -37,10 +35,8 @@ const serializers = {
     }
 }
 
-
-export default async function BlogArticle({params}: BlogArticleProps) {
-    const resolvedParams = await params;
-    const { slug } = resolvedParams;
+export default async function BlogArticle({params}: BlogArticleProps) {    
+    const { slug } = await params;
     const data: fullBlog = await getData(slug);    
     return (
         <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">
