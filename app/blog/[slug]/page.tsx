@@ -1,17 +1,11 @@
-
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import { fullBlog } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
 import React from 'react';
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
-
-interface BlogArticleProps {
-    params: {
-        slug: string;
-    };
-}
-
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -38,8 +32,22 @@ const serializers = {
     }
 }
 
-export default async function BlogArticle({params}: {params: {slug: string}}) {
-    const data: fullBlog = await getData(params.slug);
+export default function BlogArticle({params}: {params: {slug: string}}) {
+    const [data, setData ]  = useState<fullBlog | null>(null);
+    const router = useRouter();
+    const {slug} = router.query;
+
+    useEffect(() => {
+        if (slug) {
+            const fetchData = async () => {
+                const fetchedData = await getData(slug as string);
+                setData(fetchedData);
+            };
+            fetchData()
+        }
+    }, [slug]);
+
+    if (!data) return <div>Loading...</div>;
     
 
     return (
