@@ -4,6 +4,7 @@ import { Navbar } from "./components/Navbar";
 import { Inter } from "next/font/google";
 import { Footer } from "./components/Footer";
 import { ThemeProvider } from "./components/theme-provider";
+import { Analytics } from '@vercel/analytics/react'
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});
@@ -28,7 +29,8 @@ export default function RootLayout({
         disableTransitionOnChange>
           <Navbar />
           <main className="max-w-7xl mx-auto px-4">{children}</main>
-          <Footer />        
+          <Footer />
+          <Analytics />        
         </ThemeProvider>        
       </body>
     </html>

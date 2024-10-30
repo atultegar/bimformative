@@ -5,6 +5,7 @@ import { navigationItems } from "./Navbar";
 import { socialMedia } from "./SectionTwo";
 import Image from "next/image";
 import logo from "../../public/tunnel-100.png"
+import darklogo from "../../public/dark-tunnel-100.png"
 
 // export function Footer() {
 //     return (
@@ -32,7 +33,8 @@ export function Footer() {
             <div className="w-full px-8 mx-auto max-w-7xl py-5">
                 <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2 border-t border-slate-200">
                     <h5 className="mb-2 text-xl font-semibold text-primary py-2 flex flex-wrap">
-                        <Image src={logo} alt="logo" className="w-8 h-8"/>
+                        <Image src={logo} alt="logo" className="w-8 h-8 block dark:hidden"/>
+                        <Image src={darklogo} alt="darklogo" className="w-8 h-8 hidden dark:block"/>
                         BIMformative
                     </h5>
                     <div className="grid justify-between grid-cols-3 gap-4 py-2">

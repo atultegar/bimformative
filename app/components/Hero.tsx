@@ -1,17 +1,13 @@
+"use client"
 import Image from "next/image";
 import profileImage from "../../public/intro.png";
 import * as React from 'react';
 import Autoplay from "embla-carousel-autoplay"
 
-
-import intro1 from "../../public/intro.png";
-import intro2 from "../../public/intro-2.png";
-import intro3 from "../../public/intro-3.png";
-import intro4 from "../../public/intro-4.png";
-import intro5 from "../../public/intro-5.png";
-
-
 export function Hero() {
+    const plugin = React.useRef(
+        Autoplay({delay: 2000, stopOnInteraction: true})
+    )
     return (
         <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="col-span-1 lg:col-span-1 h-full bg-gray-100 dark:bg-black min-h-[500px] lg:min-h-[300px] rounded-2xl p-8 flex flex-col justify-center">
@@ -33,7 +29,7 @@ export function Hero() {
             <Image
                 src={profileImage}
                 alt="Profile"
-            className="col-span-1 h-[400px] object-cover rounded-2xl bg-gray-100"
+            className="col-span-1 h-[420px] object-cover rounded-2xl bg-gray-100"
             priority />
         </div>
     )
