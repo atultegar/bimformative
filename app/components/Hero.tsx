@@ -1,9 +1,6 @@
 import Image from "next/image";
-import { Suspense } from "react";
 
 import profileImage from "../../public/intro.png"
-import Video from "next-video";
-import introVideo from "@/videos/introvideo.mp4";
 
 export function Hero() {
     return (

@@ -1,11 +1,8 @@
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
 import { simpleBlogCard } from "../lib/interface";
 import { client, urlFor } from "../lib/sanity";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import DateComponent from "../components/Date";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 

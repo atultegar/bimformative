@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { ProjectsCard } from "../lib/interface";
 import { client } from "../lib/sanity";
-import { Footer } from "../components/Footer";
 
 async function getData() {
     const query = `*[_type == 'project'] {

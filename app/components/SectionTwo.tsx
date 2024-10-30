@@ -1,5 +1,4 @@
 import Image from "next/image";
-import square from "../../public/square.svg";
 import {
     Card,
     CardContent,
@@ -15,10 +14,6 @@ import github from "../../public/tech-icons/github.svg";
 import youtube from "../../public/tech-icons/youtube.svg";
 import chrome from "../../public/tech-icons/chrome.svg";
 import notion from "../../public/tech-icons/notion.svg";
-import twitter from "../../public/twitter.svg";
-import insta from "../../public/insta.svg";
-import linkedin from "../../public/linkedin.svg";
-import { Button } from "@/components/ui/button";
 import autocad from "../../public/tech-icons/autocad.svg";
 import revit from "../../public/tech-icons/revit_grande.svg";
 

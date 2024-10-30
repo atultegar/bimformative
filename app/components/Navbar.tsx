@@ -2,8 +2,6 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import Link from "next/link"
 import { usePathname } from "next/navigation";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./MobileMenu";
 import { useEffect, useState } from "react";
 import * as React from "react";

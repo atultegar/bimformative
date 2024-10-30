@@ -3,10 +3,7 @@ import Image from "next/image";
 import { fullBlog } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
-import { youTube } from "@/sanity/schemaTypes/youTubeType";
 import React from 'react';
-import YoutubePlayer from 'react-player/youtube'
-import ReactPlayer from "react-player";
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 
 
