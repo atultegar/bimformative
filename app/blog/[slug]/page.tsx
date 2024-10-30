@@ -6,6 +6,12 @@ import { PortableText } from "@portabletext/react";
 import React from 'react';
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 
+interface BlogArticleProps {
+    params: {
+        slug: string;
+    };
+}
+
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -32,7 +38,7 @@ const serializers = {
     }
 }
 
-export default async function BlogArticle({params}: {params: {slug: string } }) {
+export default async function BlogArticle({params}: BlogArticleProps) {
     const data: fullBlog = await getData(params.slug);
     
 
