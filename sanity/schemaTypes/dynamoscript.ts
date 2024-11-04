@@ -6,6 +6,18 @@ export const dynamoScriptType = defineType({
     type: 'document',
     fields: [
         defineField({
+            name: 'scriptfile',
+            title: 'Script File',
+            type: 'file',
+            fields: [
+                {
+                    name: 'description',
+                    type: 'string',
+                    title: 'Description'
+                }
+            ]
+        }),
+        defineField({
             name: 'title',
             title: 'Title of Dynamo script',
             type: 'string',
@@ -21,10 +33,10 @@ export const dynamoScriptType = defineType({
             type: 'text',
         }),
         defineField({
-            name: 'link',
-            title: 'Link',
+            name: 'youtubelink',
+            title: 'YouTube Link',
             type: 'url',
-        }),
+        }),        
         defineField({
             name: 'tags',
             title: 'Tags',

@@ -21,9 +21,29 @@ export interface fullBlog {
     title: string;
     content: any;
     titleImage: any;
+    date: string;
 }
 
 export interface Author {
     name: string;
     picture: any;
+}
+
+export interface dynamoscript {
+    scriptfile: File;
+    title: string;
+    description: string;
+    tags: string[];
+    fileUrl: string;
+    youtubelink: string;
+}
+
+export interface codeSnippet {
+    title: string;
+    codeField: codeField;
+}
+
+export interface codeField {
+    language: string;
+    code: string;
 }
