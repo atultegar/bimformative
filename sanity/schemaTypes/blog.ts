@@ -62,7 +62,7 @@ export const blogsType = defineType({
             name: 'content',
             title: 'Content',
             type: 'array',
-            of: [{type: 'block'}, {type: 'youtube'}],
+            of: [{type: 'block'}, {type: 'youtube'}, {type: 'code'}],
         }),
         defineField({
             name: 'date',

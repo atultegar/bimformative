@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "./components/Navbar";
-import { Inter } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import { Footer } from "./components/Footer";
 import { ThemeProvider } from "./components/theme-provider";
 import { Analytics } from '@vercel/analytics/react'
@@ -10,8 +10,22 @@ import { Analytics } from '@vercel/analytics/react'
 const inter = Inter({subsets: ["latin"], display: "swap"});
 
 export const metadata: Metadata = {
-  title: "BIMformative",
+  title: {
+    default: "BIMformative",
+    template: "%s - BIMformative"
+  },
   description: "Shaping and developing knowledge in the field of BIM for infrastructure",
+  twitter: {
+    card: "summary_large_image"
+  },
+  openGraph: {
+    title: "BIMformative",
+    description: "Shaping and developing knowledge in the field of BIM for infrastructure",
+    type: "website",
+    locale: "en-US",
+    url: "https://bimformative.vercel.app/",
+    siteName: "BIMformative",
+  }
 };
 
 export default function RootLayout({

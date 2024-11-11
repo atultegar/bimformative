@@ -3,8 +3,13 @@ import { simpleBlogCard } from "../lib/interface";
 import { client, urlFor } from "../lib/sanity";
 import Link from "next/link";
 import DateComponent from "../components/Date";
+import { Metadata } from "next";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
+
+export const metadata: Metadata = {
+    title : "Blog"
+}
 
 async function getData() {
     const query = `

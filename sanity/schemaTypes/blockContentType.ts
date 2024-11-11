@@ -11,5 +11,29 @@ export const blockContentType = defineType({
         defineArrayMember({
             type: 'youTube'
         }),
+        defineArrayMember({
+            type: 'code',
+        }),
+        defineArrayMember({
+            type: 'image',
+            options: {hotspot: true},
+            fields: [
+                {
+                    name: 'alt',
+                    type: 'string',
+                    title: 'Alternative Text',
+                },
+                {
+                    name: 'height',
+                    type: 'number',
+                    title: 'Height',
+                },
+                {
+                    name: 'width',
+                    type: 'number',
+                    title: 'Width',
+                },
+            ]
+        }),
     ]
 })

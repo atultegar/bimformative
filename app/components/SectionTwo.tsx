@@ -35,14 +35,7 @@ const icons = [
     notion,    
 ];
 
-export const socialMedia = [
-    {
-        id: 1,
-        icon: instagramIcon,
-        name: "Instagram",
-        username: "@chaosatul",
-        link: "https://www.instagram.com/chaosatul/"
-    },
+export const socialMedia = [    
     {
         id: 2,
         icon: xIcon,
@@ -91,7 +84,7 @@ export function SectionTwo() {
                 alt="bimsoftwares"
                 className="w-full h-full object-cover rounded-2xl" />
             </div>
-            <div className="flex flex-col w-full col-span-1 lg:col-span-2 gap-4">
+            <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
                 <Card className="bg-gray-100 dark:bg-black border-none">
                     <CardHeader>
                         <CardTitle>Explore our stack</CardTitle>
@@ -103,20 +96,6 @@ export function SectionTwo() {
                         ))}
                     </CardContent>
                 </Card>
-
-                {/* <div className="grid grid-cols-1 sm:grid-cols-3 w-full gap-4">
-                    {socialMedia.map((item) => (
-                        <Card key={item.id}
-                        className="p-4 flex flex-col items-center sm:items-start bg-gray-100 border-none">
-                            <Image src={item.icon} alt="Icon" className="w-16 h-16" />
-                            <h1 className="text-2xl font-medium pt-3">{item.name}</h1>
-                            <p className="text-muted-foreground">{item.username}</p>
-                            <Button className="mt-4 " size="sm" asChild>
-                                <a href={item.link}>Follow</a>
-                            </Button>
-                        </Card>
-                    ))}
-                </div> */}
             </div>
         </div>
     )

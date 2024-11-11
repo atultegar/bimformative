@@ -1,8 +1,9 @@
 "use client";
-import React from 'react';
-import { Highlight, themes } from 'prism-react-renderer';
 import { useState } from 'react';
 import { CheckmarkIcon, CopyIcon } from '@sanity/icons';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { docco, dracula, atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 interface CodeBlockProps {
   code: string;
@@ -20,37 +21,22 @@ export default function CodeBlock({ code, language }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative bg-gray-900 text-white rounded-lg overflow-hidden my-4 shadow-lg">
+    <div className="relative bg-gray-900 rounded-lg overflow-hidden">
       {/* Language Label */}
-      <span className="absolute top-2 left-4 bg-blue-500 text-xs font-semibold uppercase px-2 py-1 rounded-md">
+      <span className="absolute top-2 left-4 bg-blue-500 text-xs font-semibold px-2 py-1 mb-5 rounded-sm">
         {language}
       </span>
 
       {/* Copy Button */}
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-4 text-gray-300 hover:text-white transition flex items-center"
-      >
+        className="absolute top-2 right-4 text-gray-300 hover:text-white transition flex items-center">
         {isCopied ? <CheckmarkIcon className="w-5 h-5" /> : <CopyIcon className="w-5 h-5" />} <span className='px-1 text-sm'>Copy code</span>
       </button>
 
-      {/* Syntax Highlighting */}
-      <Highlight code={code.trim()} language={language} theme={themes.dracula}>
-        {({ style, tokens, getLineProps, getTokenProps }) => (
-          <pre
-            className="mt-10 p-4 overflow-auto text-sm leading-relaxed"
-            style={{ ...style, backgroundColor: 'transparent' }}
-          >
-            {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </pre>
-        )}
-      </Highlight>
+      <SyntaxHighlighter language={language} style={atomOneDark} showLineNumbers={true} className="mt-10">
+        {code}
+      </SyntaxHighlighter>
     </div>
   );
-}
+};

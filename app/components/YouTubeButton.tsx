@@ -14,8 +14,8 @@ export default function YouTubeButton({videoUrl}: {videoUrl: string}) {
     };
 
     return (
-        <AlertDialogAction onClick={handleRedirect}>
-            Demo
+        <AlertDialogAction onClick={handleRedirect} className="bg-transparent text-black outline dark:outline-neutral-800 outline-neutral-300 dark:bg-transparent outline-1 hover:text-white">
+            View Demo
         </AlertDialogAction>
     )
 }
