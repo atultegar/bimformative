@@ -94,7 +94,7 @@ export default function AboutPage() {
                     <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-left lg:text-left scroll-m-20 ">
                         BIMformative was born out of a need for a dedicated space where infrastructure-focused BIM professionals can access targeted resources.
                         We prioritize practical, hands-on guidance and actinable insights over theoritical content. 
-                        Whether you're seasoned BIM Manager or new to BIM for Infrastructure, BIMformative provides content tailored to help you overcome challenges and enhance project efficiency.
+                        Whether you&apos;re seasoned BIM Manager or new to BIM for Infrastructure, BIMformative provides content tailored to help you overcome challenges and enhance project efficiency.
                     </h2>
                 </div>
             </div>
@@ -106,7 +106,7 @@ export default function AboutPage() {
                 </div>
                 <div className="lg:col-start-2 h-auto lg:h-[200px] p-4">
                     <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-left lg:text-left scroll-m-20 ">
-                        We're passionate about supporting the BIM community and encourage you to participate by asking questions, sharing insights, and exploring new ways to implement BIM in infrastructure projects. 
+                        We&apos;re passionate about supporting the BIM community and encourage you to participate by asking questions, sharing insights, and exploring new ways to implement BIM in infrastructure projects. 
                         Follow us for updates, resources, and the latest in BIM technology and infrastructure innovation.
                     </h2>                    
                 </div>
@@ -120,7 +120,7 @@ export default function AboutPage() {
                 </div>
                 <div className="lg:col-start-1 col-span-2 h-auto p-4">
                     <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-center scroll-m-20 ">                         
-                    Thank you for being part of our journey. Together, let's build the future of infrastructure!
+                    Thank you for being part of our journey. Together, let&apos;s build the future of infrastructure!
                     </h2>                    
                 </div>
             </div>
