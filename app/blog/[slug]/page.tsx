@@ -1,19 +1,13 @@
 
 import Image from "next/image";
-import { fullBlog, codeField } from "../../lib/interface";
+import { fullBlog } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
 import React from 'react';
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 import DateComponent from "@/app/components/Date";
-import {ArrowLeftIcon} from '@sanity/icons'
 import Link from "next/link";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { solarizedlight, solarizedDarkAtom, synthwave84, vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { codeType } from "@/sanity/schemaTypes/codeType";
-import { useState } from "react";
 import CodeBlock from "@/app/components/CodeBlock";
-import { Badge } from "@/components/ui/badge";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
