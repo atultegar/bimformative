@@ -31,7 +31,7 @@ export default function CodeBlock({ code, language }: CodeBlockProps) {
       <button
         onClick={handleCopy}
         className="absolute top-2 right-4 text-gray-300 hover:text-white transition flex items-center">
-        {isCopied ? <CheckmarkIcon className="w-5 h-5" /> : <CopyIcon className="w-5 h-5" />} <span className='px-1 text-sm'>Copy code</span>
+        {isCopied ? <CheckmarkIcon className="w-5 h-5" /> : <CopyIcon className="w-5 h-5" />}
       </button>
 
       <SyntaxHighlighter language={language} style={atomOneDark} showLineNumbers={true} className="mt-10">

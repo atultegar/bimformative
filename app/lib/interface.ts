@@ -14,6 +14,7 @@ export interface simpleBlogCard {
     titleImage: any;
     date: string;
     author: Author;
+    tags: string[];
 }
 
 export interface fullBlog {
@@ -22,6 +23,7 @@ export interface fullBlog {
     content: any;
     titleImage: any;
     date: string;
+    tags: string[];
 }
 
 export interface Author {
@@ -47,3 +49,14 @@ export interface codeField {
     language: string;
     code: string;
 }
+
+export interface tag {
+    name: string;
+    slug: string;
+    postCount: number;
+}
+
+// name,
+//         slug,
+//         _id,
+//         "postCount": count(*[_type == "blog" && references("tags", ^._id)])

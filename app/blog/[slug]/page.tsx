@@ -13,6 +13,7 @@ import { solarizedlight, solarizedDarkAtom, synthwave84, vscDarkPlus } from "rea
 import { codeType } from "@/sanity/schemaTypes/codeType";
 import { useState } from "react";
 import CodeBlock from "@/app/components/CodeBlock";
+import { Badge } from "@/components/ui/badge";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -29,6 +30,7 @@ async function getData(slug: string){
             content,
             titleImage,
             date,
+            "tags": coalesce(tags, ["untagged"]),
         }[0]`;
 
     const data = await client.fetch(query)
@@ -93,7 +95,15 @@ export default async function BlogArticle({params}: BlogArticleProps) {
                     className="mt-8 border"
                     style={{objectPosition: "center"}}
                     />
-            </div>            
+            </div>
+            {/* <div className="mt-5 max-w-4xl mx-auto flex flex-wrap gap-2">
+                {data.tags.map((tagItem, index) => (
+                    <Badge
+                    key={index}>
+                        {tagItem}
+                    </Badge>
+                ))}
+            </div>             */}
 
             <div className="mt-10 max-w-4xl mx-auto prose prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
                 <PortableText value={data.content} components={serializers}/>

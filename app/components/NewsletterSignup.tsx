@@ -1,18 +1,53 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {  FormEvent, useState } from "react";
+import axios from "axios";
 
 export default function NewsletterSignup() {
+    const [email, setEmail] = useState<string>("");
+    const [status, setStatus] = useState<"success" | "error" | "loading" | "idle">("idle");
+    const [responseMsg, setResponseMsg] = useState<string>("");
+    const [statusCode, setStatusCode] = useState<number>();
+
+    async function handleSubcribe(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setStatus("loading");
+        try {
+            const response = await axios.post("api/subscribe", {email});
+
+            setStatus("success");
+            setStatusCode(response.status);
+            setEmail("");
+            setResponseMsg(response.data.message);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                setStatus("error");
+                setStatusCode(err.response?.status);
+                setResponseMsg(err.response?.data.error);
+            }
+        }
+    }
+
     return (
-        <section className="max-w-7xl mx-auto mt-10 py-16 bg-gray-100 dark:bg-black">
+        <form className="max-w-7xl mx-auto mt-10 py-16 bg-gray-100 dark:bg-black" onSubmit={handleSubcribe}>
             <h2 className="text-center text-3xl font-semibold">Stay Updated with BIMformative</h2>
             <p className="text-center mt-2 text-gray-700">
                 Subscribe to our newsletter for the latest BIM insights.
             </p>
             <div className="flex w-full max-w-md space-x-2 items-center mx-auto p-5">
-                <Input type="email" placeholder="Email" className="border rounded-l-md" />
+                <Input type="email" placeholder="Email" className="border rounded-l-md" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status == "loading"} />
                 <Button type="submit" className="rounded-r-md">Subscribe</Button>
             </div>
-        </section>
-    )
-}
+            <div className="server-message pt-4 text-green-600">
+                {status === "success" ? (
+                    <p className="text-green-600">{responseMsg}</p>
+                ): null}
+                {status === "error" ? (
+                    <p className="text-orange-600">{responseMsg}</p>
+                ): null}
+            </div>
+        </form>
+    );
+};
