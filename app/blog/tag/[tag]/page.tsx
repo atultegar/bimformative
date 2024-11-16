@@ -111,7 +111,7 @@ export default async function TagPage({ params }: TagPageProps) {
                         </p>
                         <div>
                             {post.tags.map((t, idx) => (
-                                <Badge variant="outline" className="p-2 mr-2">{t}</Badge>
+                                <Badge key={idx} variant="outline" className="p-2 mr-2">{t}</Badge>
                             ))}
                         </div>                        
                     </article>
