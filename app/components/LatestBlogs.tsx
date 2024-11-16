@@ -36,12 +36,13 @@ export default async function LatestBlogs() {
                 {data.map((post, index) => (
                     <article key={index}>
                         <Link key={index} href={`/blog/${post.currentSlug}`} className="hover:underline">
-                        <Image src= {urlFor(post.titleImage).url()}
-                            alt="image"
-                            width={400}
-                            height={200}
-                            className="rounded-sm object-cover w-[400px] h-[200px] border border-gray-300 drop-shadow-md hover:opacity-50"
-                            priority />
+                        <div className="d-block w-[400px] h-[250px] border border-gray-300 dark:border-stone-950 drop-shadow-md content-center">
+                            <Image src= {urlFor(post.titleImage).url()}
+                                alt="image"
+                                fill={true}
+                                className="mx-auto d-block object-contain hover:opacity-50"
+                                priority />
+                        </div>                        
                         </Link>
                         <h3 className="text-balance text-center mt-2 text-lg font-semibold leading-snug">
                             <Link href={`/blog/${post.currentSlug}`} className="hover:underline">

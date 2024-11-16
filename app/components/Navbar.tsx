@@ -59,7 +59,7 @@ export function Navbar() {
     }, [top]);
     const pathname = usePathname();
     return (
-    <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-white dark:bg-black`} w-full shadow-sm dark:shadow-stone-900`}>
+    <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-white dark:bg-black`} w-full shadow-sm shadow-gray-300 dark:shadow-stone-900`}>
         <div className="max-w-7xl grid grid-cols-12 mx-auto px-4 md:px-8 py-2">
             <div className="col-span-6 flex md:col-span-3">
                 <Link href="/">                

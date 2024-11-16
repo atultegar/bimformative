@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { simpleBlogCard, tag } from "../lib/interface";
-import { client, urlFor } from "../lib/sanity";
+import { simpleBlogCard, tag } from "@/app/lib/interface";
+import { client, urlFor } from "@/app/lib/sanity";
 import Link from "next/link";
-import DateComponent from "../components/Date";
+import DateComponent from "@/app/components/Date";
 import { Metadata } from "next";
-import cube from "../../public/cube-cover.png";
+import cube from "@/public/cube-cover.png";
+import { Badge } from "@/components/ui/badge";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -12,44 +13,17 @@ export const metadata: Metadata = {
     title : "Blog"
 }
 
-async function getData() {
-    const query = `
-  *[_type == 'blog'] | order(_createdAt desc) {
-  title,
-    smallDescription,
-    "currentSlug": slug.current,
-    titleImage,
-    date,
-    "author": author->{"name": coalesce(name, "Anonymous"), picture},
-    "tags": coalesce(tags, ["Untagged"]),
-  }`;
-
-  const data = await client.fetch(query);
-
-  return data;
-}
-
-async function getBlogs(tagName?: string) {
-    const query = tagName
-    ? `*[_type == 'blog' && "${tagName}" in tags[]->slug.current] | order(_createdAt desc) {
+async function getBlogsByTag(tagName?: string) {
+    const query = `*[_type == 'blog' && "${tagName}" in tags[]->slug.current] | order(_createdAt desc) {
     title,
     smallDescription,
     "currentSlug": slug.current,
     titleImage,
     date,
     "author": author->{"name": coalesce(name, "Anonymous"), picture},
-    "tags": coalesce(tags[]->name, ["Untagged"]),}`
-    : `*[_type == 'blog'] | order(_createdAt desc) {
-    title,
-    smallDescription,
-    "currentSlug": slug.current,
-    titleImage,
-    date,
-    "author": author->{"name": coalesce(name, "Anonymous"), picture},
-    "tags": coalesce(tags[]->name, ["Untagged"]),}`;
+    "tags": tags[]->name }`;
 
-    const blogs = await client.fetch(query);
-    return blogs;
+    return client.fetch(query);
 }
 
 async function getAllTags() {
@@ -80,8 +54,13 @@ async function getAllTags() {
     return allTags;
 }
 
-export default async function BlogPage() {
-    const data: simpleBlogCard[] = await getData();
+interface TagPageProps {
+    params: { tag: string }
+}
+
+export default async function TagPage({ params }: TagPageProps) {
+    const { tag } = params;
+    const data: simpleBlogCard[] = await getBlogsByTag(tag);
     const allTags: tag[] = await getAllTags();
     
     return (
@@ -93,7 +72,7 @@ export default async function BlogPage() {
                 </h1>
             </div>
             <hr className="h-px my-1 bg-gray-300 border-0 dark:bg-gray-800"></hr>
-            <div className="mt-5 lg:inline-flex">
+            <div className="mt-10 lg:inline-flex">
                 {allTags.map((item, index) => (
                     <div key={index} className="py-2">
                         <Link href={item.slug} className="block text-slate-600 py-1 hover:text-primary focus:text-slate-500 text-md mr-5">
@@ -102,9 +81,12 @@ export default async function BlogPage() {
                     </div>
                 ))}
             </div>
-            <div>                
-            </div>            
-            <div className="mt-10 mb-16 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-32 lg:gap-x-10 content-center">
+            <div className="mt-10">
+                <h1 className="text-3xl font-light">
+                    {data.length} results found for <span className="text-primary">{tag}</span>
+                </h1>
+            </div>                        
+            <div className="mt-10 mb-16 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-20 lg:gap-x-10 content-center">
                 {data.map((post, idx) => (
                     <article key={idx}>
                         <Link href={`/blog/${post.currentSlug}`} className="group mb-5 block mx-auto">
@@ -114,8 +96,7 @@ export default async function BlogPage() {
                                 fill={true}
                                 className="mx-auto w-auto h-auto object-contain hover:opacity-50"
                                 priority />
-                            </div>
-                            
+                            </div>                            
                         </Link>
                         <h3 className="text-balance mb-2 text-lg font-semibold leading-snug">
                             <Link href={`/blog/${post.currentSlug}`} className="hover:underline">
@@ -127,7 +108,12 @@ export default async function BlogPage() {
                         </div>
                         <p className="line-clamp-2 text-sm mt-2 text-gray-600 dark:text-gray-300">
                             {post.smallDescription}
-                        </p>                        
+                        </p>
+                        <div>
+                            {post.tags.map((t, idx) => (
+                                <Badge variant="outline" className="p-2 mr-2">{t}</Badge>
+                            ))}
+                        </div>                        
                     </article>
                 ))}
             </div>

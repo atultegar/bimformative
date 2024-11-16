@@ -31,7 +31,7 @@ export function Footer() {
     return (
         <footer className="relative w-full mb-2 mt-5">
             <div className="w-full px-8 mx-auto max-w-7xl py-5">
-                <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2 border-t border-slate-200">
+                <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2 border-t border-gray-300 dark:border-stone-600">
                     <h5 className="mb-2 text-xl font-semibold text-primary py-2 flex flex-wrap gap-2">
                         <Image src={logo} alt="logo" className="w-8 h-8 block dark:hidden"/>
                         <Image src={darklogo} alt="darklogo" className="w-8 h-8 hidden dark:block"/>
@@ -54,7 +54,7 @@ export function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center w-full py-4 mt-8 border-t border-slate-200 md:flex-row md:justify-between">
+                <div className="flex flex-col items-center justify-center w-full py-4 mt-8 border-t border-gray-300 dark:border-stone-600 md:flex-row md:justify-between">
                     <p className="block text-sm text-center text-slate-500 md:mb-0">
                         Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
                     </p>
