@@ -159,8 +159,6 @@ export function DataTable<TData, TValue>({
                         Next
                 </Button>            
             </div>
-
-        </div>
-        
+        </div>        
     )
 }

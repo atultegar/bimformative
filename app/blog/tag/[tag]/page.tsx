@@ -55,11 +55,12 @@ async function getAllTags() {
 }
 
 interface TagPageProps {
-    params: { tag: string }
+    params: Promise<{ tag: string }>;
 }
 
-export default async function TagPage({ params }: TagPageProps) {
-    const { tag } = params;
+export default async function TagPage({ params }: TagPageProps): Promise<JSX.Element> {
+    const resolvedParams = await params;
+    const { tag } = resolvedParams;
     const data: simpleBlogCard[] = await getBlogsByTag(tag);
     const allTags: tag[] = await getAllTags();
     
