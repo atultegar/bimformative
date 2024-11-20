@@ -10,6 +10,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import dynamoCover from "@/public/dynamo-cover.png";
 
+export const revalidate = 30;  //revalidate at most 30 seconds
 
 async function getData() {
     const query = `
