@@ -17,12 +17,11 @@ import notion from "../../public/tech-icons/notion.svg";
 import autocad from "../../public/tech-icons/autocad.svg";
 import revit from "../../public/tech-icons/revit_grande.svg";
 
-import githubIcon from "../../public/square-github-brands-solid.svg";
-import youtubeIcon from "../../public/youtube-brands-solid.svg";
-import linkedinIcon from "../../public/linkedin-brands-solid.svg";
-import instagramIcon from "../../public/square-instagram-brands-solid.svg";
-import xIcon from "../../public/square-x-twitter-brands-solid.svg";
-import emailIcon from "../../public/envelope-solid.svg";
+import githubIcon from "@/public/social-media/github.svg";
+import youtubeIcon from "@/public/social-media/youtube-dark.svg";
+import linkedinIcon from "@/public/social-media/linkedin.svg";
+import xIcon from "@/public/social-media/x.svg";
+import emailIcon from "@/public/social-media/gmail.svg";
 
 const icons = [
     autocad,

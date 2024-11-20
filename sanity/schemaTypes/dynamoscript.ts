@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { dynamosoftwares } from "./dynamosoftwares";
 
 export const dynamoScriptType = defineType({
     name: 'dynamoscript',
@@ -31,6 +32,28 @@ export const dynamoScriptType = defineType({
             name: 'description',
             title: 'Description',
             type: 'text',
+        }),
+        defineField({
+            name: 'scripttype',
+            title: 'Script Type',
+            type: 'array',
+            of: [{type: "reference", to: [{type: "dynamosoftwares"}]}],
+        }),
+        defineField({
+            name: 'dynamoplayer',
+            title: 'Dynamo Player Ready',
+            type: 'boolean',
+        }),
+        defineField({
+            name: 'externalpackages',
+            title: 'External Packages',
+            type: 'array',
+            of: [{type: 'string'}],
+        }),
+        defineField({
+            name: 'pythonscripts',
+            title: 'Python Scripts',
+            type: 'boolean',
         }),
         defineField({
             name: 'youtubelink',

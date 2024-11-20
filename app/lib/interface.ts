@@ -38,6 +38,10 @@ export interface dynamoscript {
     tags: string[];
     fileUrl: string;
     youtubelink: string;
+    scripttype: string[];
+    dynamoplayer: boolean;
+    externalpackages: string[];
+    pythonscripts: boolean;
 }
 
 export interface codeSnippet {

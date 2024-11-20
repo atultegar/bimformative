@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     title : "Blog"
 }
 
-async function getBlogsByTag(tagName?: string) {
-    const query = `*[_type == 'blog' && "${tagName}" in tags[]->slug.current] | order(_createdAt desc) {
+async function getBlogsByTag(tag?: string) {
+    const query = `*[_type == 'blog' && "${tag}" in tags[]->slug.current] | order(_createdAt desc) {
     title,
     smallDescription,
     "currentSlug": slug.current,
