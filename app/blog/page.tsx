@@ -71,7 +71,7 @@ async function getAllTags() {
             _id: "all",
             postCount: tags.reduce((total: number, tag: { postCount: number}) => total + tag.postCount, 0),
         },
-        ...tags.map((t:tag) => ({
+        ...tags.map((t: { name: string; slug: {current: string}; _id: string; postCount: number}) => ({
             ...t,
             slug: `/blog/tag/${t.slug.current}`,
         })),
