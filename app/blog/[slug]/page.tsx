@@ -8,12 +8,29 @@ import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 import DateComponent from "@/app/components/Date";
 import Link from "next/link";
 import CodeBlock from "@/app/components/CodeBlock";
+import { Metadata } from "next";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
 interface BlogArticleProps {
     params: Promise<{ slug: string}>;
+}
+
+export async function generateMetadata({params}: BlogArticleProps): Promise<Metadata> {
+    const { slug } = await params;
+    const data: fullBlog = await getData(slug);
+    return {
+        title: data.title,
+        description: data.smallDescription,
+        openGraph: {
+            images: [
+                {
+                    url: urlFor(data.titleImage).url()
+                }
+            ]
+        }
+    }
 }
 
 async function getData(slug: string){
@@ -25,6 +42,7 @@ async function getData(slug: string){
             titleImage,
             date,
             "tags": coalesce(tags, ["untagged"]),
+            smallDescription,
         }[0]`;
 
     const data = await client.fetch(query)

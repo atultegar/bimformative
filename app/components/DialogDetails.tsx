@@ -6,6 +6,7 @@ import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import dynamoImage from "@/public/dynamo.png";
 import { handleDownload } from "@/app/api/handleDownload";
+import { urlFor } from "../lib/sanity";
 
 interface DialogDetailsProps {
     script: {
@@ -14,6 +15,7 @@ interface DialogDetailsProps {
         externalpackages: string[];
         youtubelink?: string;
         fileUrl: string;
+        image: string;
     };
 }
 
@@ -24,10 +26,14 @@ const DialogDetails: React.FC<DialogDetailsProps> = ({ script }) => {
                 <DialogTitle className="flex items-center">
                     <Image src={dynamoImage} alt="Dynamo" className="w-8 h-8" />
                     {script.title}
+                    
                 </DialogTitle>
                 <DialogDescription className="items-start">
+                    {/* <div>
+                        <Image src={script.image} alt="Dynamo" width={1500} height={1500} className="w-[1500px] bg-white" />
+                    </div> */}
                     {script.description}
-                    <div className="mt-1">
+                    <div className="mt-5">
                         <strong>External Packages:</strong>
                         {script.externalpackages && script.externalpackages.length > 0 ? (
                             <ul className="mt-1 space-y-1 list-disc list-inside">

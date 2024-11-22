@@ -24,6 +24,7 @@ export interface fullBlog {
     titleImage: any;
     date: string;
     tags: string[];
+    smallDescription: string;
 }
 
 export interface Author {
@@ -42,6 +43,7 @@ export interface dynamoscript {
     dynamoplayer: boolean;
     externalpackages: string[];
     pythonscripts: boolean;
+    image: string;
 }
 
 export interface codeSnippet {

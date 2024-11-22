@@ -1,6 +1,11 @@
 import Image from "next/image";
 import { ProjectsCard } from "../lib/interface";
 import { client } from "../lib/sanity";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title : "Projects"
+}
 
 async function getData() {
     const query = `*[_type == 'project'] {

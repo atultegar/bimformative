@@ -45,7 +45,7 @@ export function Footer() {
                             <li className="lg:inline-flex">
                                 {navigationItems.map((item, index) => (
                                     <div key={index} className="py-2">
-                                        <Link href={item.href} className="block text-slate-600 py-1 hover:text-primary focus:text-slate-500 text-sm mr-12">
+                                        <Link href={item.href} className="block text-gray-700 py-1 hover:text-primary focus:text-gray-700 text-sm mr-12">
                                             {item.name}
                                         </Link>
                                     </div>
@@ -58,6 +58,10 @@ export function Footer() {
                     <p className="block text-sm text-center text-slate-500 md:mb-0">
                         Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
                     </p>
+                    <div className="block text-sm text-center text-slate-500 md:mb-0 divide-x">
+                        <Link href="/disclaimer" className="hover:text-primary focus:text-gray-700 px-3">Disclaimer</Link>
+                        <Link href="/privacy-policy" className="hover:text-primary focus:text-gray-700 px-3">Privacy Policy</Link>
+                    </div>
                     <div className=" flex sm:flex mb-2 gap-2 text-slate-600 dark:text-slate-300 sm:justify-center">
                         {socialMedia.map((item, index)=> (
                             <div key={index}>

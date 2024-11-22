@@ -9,8 +9,13 @@ import Dynamo from "@/public/tech-icons/dynamo.png";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import dynamoCover from "@/public/dynamo-cover.png";
+import { Metadata } from "next";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
+
+export const metadata: Metadata = {
+    title : "Dynamo Scripts"
+}
 
 async function getData() {
     const query = `
@@ -25,6 +30,7 @@ async function getData() {
     dynamoplayer,
     externalpackages,
     pythonscripts,
+    "image": image.asset->url,
   }`;
 
   const data = await client.fetch(query);
@@ -47,10 +53,9 @@ export default async function DynamoScriptPage() {
             </div>
             <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
             
-            <div className="container mx-auto py-10">
+            <div className="container max-w-[1280px] mx-auto py-10">
                 <DataTable columns={columns} data={data} />
             </div>
-        </section>
-        
+        </section>        
     )
 }

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     card: "summary_large_image"
   },
   openGraph: {
-    title: "BIMformative",
+    title: "BIMformative - Where infrastructure innovation takes shape",
     description: "Shaping and developing knowledge in the field of BIM for infrastructure",
     type: "website",
     locale: "en-US",

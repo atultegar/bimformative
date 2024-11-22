@@ -23,7 +23,8 @@ export type DynamoScript = {
     pythonscripts: boolean
     fileUrl: string
     description: string
-    youtubelink: string  
+    youtubelink: string
+    image: string  
 }
 
 export const columns: ColumnDef<DynamoScript>[] = [
