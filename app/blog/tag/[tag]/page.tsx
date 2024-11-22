@@ -58,6 +58,14 @@ interface TagPageProps {
     params: Promise<{ tag: string }>;
 }
 
+export async function generateStaticParams() {
+    const allTags: tag[] = await getAllTags();
+
+    return allTags.map((tag) => ({
+        tag: tag.slug,
+    }))    
+}
+
 export default async function TagPage({ params }: TagPageProps): Promise<JSX.Element> {
     const resolvedParams = await params;
     const { tag } = resolvedParams;

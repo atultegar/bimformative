@@ -1,6 +1,6 @@
 
 import Image from "next/image";
-import { fullBlog } from "../../lib/interface";
+import { fullBlog, simpleBlogCard } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
 import React from 'react';
@@ -63,6 +63,25 @@ const serializers = {
         },
     },
 };
+
+export async function generateStaticParams() {
+    const query = `
+        *[_type == 'blog'] | order(_createdAt desc) {
+        title,
+            smallDescription,
+            "currentSlug": slug.current,
+            titleImage,
+            date,
+            "author": author->{"name": coalesce(name, "Anonymous"), picture},
+            "tags": coalesce(tags, ["Untagged"]),
+        }`;
+
+    const blogs: simpleBlogCard[] = await client.fetch(query);
+
+    return blogs.map((blog) => ({
+        slug: blog.currentSlug,
+    }))
+}
 
 export default async function BlogArticle({params}: BlogArticleProps) {    
     const { slug } = await params;
