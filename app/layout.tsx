@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: "Shaping and developing knowledge in the field of BIM for infrastructure",
     type: "website",
     locale: "en-US",
-    url: "https://bimformative.vercel.app/",
+    url: "https://bimformative.com/",
     siteName: "BIMformative",
   }
 };

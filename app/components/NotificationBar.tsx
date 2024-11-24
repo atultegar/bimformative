@@ -11,7 +11,7 @@ export default function NotificationBar() {
     return (
         <div className="w-full bg-primary-foreground text-center text-black py-2 text-xs sm:text-sm font-medium relative">
             <span>
-                🚧 The website is currently under development, and some features may not work as expected. 🚧
+                🚧 This website is currently under development, and some features may not work as expected. 🚧
             </span>
             <Button variant="ghost" onClick={() => setIsVisible(false)}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-black font-bold">

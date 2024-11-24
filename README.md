@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BIMformative
 
-## Getting Started
+BIMformative is a resource hub designed for BIM (Building Information Modeling) professionals, focusing on infrastructure projects. The platform provides a collection of blogs, tutorials, scripts, documentation, and more to streamline workflows and enhance productivity.
 
-First, run the development server:
+## 🌟 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Blogs**: Explore insights, updates, and best practices in BIM for infrastructure.
+- **Documentation**: Access step-by-step guides and manuals for BIM tools and workflows.
+- **Dynamo Scripts**: A collection of ready-to-use Dynamo scripts.
+- **Code Snippets**: Useful C# and Python code snippets tailored for BIM development.
+- **Tutorials**: Watch in-depth tutorials to enhance your skills.
+- **Other Assets**: Download various resources to support your BIM journey.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: [Next.js](https://nextjs.org/)
+- **Database**: [Sanity.io](https://www.sanity.io/)
+- **Styling**: [TailwindCSS] (https://tailwindcss.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔧 Getting Started
 
-## Learn More
+### Prerequisites
+- Node.js (v16 or higher)
+- Yarn or npm
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/atultegar/bimformative.git
+   cd bimformative
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Install dependencies:
+    ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Start the development server:
+    ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+4. Open your browser at http://localhost:3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Building for Production
+To create a production build:  
+   ```bash
+   npm run build
+   npm run start
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 Deployment
+The webiste can be deployed on any platform supporting Node.js. Recommended paltforms:
+- [Vercel](https://vercel.com/)
+- [Netlify](https://www.netlify.com/)
+
+## 📝 Contribution Guidelines
+
+1. Fork the repository.
+
+2. Create a new branch for your feature or bug fix:
+ ```bash
+   git checkout -b feature-name
+   ```
+
+3. Commit your changes:
+ ```bash
+   git commit -m "Add feature-name"
+   ```
+
+4. Push the branch to your forked repository and create a pull request.
+
+## 📄 License
+This project is licensed under the MIT license. See the LICENSE file for details.
+
+## 📬 Contact
+For questions or suggestions, reach out at atul.tegar@gmail.com.
