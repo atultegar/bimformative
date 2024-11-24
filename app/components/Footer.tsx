@@ -6,6 +6,7 @@ import { socialMedia } from "./SectionTwo";
 import Image from "next/image";
 import logo from "../../public/logo-1.png"
 import darklogo from "../../public/logo-2.png"
+import { Separator } from "@/components/ui/separator";
 
 // export function Footer() {
 //     return (
@@ -58,11 +59,12 @@ export function Footer() {
                     <p className="block text-sm text-center text-slate-500 md:mb-0">
                         Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
                     </p>
-                    <div className="block text-sm text-center text-slate-500 md:mb-0 divide-x">
-                        <Link href="/disclaimer" className="hover:text-primary focus:text-gray-700 px-3">Disclaimer</Link>
-                        <Link href="/privacy-policy" className="hover:text-primary focus:text-gray-700 px-3">Privacy Policy</Link>
+                    <div className="flex h-5 items-center space-x-4 text-sm text-slate-500 md:mb-0">
+                        <Link href="/disclaimer" className="hover:text-primary focus:text-gray-700">Disclaimer</Link>
+                        <Separator orientation="vertical" />
+                        <Link href="/privacy-policy" className="hover:text-primary focus:text-gray-700">Privacy Policy</Link>
                     </div>
-                    <div className=" flex sm:flex mb-2 gap-2 text-slate-600 dark:text-slate-300 sm:justify-center">
+                    <div className=" flex sm:flex mb-1 gap-4 text-slate-600 dark:text-slate-300 sm:justify-center">
                         {socialMedia.map((item, index)=> (
                             <div key={index}>
                                 <Link href={item.link} className="block transition-opacity text-inherit hover:opacity-80 opacity-50">

@@ -5,6 +5,7 @@ import { Inter, Inter_Tight } from "next/font/google";
 import { Footer } from "./components/Footer";
 import { ThemeProvider } from "./components/theme-provider";
 import { Analytics } from '@vercel/analytics/react'
+import NotificationBar from "./components/NotificationBar";
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});
@@ -41,6 +42,7 @@ export default function RootLayout({
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange>
+          <NotificationBar />
           <Navbar />
           <main className="max-w-7xl mx-auto px-4">{children}</main>
           <Footer />
