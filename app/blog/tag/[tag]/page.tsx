@@ -6,6 +6,8 @@ import DateComponent from "@/app/components/Date";
 import { Metadata } from "next";
 import cube from "@/public/cube-cover.png";
 import { Badge } from "@/components/ui/badge";
+import { capitalizeWords } from "@/app/lib/utils";
+import BlogPostCard from "@/app/components/BlogPostCard";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -83,53 +85,26 @@ export default async function TagPage({ params }: TagPageProps): Promise<JSX.Ele
                 Insights, Updates, and Guides on BIM for Infrastructure
                 </p>
             </div>
-            <hr className="h-px my-1 bg-gray-300 border-0 dark:bg-gray-800"></hr>
-            <div className="mt-10 lg:inline-flex">
+            <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
+            <div className="mt-5 lg:inline-flex">
                 {allTags.map((item, index) => (
                     <div key={index} className="py-2">
-                        <Link href={item.slug} className="block text-slate-600 py-1 hover:text-primary focus:text-slate-500 text-md mr-5">
+                        <Link href={item.slug} className="block py-1 text-gray-500 hover:text-primary text-md mr-5">
                             {item.name}
                         </Link>
                     </div>
                 ))}
             </div>
-            <div className="mt-10">
+            <div className="mt-5">
                 <h1 className="text-3xl font-light">
-                    {data.length} results found for <span className="text-primary">{tag}</span>
+                    {data.length} results found for <span className="text-primary">{capitalizeWords(tag)}</span>
                 </h1>
             </div>                        
             <div className="mt-10 mb-16 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-20 lg:gap-x-10 content-center">
                 {data.map((post, idx) => (
-                    <article key={idx}>
-                        <Link href={`/blog/${post.currentSlug}`} className="group mb-5 block mx-auto">
-                            <div className="d-block w-full h-[250px] border border-gray-300 dark:border-stone-900 drop-shadow-sm bg-white content-center">
-                                <Image src= {urlFor(post.titleImage).url()}
-                                alt="image"
-                                fill={true}
-                                className="mx-auto w-auto h-auto object-contain hover:opacity-50"
-                                priority />
-                            </div>                            
-                        </Link>
-                        <h3 className="text-balance mb-2 text-lg font-semibold leading-snug">
-                            <Link href={`/blog/${post.currentSlug}`} className="hover:underline">
-                                {post.title}
-                            </Link>
-                        </h3>
-                        <div className="text-sm text-gray-600 dark:text-gray-300">
-                            <DateComponent dateString={post.date} />
-                        </div>
-                        <p className="line-clamp-2 text-sm mt-2 text-gray-600 dark:text-gray-300">
-                            {post.smallDescription}
-                        </p>
-                        <div>
-                            {post.tags.map((t, idx) => (
-                                <Badge key={idx} variant="outline" className="p-2 mr-2">{t}</Badge>
-                            ))}
-                        </div>                        
-                    </article>
+                    <BlogPostCard key={idx} post={post} idx={idx} />
                 ))}
-            </div>
-            
+            </div>            
         </section>        
     );
 }

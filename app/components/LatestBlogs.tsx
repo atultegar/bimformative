@@ -32,11 +32,11 @@ export default async function LatestBlogs() {
     return (
         <section className="max-w-7xl mx-auto mt-10 py-16 bg-gray-100 dark:bg-black">
             <h2 className="text-center text-3xl font-semibold">Latest Blogs</h2>
-            <div className="flex mt-8 max-w-4xl gap-6 mx-auto items-center justify-between">
+            <div className="lg:flex md:flex sm:flex mt-8 max-w-4xl gap-6 mx-auto items-center justify-between">
                 {data.map((post, index) => (
                     <article key={index}>
                         <Link key={index} href={`/blog/${post.currentSlug}`} className="hover:underline">
-                        <div className="d-block w-[400px] h-[250px] border border-gray-300 dark:border-stone-950 drop-shadow-md content-center">
+                        <div className="d-block lg:w-[400px] h-[250px] sm:w-[300px] border border-gray-300 dark:border-stone-950 drop-shadow-md content-center">
                             <Image src= {urlFor(post.titleImage).url()}
                                 alt="image"
                                 fill={true}

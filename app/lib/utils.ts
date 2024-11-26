@@ -17,3 +17,10 @@ export function formatDate(input: string | number): string {
 export function absoluteUrl(path: string) {
   return `${process.env.NEXT_PUBLIC_APP_URL}${path}`
 }
+
+export function capitalizeWords(input: string) {
+  return input
+    .split(/[\s-]+/) // Split by spaces or hyphens
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}

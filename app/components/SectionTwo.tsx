@@ -86,7 +86,7 @@ export function SectionTwo() {
                 <Image
                 src={bimsoftwares}
                 alt="bimsoftwares"
-                className="w-full h-full object-cover rounded-2xl" />
+                className="w-full h-full object-cover rounded-lg" />
             </div>
             <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
                 <Card className="bg-gray-100 dark:bg-black border-none">
@@ -94,9 +94,9 @@ export function SectionTwo() {
                         <CardTitle>Explore our stack</CardTitle>
                         <CardDescription>Check out the tool we use daily</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-wrap gap-4">
+                    <CardContent className="flex flex-wrap gap-4 justify-center mx-auto">
                         {icons.map((item, index) => (
-                            <Image key={index} src={item} alt='Icon' className="w-20 h-20 bg-gray-200 rounded-lg" />
+                            <Image key={index} src={item} alt='Icon' className="w-20 h-20 rounded-lg shadow text-center dark:shadow-stone-950" />
                         ))}
                     </CardContent>
                 </Card>
