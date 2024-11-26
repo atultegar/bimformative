@@ -10,7 +10,7 @@ export default function Testimonial() {
             <blockquote className="mt-8 max-w-3xl mx-auto text-center text-gray-700 italic">
                 &quot;BIMformative has transformed the way I approach BIM for infrastructure projects. The detailed articles and practical resources, especially the 
                 well-structured Dynamo scripts, have saved me countless hours of work. The scripts are easy to use and customize, making even complex tasks much simpler to execute. 
-                Whether you're just starting out or a seasoned professional, this platform is an invaluable asset. Highly recommended!&quot;
+                Whether you&apos;re just starting out or a seasoned professional, this platform is an invaluable asset. Highly recommended!&quot;
             </blockquote>
         </section>
     )
