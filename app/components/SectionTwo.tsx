@@ -7,15 +7,18 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-import bimsoftwares from "../../public/bim-software-1024x512.webp"
-import canva from "../../public/tech-icons/canva.svg";
-import chatgpt from "../../public/tech-icons/chatgpt.svg";
-import github from "../../public/tech-icons/github.svg";
-import youtube from "../../public/tech-icons/youtube.svg";
-import chrome from "../../public/tech-icons/chrome.svg";
-import notion from "../../public/tech-icons/notion.svg";
-import autocad from "../../public/tech-icons/autocad.svg";
-import revit from "../../public/tech-icons/revit_grande.svg";
+import bimsoftwares from "@/public/bim-software-1024x512.webp"
+import autocad from "@/public/bim-icons/autocad.png";
+import revit from "@/public/bim-icons/revit.png";
+import civil3d from "@/public/bim-icons/civil3d.png";
+import dynamo from "@/public/bim-icons/dynamo.png";
+import inventor from "@/public/bim-icons/inventor.png";
+import navisworks from "@/public/bim-icons/navisworks.png";
+import bim360 from "@/public/bim-icons/bim360.png";
+import python from "@/public/bim-icons/pythonLogo.png";
+import csharp from "@/public/bim-icons/csharpLogo2023.png";
+import vb from "@/public/bim-icons/vb.png";
+
 
 import githubIcon from "@/public/social-media/github.svg";
 import youtubeIcon from "@/public/social-media/youtube-dark.svg";
@@ -26,12 +29,14 @@ import emailIcon from "@/public/social-media/gmail.svg";
 const icons = [
     autocad,
     revit,
-    canva,
-    chatgpt,
-    github,
-    youtube,
-    chrome,
-    notion,    
+    civil3d,
+    dynamo,
+    inventor,
+    navisworks,
+    bim360,
+    python,
+    csharp,
+    vb,
 ];
 
 export const socialMedia = [    
@@ -91,7 +96,7 @@ export function SectionTwo() {
                     </CardHeader>
                     <CardContent className="flex flex-wrap gap-4">
                         {icons.map((item, index) => (
-                            <Image key={index} src={item} alt='Icon' className="w-16 h-16" />
+                            <Image key={index} src={item} alt='Icon' className="w-20 h-20 bg-gray-200 rounded-lg" />
                         ))}
                     </CardContent>
                 </Card>
