@@ -18,7 +18,7 @@ const charm = Charm({ weight: "700", subsets: ["latin"]});
 
 export function Hero() {
     const plugin = React.useRef(
-        Autoplay({delay: 2000, stopOnInteraction: true})
+        Autoplay({delay: 2000, stopOnInteraction: false})
     )
 
     const carouselArray = [
@@ -57,9 +57,7 @@ export function Hero() {
 
             <div className="col-span-1 lg:col-start-2 lg:col-span-1 h-full min-h-[300px] rounded-lg p-8 flex flex-col justify-start">
                 <Carousel plugins={[plugin.current]}
-                className="w-full"
-                onMouseEnter={plugin.current.stop}
-                onMouseLeave={plugin.current.reset}>
+                className="w-full">
                     <CarouselContent>
                         {carouselArray.map((_, index) => (
                             <CarouselItem key={index}>

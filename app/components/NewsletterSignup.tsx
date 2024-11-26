@@ -6,6 +6,7 @@ import {  FormEvent, useState } from "react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function NewsletterSignup() {
     const [email, setEmail] = useState<string>("");
@@ -53,14 +54,7 @@ export default function NewsletterSignup() {
                 <Input type="email" placeholder="Email" className="border rounded-l-md" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status == "loading"} />
                 <Button type="submit" className="rounded-r-md">Subscribe</Button>
             </div>
-            {/* <div className="server-message pt-4 text-green-600">
-                {status === "success" ? (
-                    <p className="text-green-600">{responseMsg}</p>
-                ): null}
-                {status === "error" ? (
-                    <p className="text-orange-600">{responseMsg}</p>
-                ): null}
-            </div> */}            
+                   
         </form>
     );
 };

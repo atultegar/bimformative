@@ -14,10 +14,9 @@ const EmailSchema = z
 //Subscription handler function
 export const POST = async (request: Request) => {
     
-    // 1. Validate email address
-    let email: string;
+    // 1. Validate email address    
     const res = await request.json();
-    email = res.email;
+    const email = res.email;
 
     const emailValidation = EmailSchema.safeParse(email);
 

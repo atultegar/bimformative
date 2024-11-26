@@ -17,7 +17,7 @@ export default function Home() {
       <ResourceHighlights />
       <LatestBlogs />
       <NewsletterSignup />
-      <Testimonial />
+      {/* <Testimonial /> */}
       <FooterCTA />
     </div>
 
