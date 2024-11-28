@@ -8,6 +8,7 @@ import cube from "@/public/cube-cover.png";
 import { Badge } from "@/components/ui/badge";
 import { capitalizeWords } from "@/app/lib/utils";
 import BlogPostCard from "@/app/components/BlogPostCard";
+import TagMenu from "@/app/components/TagMenu";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -86,15 +87,7 @@ export default async function TagPage({ params }: TagPageProps): Promise<JSX.Ele
                 </p>
             </div>
             <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
-            <div className="mt-5 lg:inline-flex">
-                {allTags.map((item, index) => (
-                    <div key={index} className="py-2">
-                        <Link href={item.slug} className="block py-1 text-gray-500 hover:text-primary text-md mr-5">
-                            {item.name}
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <TagMenu allTags={allTags} />
             <div className="mt-5">
                 <h1 className="text-3xl font-light">
                     {data.length} results found for <span className="text-primary">{capitalizeWords(tag)}</span>

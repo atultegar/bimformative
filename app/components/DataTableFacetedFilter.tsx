@@ -25,6 +25,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
     const facets = column?.getFacetedUniqueValues()
     const selectedValues = new Set(column?.getFilterValue() as string[])
+    const lowerCaseSelectedValues = new Set(Array.from(selectedValues).map(value => value.toLowerCase()));
 
     return (
         <Popover>
@@ -49,7 +50,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                     </Badge>
                                 ) : (
                                     options
-                                    .filter((option) => selectedValues.has(option.value))
+                                    .filter((option) => lowerCaseSelectedValues.has(option.value.toLowerCase()))
                                     .map((option) => (
                                         <Badge
                                             variant="secondary"

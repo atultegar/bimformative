@@ -40,8 +40,7 @@ export default async function LatestBlogs() {
                             <Image src= {urlFor(post.titleImage).url()}
                                 alt="image"
                                 fill={true}
-                                className="mx-auto d-block object-contain hover:opacity-50"
-                                priority />
+                                className="mx-auto d-block object-contain hover:opacity-50"/>
                         </div>                        
                         </Link>
                         <h3 className="text-balance text-center mt-2 text-lg font-semibold leading-snug">

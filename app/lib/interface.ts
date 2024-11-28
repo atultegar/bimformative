@@ -39,7 +39,7 @@ export interface dynamoscript {
     tags: string[];
     fileUrl: string;
     youtubelink: string;
-    scripttype: string[];
+    scripttype: string;
     dynamoplayer: boolean;
     externalpackages: string[];
     pythonscripts: boolean;

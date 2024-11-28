@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import revitImage from "@/public/bim-icons/revit.png";
-import civil3dImage from "@/public/bim-icons/civil3d.png";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -28,7 +26,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableFacetedFilter } from "@/app/components/DataTableFacetedFilter";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CheckCircle, Circle, CircleOff, HelpCircle, Timer, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, X } from "lucide-react";
+import { SiAutodeskrevit, SiAutocad } from "react-icons/si";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -39,12 +38,12 @@ export const types = [
     {
         value: "revit",
         label: "Revit",
-        icon: CheckCircle,
+        icon: SiAutodeskrevit,
     },
     {
         value: "civil3d",
         label: "Civil 3D",
-        icon: Timer,
+        icon: SiAutocad,
     },
 
 ]
@@ -145,6 +144,9 @@ export function DataTable<TData, TValue>({
             </div>
             
             <div className="flex items-center justify-end space-x-2 py-4">
+                <div className="flex-1 text-sm text-muted-foreground">
+                    {table.getFilteredRowModel().rows.length} row(s)
+                </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
                     Page {table.getState().pagination.pageIndex + 1} of {" "}
                     {table.getPageCount()}

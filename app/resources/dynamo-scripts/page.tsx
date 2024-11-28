@@ -26,7 +26,7 @@ async function getData() {
     tags,
     "fileUrl": scriptfile.asset->url,
     youtubelink,
-    "scripttype": scripttype[]->name,
+    "scripttype": scripttype->name,
     dynamoplayer,
     externalpackages,
     pythonscripts,
@@ -52,9 +52,7 @@ export default async function DynamoScriptPage() {
                 </p>
             </div>
             <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
-            <div className="mt-5 text-sm font-medium">
-                Total: {data.length}
-            </div>
+            
             <div className="container max-w-[1280px] mx-auto py-10">
                 <DataTable columns={columns} data={data} />
             </div>

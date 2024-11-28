@@ -36,12 +36,17 @@ export const dynamoScriptType = defineType({
         defineField({
             name: 'scripttype',
             title: 'Script Type',
-            type: 'array',
-            of: [{type: "reference", to: [{type: "dynamosoftwares"}]}],
+            type: 'reference',
+            to: {type: "dynamosoftwares"}
         }),
         defineField({
             name: 'dynamoplayer',
             title: 'Dynamo Player Ready',
+            type: 'boolean',
+        }),        
+        defineField({
+            name: 'pythonscripts',
+            title: 'Python Scripts',
             type: 'boolean',
         }),
         defineField({
@@ -49,11 +54,6 @@ export const dynamoScriptType = defineType({
             title: 'External Packages',
             type: 'array',
             of: [{type: 'string'}],
-        }),
-        defineField({
-            name: 'pythonscripts',
-            title: 'Python Scripts',
-            type: 'boolean',
         }),
         defineField({
             name: 'youtubelink',

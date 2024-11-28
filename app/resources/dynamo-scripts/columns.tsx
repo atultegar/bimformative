@@ -17,7 +17,7 @@ import DialogDetails from "@/app/components/DialogDetails";
 
 export type DynamoScript = {
     title: string
-    scripttype: string[]
+    scripttype: string
     dynamoplayer: boolean
     externalpackages: string[]
     pythonscripts: boolean
@@ -56,7 +56,7 @@ export const columns: ColumnDef<DynamoScript>[] = [
         accessorKey: "scripttype",
         header: () => <div className="text-left">Type</div>,
         cell: ({row}) => {
-            const scriptTypes = row.getValue<string[]>("scripttype");
+            const scriptType = row.getValue<string>("scripttype");
 
             // Map tags to corrsponding images
             const imageMapping: { [key: string]: { src: any; alt: string}} = {
@@ -65,16 +65,12 @@ export const columns: ColumnDef<DynamoScript>[] = [
             };
 
             // Filter valid images based on the scripttypes array
-            const imagesToShow = scriptTypes
-            .map((type) => type.toLowerCase())
-            .filter((type) => type in imageMapping)
-            .map((type) => imageMapping[type]);
+            const cleanedScriptType = scriptType.trim().toLowerCase();
+            const image = imageMapping[cleanedScriptType] || null;
 
             return (
                 <div className="flex space-x-2 items-center">
-                    {imagesToShow.map((image, index) => (
-                        <Image key={index} src={image.src} alt={image.alt} width={40} height={40} />
-                    ))}
+                    {image && <Image src={image.src} alt={image.alt} width={40} height={40} />}
                 </div>
             );
         },

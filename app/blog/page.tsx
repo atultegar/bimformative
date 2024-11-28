@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import BlogPostCard from "../components/BlogPostCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import TagMenu from "../components/TagMenu";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -105,15 +106,7 @@ export default async function BlogPage() {
                 </p>
             </div>
             <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
-            <div className="mt-5 lg:inline-flex">
-                {allTags.map((item, index) => (
-                    <div key={index} className="py-2">
-                        <Link href={item.slug} className="block text-slate-600 py-1 hover:text-primary focus:text-slate-500 text-md mr-5">
-                            {item.name}
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <TagMenu allTags={allTags} />
             <div className="mt-10">
                 <Card className="bg-gray-100 dark:bg-black">                    
                     <CardContent className="w-full p-10 grid grid-cols-1 md:grid-cols-2 mx-auto gap-4">
