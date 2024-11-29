@@ -14,6 +14,7 @@ import BlogPostCard from "../components/BlogPostCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import TagMenu from "../components/TagMenu";
+import { PageBanner } from "../components/PageBanner";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -92,20 +93,11 @@ async function getAllTags() {
 export default async function BlogPage() {
     const data: simpleBlogCard[] = await getData();
     const allTags: tag[] = await getAllTags();
-    const featuredPost = data[0];
+    const featuredPost = data[3];
     
     return (
         <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px]">
-            <div className="relative text-left h-[200px] md:h-[300px] bg-gray-100 dark:bg-black">
-                <Image src={cube} alt="blogcover" className="d-block h-[150px] md:h-[300px] object-cover" />
-                <h1 className="absolute top-0 left-0 mt-10 text-4xl lg:text-6xl font-semibold text-black dark:text-white md:mx-10 mx-5 max-w-xl">
-                    Blog
-                </h1>
-                <p className="absolute top-20 mx-5 md:mx-11 md:mt-40 mt-10 max-w-md text-gray-900 dark:text-gray-400">
-                Insights, Updates, and Guides on BIM for Infrastructure
-                </p>
-            </div>
-            <hr className="h-px bg-gray-300 border-0 dark:bg-gray-800"></hr>
+            <PageBanner imageSrc={cube} title="Blog" description="Insights, Updates, and Guides on BIM for Infrastructure" />
             <TagMenu allTags={allTags} />
             <div className="mt-10">
                 <Card className="bg-gray-100 dark:bg-black">                    

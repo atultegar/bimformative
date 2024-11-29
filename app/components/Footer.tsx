@@ -46,7 +46,7 @@ export function Footer() {
                             <li className="lg:inline-flex">
                                 {navigationItems.map((item, index) => (
                                     <div key={index} className="py-2">
-                                        <Link href={item.href} className="block text-gray-700 py-1 hover:text-primary focus:text-gray-700 text-sm mr-12">
+                                        <Link href={item.href} className="block text-slate-500 py-1 hover:text-primary focus:text-gray-700 text-sm mr-12">
                                             {item.name}
                                         </Link>
                                     </div>

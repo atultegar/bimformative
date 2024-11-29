@@ -1,6 +1,10 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import NewsletterSignup from "../components/NewsletterSignup";
+import { PageBanner } from "../components/PageBanner";
+import Mission from "@/public/mission.png";
+import AboutCover from "@/public/about-cover.png";
 
 export const metadata: Metadata = {
     title: "About"
@@ -9,22 +13,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
     return (
         <div className="max-w-7xl w-full px-4 md:px-8 mx-auto" >
-            <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gray-100 dark:bg-black rounded-xl lg:h-[400px]">
-                {/* Heading Section */}
-                <div className="col-span-1 lg:col-span-2 p-4 lg:p-8 mx-10">
-                    <h1 className="text-4xl sm:text-4xl lg:text-6xl text-center lg:text-left font-extrabold scroll-m-20 tracking-tight">
-                        Welcome to BIM<span className="italic">formative</span>
-                    </h1>                    
-                </div>
-                <div className="lg:col-start-2 h-auto lg:h-[150px] px-4 mb-5 lg:mb-0">
-                    <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide mt-5 lg:mt-5 text-center lg:text-right scroll-m-20 lg:mr-5">
-                        Your trusted resource for insights, documentation, and technical guidance on Building Information Modeling (BIM) for Infrastructure.
-                    </h2>
-                </div>
-                
-            </div>
+            <PageBanner imageSrc={AboutCover} title="Welcome to BIMformative"  
+                description="Your trusted resource for insights, documentation, and technical guidance on Building Information Modeling (BIM) for Infrastructure."/>
+            
             <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gray-100 dark:bg-black rounded-xl lg:h-[400px] items-center">
-                <div className="lg:col-start-1 lg:col-span-2 h-auto lg:h-[200px] px-4">
+                <Image src={Mission} alt="Mission" className="justify-self-center lg:col-span-2 w-36 h-36 dark:invert"/>
+                <h1 className="text-4xl font-bold justify-self-center lg:col-span-2 -mt-10">Mission</h1>
+                <div className="lg:col-start-1 lg:col-span-2 h-auto lg:h-[200px] px-4">               
                     <h2 className="text-2xl sm:text-xl lg:text-2xl font-semibold tracking-wide mt-5 text-center scroll-m-20 ">
                         Our mission is to empower infrastructure professionals, architects, engineers, and construction specialists to harness the power of BIM for more efficient, accurate, and collaborative project outcomes.
                     </h2>
@@ -32,17 +27,18 @@ export default function AboutPage() {
             </div>
             <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gray-100 dark:bg-black rounded-xl lg:h-[400px] items-center">
                 <div className="lg:col-start-1 h-auto lg:h-[200px] p-4 flex flex-col justify-center items-left mx-10">                    
-                    <h2 className="scroll-m-20 text-4xl font-extrabold tracking-tight">
+                    
+                    <Image className="mx-10 mt-5 dark:invert" src="https://img.icons8.com/external-pixer-icons-pack-dmitry-mirolyubov/88/external-horizon-weather-pixer-icons-pack-dmitry-mirolyubov.png" 
+                    alt="external-horizon-weather-pixer-icons-pack-dmitry-mirolyubov" 
+                    width="120" 
+                    height="120"
+                     />
+                     <h2 className="scroll-m-20 text-4xl font-bold tracking-tight mt-5 ml-3">
                         Our Vision
                     </h2>
-                    <Image className="mx-10 mt-5" src="https://img.icons8.com/external-pixer-icons-pack-dmitry-mirolyubov/88/external-horizon-weather-pixer-icons-pack-dmitry-mirolyubov.png" 
-                    alt="external-horizon-weather-pixer-icons-pack-dmitry-mirolyubov" 
-                    width="88" 
-                    height="88"
-                     />
                 </div>
                 <div className="lg:col-start-2 h-auto lg:h-[200px] p-4">
-                    <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-left lg:text-left scroll-m-20 ">
+                    <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-left lg:text-left scroll-m-20 mr-5">
                         In a world where infrastructure projects grow increasingly complex, <span className="font-semibold">BIMformative </span> 
                         envisions a future where digital workflows drive clarity, precision, and sustainability.  
                         We are committed to equipping industry professionals with the tools and knowledge to adopt and advance BIM practices seamlessly.
@@ -93,7 +89,7 @@ export default function AboutPage() {
                 <div className="lg:col-start-2 h-auto lg:h-[250px] p-4">
                     <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-left lg:text-left scroll-m-20 ">
                         BIMformative was born out of a need for a dedicated space where infrastructure-focused BIM professionals can access targeted resources.
-                        We prioritize practical, hands-on guidance and actinable insights over theoritical content. 
+                        We prioritize practical, hands-on guidance and actionable insights over theoritical content. 
                         Whether you&apos;re seasoned BIM Manager or new to BIM for Infrastructure, BIMformative provides content tailored to help you overcome challenges and enhance project efficiency.
                     </h2>
                 </div>
@@ -112,6 +108,7 @@ export default function AboutPage() {
                 </div>
                 
             </div>
+            <NewsletterSignup />
             <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-2">                
                 <div className="lg:col-start-1 col-span-2 h-auto p-4">
                     <h2 className="text-xl sm:text-xl lg:text-xl font-semibold tracking-wide text-center scroll-m-20 ">                         

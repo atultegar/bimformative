@@ -26,7 +26,7 @@ export function Hero() {
     ]
 
     return (
-        <div className="mt-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-gray-100 dark:bg-transparent items-center">
+        <div className="mt-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-transparent items-center">
             <div className="col-span-1 lg:col-span-1 h-full min-h-[300px] rounded-2xl p-8 flex flex-col justify-center">
                 <h1 className="text-4xl lg:text-6xl font-semibold">
                     BIM<span className={`italic ${charm.className}`}>formative</span>
