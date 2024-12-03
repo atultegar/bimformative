@@ -13,6 +13,8 @@ import intro3 from "../../public/intro-3.png";
 import intro4 from "../../public/intro-4.png";
 import intro5 from "../../public/intro-5.png";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import GridPattern from "@/components/ui/grid-pattern";
+import { cn } from "@/lib/utils";
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 
@@ -26,8 +28,8 @@ export function Hero() {
     ]
 
     return (
-        <div className="mt-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-transparent items-center">
-            <div className="col-span-1 lg:col-span-1 h-full min-h-[300px] rounded-2xl p-8 flex flex-col justify-center">
+        <div className="mt-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-transparent items-center">            
+            <div className="col-span-1 lg:col-span-1 h-full min-h-[300px] rounded-2xl px-8 py-4 flex flex-col justify-center">
                 <h1 className="text-4xl lg:text-6xl font-semibold">
                     BIM<span className={`italic ${charm.className}`}>formative</span>
                 </h1>
@@ -55,7 +57,7 @@ export function Hero() {
                 priority />
             </div> */}
 
-            <div className="col-span-1 lg:col-start-2 lg:col-span-1 h-full min-h-[300px] rounded-lg p-8 flex flex-col justify-start">
+            <div className="col-span-1 lg:col-start-2 lg:col-span-1 h-full min-h-[300px] rounded-lg px-8 py-4 flex flex-col justify-start">
                 <Carousel plugins={[plugin.current]}
                 className="w-full">
                     <CarouselContent>
@@ -66,7 +68,8 @@ export function Hero() {
                         ))}
                     </CarouselContent>
                 </Carousel>
-            </div>            
+            </div>
+                    
         </div>
     )
 }

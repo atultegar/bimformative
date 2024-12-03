@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { ProjectsCard } from "../lib/interface";
-import { client } from "../lib/sanity";
+import { client, urlFor } from "../lib/sanity";
 import { Metadata } from "next";
+import { PageBanner } from "../components/PageBanner";
+import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { FaGithub} from "react-icons/fa";
 
 export const metadata: Metadata = {
     title : "Projects"
@@ -25,39 +30,65 @@ async function getData() {
 export default async function ProjectsPage() {
     const data: ProjectsCard[] = await getData();
     return (
-        <section className="max-w-7xl w-full px-4 md:px-8 mx-auto">
-            <h1 className="text-4xl font-semibold lg:text-5xl pt-5">Projects</h1>
-            <p className="leading-7 text-muted-foreground mt-2">
-                Check out what projects I have created
-            </p>
-            <div className="py-12 grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 grid-cols-1">
-                {data.map((item) => (
-                    <a href={item.link} key={item._id} className="group block" target="_blank">
-                        <div className="aspect-w-16 aspect-h-12 overflow-hidden rounded-2xl relative">
-                            <Image 
-                            src={item.imageUrl} 
-                            alt="Image Decription" 
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"/>
-                        </div>
-                        <div className="mt-4">
-                            <h2 className="font-medium text-lg hover:underline">
-                                {item.title}
-                            </h2>
-                            <p className="mt-1 text-muted-foreground line-clamp-3">
-                                {item.description}
-                            </p>
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                {item.tags.map((tagItem, index) => (
-                                    <span className="inline-flex items-center rounded-md bg-primary/10 px-3 py-1.5 text-xs 
-                                    sm:text-sm font-medium text-primary ring-2 ring-inset ring-primary/20" 
-                                    key={index}>
-                                        {tagItem}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    </a>
+        <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px]">
+            <PageBanner title="Projects" description="Check out what projects I have created" />            
+            <div className="mt-10 mb-16">
+                {data.map((item, idx) => (
+                    <div key={idx}>
+                        <Card className="bg-gray-100 dark:bg-black mb-10">
+                            <CardContent className="w-full p-10 grid grid-cols-1 md:grid-cols-2 mx-auto gap-4">
+                                { idx % 2 === 0 ? (
+                                    <>
+                                    <Link href={item.link}>
+                                        <div className="md:col-start-2 col-start-1 mt-10 md:mt-0 d-block w-full h-[200px] md:h-[300px] border border-gray-300 dark:border-stone-900 drop-shadow-sm bg-white content-center">
+                                            <Image src={item.imageUrl} alt="image" fill={true} className="mx-auto w-auto h-auto object-contain hover:opacity-50" />
+                                        </div>
+                                    </Link>
+                                    <div className="flex flex-col h-[300px] justify-center items-end gap-14">
+                                        <Link href={item.link}>
+                                        <div className="font-bold text-3xl md:w-[400px] w-[300px] hover:underline text-right">
+                                            {item.title}
+                                        </div>
+                                        </Link>
+                                        <div className="md:w-[400px] w-[300px] text-right">
+                                            {item.description}
+                                        </div>
+                                        <Button className="w-40" asChild>
+                                            <Link href={item.link} className="hover:underline">
+                                                <FaGithub /> Repository
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                    
+                                    </>
+                                ) : (
+                                    <>
+                                    <div className="flex flex-col h-[300px] justify-center gap-14">
+                                        <Link href={item.link}>
+                                        <div className="font-bold text-3xl md:w-[400px] w-[300px] hover:underline">
+                                            {item.title}
+                                        </div>
+                                        </Link>
+                                        <div className="md:w-[400px] w-[300px]">
+                                            {item.description}
+                                        </div>
+                                        <Button className="w-40" asChild>
+                                            <Link href={item.link} className="hover:underline">
+                                                <FaGithub /> Repository
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                    <Link href={item.link}>
+                                        <div className="md:col-start-2 col-start-1 mt-10 md:mt-0 d-block w-full h-[200px] md:h-[300px] border border-gray-300 dark:border-stone-900 drop-shadow-sm bg-white content-center">
+                                            <Image src={item.imageUrl} alt="image" fill={true} className="mx-auto w-auto h-auto object-contain hover:opacity-50" />
+                                        </div>
+                                    </Link>
+                                    </>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+                    
                 ))}
             </div>
         </section>

@@ -125,15 +125,13 @@ export default async function BlogPage() {
                                 className="mx-auto w-auto h-auto object-contain hover:opacity-50"/>
                             </div>
                         </Link>
-                        
-                        
                     </CardContent>
                 </Card>
             </div>
             <div className="items-center">
                 <NewsletterSignup />
             </div>             
-            <div className="mt-10 mb-16 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-32 lg:gap-x-10 content-center">
+            <div className="mt-10 mb-16 grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-16 md:gap-y-10 lg:gap-x-10 content-center">
                 {data.map((post, idx) => (
                     <BlogPostCard key={idx} post={post} idx={idx} />
                 ))}

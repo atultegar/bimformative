@@ -14,6 +14,8 @@ import logoDark from "../../public/logo-dark-2.png"
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+
 export const navigationItems = [
     {
         name: 'Home',
@@ -114,7 +116,7 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center justify-end md:col-span-3 col-span-6">
-                <a href="mailto:atul.tegar@gmail.com" className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-primary text-primary hidden sm:block">
+                <a href={`mailto:${contactEmail}`} className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-primary text-primary hidden sm:block">
                     <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-primary top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
                     <span className="relative text-primary transition duration-300 group-hover:text-white ease">Contact Us</span>
                 </a>

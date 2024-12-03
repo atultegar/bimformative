@@ -19,7 +19,6 @@ import python from "@/public/bim-icons/pythonLogo.png";
 import csharp from "@/public/bim-icons/csharpLogo2023.png";
 import vb from "@/public/bim-icons/vb.png";
 
-
 import githubIcon from "@/public/social-media/github.svg";
 import youtubeIcon from "@/public/social-media/youtube-dark.svg";
 import linkedinIcon from "@/public/social-media/linkedin.svg";
@@ -38,6 +37,8 @@ const icons = [
     csharp,
     vb,
 ];
+
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
 
 export const socialMedia = [    
     {
@@ -72,12 +73,11 @@ export const socialMedia = [
         id: 6,
         icon: emailIcon,
         name: "Email",
-        username: "atul.tegar@gmail.com",
-        link: "mailto:atul.tegar@gmail.com"
+        username: contactEmail,
+        link: `mailto:${contactEmail}`        
     },
 
 ]
-
 
 export function SectionTwo() {
     return (

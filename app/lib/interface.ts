@@ -62,6 +62,20 @@ export interface tag {
     postCount: number;
 }
 
+export interface videoTutorial {
+    name: string;
+    description: string;
+    youtube: string;
+}
+
+export interface DocsCard {
+    name: string;
+    imageUrl: string,
+    tags: string[];
+    description: string;
+    url: string;
+}
+
 // name,
 //         slug,
 //         _id,

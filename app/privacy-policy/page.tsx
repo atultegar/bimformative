@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     }
 }
 
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+
 export default function Privacy() {
     return (
         <section className="max-w-6xl mx-auto px-4 py-8 min-h-[900px]">
@@ -32,12 +34,12 @@ export default function Privacy() {
 
                 <div>
                 <h2 className="text-xl font-bold mb-2">User Rights</h2>
-                <p>Users may request to view, update, or delete their personal information at any time by contacting us at <a href="mailto:atul.tegar@gmail.com" className="text-primary">atul.tegar@gmail.com</a>.</p>
+                <p>Users may request to view, update, or delete their personal information at any time by contacting us at <a href={`mailto:${contactEmail}`} className="text-primary">{contactEmail}</a>.</p>
                 </div>
 
                 <div>
                 <h2 className="text-xl font-bold mb-2">Contact</h2>
-                <p>If you have any questions about this Privacy Policy, contact us at <a href="mailto:atul.tegar@gmail.com" className="text-primary">atul.tegar@gmail.com</a>.</p>
+                <p>If you have any questions about this Privacy Policy, contact us at <a href={`mailto:${contactEmail}`} className="text-primary">{contactEmail}</a>.</p>
                 </div>
             </article>
         </section>
