@@ -9,5 +9,6 @@ import { youTube } from "./youTubeType";
 import { testimonial } from "./testimonial";
 import { docsType } from "./docsType";
 import { videoTutorial } from "./videoTutorial";
+import { otherAssets } from "./otherassets";
 
-export const schemaTypes = [projectsType, blogsType, authorType, youTube, dynamoScriptType, codeType, tag, dynamosoftwares, testimonial, docsType, videoTutorial]
+export const schemaTypes = [projectsType, blogsType, authorType, youTube, dynamoScriptType, codeType, tag, dynamosoftwares, testimonial, docsType, videoTutorial, otherAssets]

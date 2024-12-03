@@ -6,6 +6,9 @@ export async function GET() {
     "blogCount": count(*[_type == "blog"]),
     "dynamoScriptCount": count(*[_type == "dynamoscript"]),
     "codeSnippetCount": count(*[_type == "codeSnippet"]),
+    "docCount": count(*[_type == "docs"]),
+    "tutorialCount": count(*[_type == "videoTutorial"]),
+    "otherAssetCount": count(*[_type == "otherassets"]),
     }`;
 
     try {

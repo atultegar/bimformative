@@ -46,6 +46,17 @@ export interface dynamoscript {
     image: string;
 }
 
+export interface otherassets {
+    file: File;
+    title: string;
+    description: string;
+    image: any;
+    assettype: string;
+    youtubelink: string;
+    tags: string[];
+    fileUrl: string;
+}
+
 export interface codeSnippet {
     title: string;
     codeField: codeField;

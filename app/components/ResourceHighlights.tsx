@@ -22,9 +22,9 @@ export default function ResourceHighlights() {
         blogCount: 0,
         dynamoScriptCount: 0,
         codeSnippetCount: 0,
-        docCount: 3,
-        tutorialCount: 1,
-        otherAssetCount: 5,
+        docCount: 0,
+        tutorialCount: 0,
+        otherAssetCount: 0,
     });
 
     const resources = [
