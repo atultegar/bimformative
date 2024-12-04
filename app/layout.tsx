@@ -14,6 +14,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({subsets: ["latin"], display: "swap"});
 
 export const metadata: Metadata = {
+  applicationName: "BIMformative",
   title: {
     default: "BIMformative",
     template: "%s - BIMformative"
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     description: "Shaping and developing knowledge in the field of BIM for infrastructure",
     type: "website",
     locale: "en-US",
-    url: "https://bimformative.com/",
+    url: "https://www.bimformative.com/",
     siteName: "BIMformative",
   }
 };

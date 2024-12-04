@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         },
         {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/resources/csahrp-snippets`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/resources/csharp-snippets`,
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.8,

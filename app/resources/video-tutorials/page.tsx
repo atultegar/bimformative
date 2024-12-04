@@ -6,6 +6,7 @@ import { videoTutorial } from "@/app/lib/interface";
 import { YouTubePlayer } from "@/app/components/YouTubePlayer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import tutorialsCover from "@/public/tutorials-cover.png";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -30,7 +31,7 @@ export default async function Resources() {
     const data: videoTutorial[] = await getData();
     return (
     <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px]">
-        <PageBanner title="Video Tutorials" description="Explore, Enhance, Execute with Dynamo Scripts." />            
+        <PageBanner imageSrc={tutorialsCover} title="Video Tutorials" description="Explore, Enhance, Execute with Dynamo Scripts." />            
         <div className="container max-w-[1280px] mx-auto py-10 mt-10 mb-16 flex flex-col">
             {data.map((item, idx) => (
                 <div key={idx}>                    
