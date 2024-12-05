@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 async function getData() {
-    const query = `*[_type == 'docs'] {
+    const query = `*[_type == 'docs'] | order(_updatedAt desc) {
             name,
             url,
             description,
