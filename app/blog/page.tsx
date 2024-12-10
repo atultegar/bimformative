@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import TagMenu from "../components/TagMenu";
 import { PageBanner } from "../components/PageBanner";
+import Blogs from "../components/Blogs";
 
 export const revalidate = 30;  //revalidate at most 30 seconds
 
@@ -135,7 +136,7 @@ export default async function BlogPage() {
                 {data.map((post, idx) => (
                     <BlogPostCard key={idx} post={post} idx={idx} />
                 ))}
-            </div>            
+            </div>   
         </section>        
     );
 }

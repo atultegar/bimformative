@@ -19,7 +19,7 @@ export default function NewsletterSignup() {
         e.preventDefault();
         setStatus("loading");
         try {
-            const response = await axios.post("api/subscribe", {email});
+            const response = await axios.post("api/kitSubscribe", {email});
 
             setStatus("success");
             setStatusCode(response.status);
