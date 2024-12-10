@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET =  async (req: NextRequest) => {
     const searchParams = req.nextUrl.searchParams
     const search = searchParams.get("search") || "";
-    const tag = searchParams.get("tag") || "";
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
 
@@ -13,7 +12,7 @@ export const GET =  async (req: NextRequest) => {
 
     // Sanity query for blogs with search filter and pagination
     const query = `
-        *[_type == 'blog' && (title match $search || smallDescription match $search) && ($tag == "" || $tag in tags[]->slug.current)] | order(_createdAt desc) [${offset}...${offset + limit}] {
+        *[_type == 'blog' && (title match $search || smallDescription match $search)] | order(_createdAt desc) [${offset}...${offset + limit}] {
             title,
             smallDescription,
             "currentSlug": slug.current,
@@ -24,11 +23,14 @@ export const GET =  async (req: NextRequest) => {
         }`;
     
     const countQuery = `
-        count(*[_type == 'blog' && (title match $search || smallDescription match $search) && ($tag == "" || $tag in tags[]->slug.current)])`;
+        count(*[_type == 'blog' && (title match $search || smallDescription match $search)])`;
 
     try{
-        const blogs = await client.fetch(query, {search: `${search}*`, tag});
-        const totalCount = await client.fetch(countQuery, {search: `${search}*`, tag});
+        const queryParams = {
+            search: `${search}*`,
+        };
+        const blogs = await client.fetch(query, queryParams);
+        const totalCount = await client.fetch(countQuery, queryParams);
 
         return NextResponse.json({ 
             blogs, 

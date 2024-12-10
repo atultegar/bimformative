@@ -48,7 +48,9 @@ const SearchBlogs: React.FC<SearchProps> = ({blogs}) => {
                         <BlogPostCard key={idx} post={post} idx={idx} />
                     ))
                 ) : (
-                    <p className="text-gray-500">No blogs found for "{searchTerm}".</p>
+                    <p className="text-gray-500 text-center col-span-full">
+                        No blogs found for <span className="font-semibold">{searchTerm}</span>.
+                    </p>
                 )}                
             </div>
         </div>

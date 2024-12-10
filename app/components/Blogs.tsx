@@ -44,10 +44,10 @@ export default function Blogs() {
         fetchTags();
     }, [searchTerm, page]);
 
-    const handleSearch = (e) => {
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             setPage(1); // Reset to first page for new search
-            setSearchTerm(e.target.value);
+            setSearchTerm((e.target as HTMLInputElement).value);
         }
     };
 
