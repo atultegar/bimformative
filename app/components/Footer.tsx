@@ -67,7 +67,7 @@ export function Footer() {
                     <div className=" flex sm:flex mb-1 gap-4 text-slate-600 dark:text-slate-300 sm:justify-center">
                         {socialMedia.map((item, index)=> (
                             <div key={index}>
-                                <Link href={item.link} rel="noopener noreferrer" target="_blank" className="block transition-opacity text-inherit hover:opacity-80 opacity-50">
+                                <Link href={item.link} rel="noopener noreferrer" target="_blank" className="block transition-opacity text-inherit hover:opacity-80 opacity-50 hover:-translate-y-0.5 ease-in-out">
                                     <Image src={item.icon} alt="Icon" className="w-5 h-5 dark:invert"/>
                                 </Link>
                             </div>

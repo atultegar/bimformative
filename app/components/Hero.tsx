@@ -15,6 +15,9 @@ import intro5 from "../../public/intro-5.png";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import GridPattern from "@/components/ui/grid-pattern";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import HeroImage from "@/public/hero-image.jpg";
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 
@@ -28,48 +31,47 @@ export function Hero() {
     ]
 
     return (
-        <div className="mt-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 bg-transparent items-center">            
-            <div className="col-span-1 lg:col-span-1 h-full min-h-[300px] rounded-2xl px-8 py-4 flex flex-col justify-center">
-                <h1 className="text-4xl lg:text-6xl font-semibold">
-                    BIM<span className={`italic ${charm.className}`}>formative</span>
-                </h1>
-                <h1 className="text-2xl lg:text-6xl font-bold mt-3 bg-gradient-to-r from-blue-300 to-pink-300 inline-block text-transparent bg-clip-text">
-                    Where infrastructure innovation takes shape.
-                </h1>
-                <p className="mt-4 text-gray-400">
-                    Blogs, Tutorials, Documentation, Resources
-                </p>
-                <div className='mt-8 space-x-4'>
-                    <Button asChild>
-                        <Link href="/resources">Get Started</Link>
-                    </Button>
-                    <Button variant="outline" asChild>
-                        <Link href="/about">Learn More</Link>
-                    </Button>
+        <div className="max-w-7xl mx-auto bg-transparent items-center min-h-[90vh] flex flex-col justify-center text-center gap-y-5">            
+            {/* <h1 className="text-4xl lg:text-6xl font-semibold">
+                BIM<span className={`italic ${charm.className}`}>formative</span>
+            </h1> */}
+            <h1 className="text-2xl lg:text-6xl font-bold mt-3 bg-gradient-to-r from-blue-300 to-pink-300 inline-block text-transparent bg-clip-text">
+                Simplify Complex BIM Workflows for Infrastructure Projects
+            </h1>
+            <p className="mt-5 text-gray-400 max-w-4xl">
+                Discover tools and resources to tackle challenging BIM tasks with ease - Dynamo Scripts, Revit Families, Custom Subassemblies, and Python &amp; C# Code snippets.
+            </p>
+            <div className='mt-5 space-x-5'>
+                <Button asChild>
+                    <Link href="/resources">Get Started</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                    <Link href="/about">Learn More</Link>
+                </Button>
+            </div>
+            <div className="relative w-full max-w-7xl mx-auto">
+                <div className="relative rounded-2xl overflow-hidden h-[400px] w-full m-auto">
+                    <Image src={HeroImage} alt="Hero Image" layout="fill" objectFit="cover" className="rounded-xl" />
+                    {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50 rounded-xl"></div> */}
                 </div>                
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative flex w-full max-w-sm sm:max-w-md items-center justify-center space-x-2 border dark:border-gray-500 rounded-2xl hover:border-gray-900 bg-white p-1 dark:hover:border-blue-800">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <Search className="w-6 h-6 text-gray-500" />
+                        </span>
+                        <Input
+                            type="search"
+                            placeholder="Find the BIM resource you need..."
+                            className="pl-10 border-none focus:outline-none focus:ring-0 bg-transparent text-gray-500"
+                        />
+                        <span>
+                            <Button variant="default" className="p-2 rounded-xl w-24">
+                                Search
+                            </Button>
+                        </span>
+                    </div>
+                </div>
             </div>
-
-            {/* <div className="col-span-1 lg:col-start-2 lg:col-span-1 h-full min-h-[300px] rounded-lg p-8 flex flex-col justify-start">
-                <Image
-                    src={profileImage}
-                    alt="Profile"
-                className="col-span-1 object-cover lg:h-[350px] rounded-lg mt-2"
-                priority />
-            </div> */}
-
-            <div className="col-span-1 lg:col-start-2 lg:col-span-1 h-full min-h-[300px] rounded-lg px-8 py-4 flex flex-col justify-start">
-                <Carousel plugins={[plugin.current]}
-                className="w-full">
-                    <CarouselContent>
-                        {carouselArray.map((_, index) => (
-                            <CarouselItem key={index}>
-                                <Image src={_} alt="intro" className="col-span-1 object-cover lg:h-[350px] rounded-lg mt-2" />
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                </Carousel>
-            </div>
-                    
-        </div>
+        </div>            
     )
 }

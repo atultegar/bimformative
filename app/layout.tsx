@@ -48,7 +48,7 @@ export default function RootLayout({
         disableTransitionOnChange>
           <NotificationBar />
           <Navbar />
-          <main className="max-w-7xl mx-auto px-4">{children}</main>
+          <main className="w-full h-full mx-auto">{children}</main>
           <Toaster />
           <Footer />
           <Analytics />

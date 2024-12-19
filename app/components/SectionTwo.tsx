@@ -39,35 +39,39 @@ const icons = [
 ];
 
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+const xUserName = process.env.NEXT_PUBLIC_X_USERNAME;
+const linkedinUSerName = process.env.NEXT_PUBLIC_LINKEDIN_USERNAME;
+const ytUserName = process.env.NEXT_PUBLIC_YT_USERNAME;
+const githubUserName = process.env.NEXT_PUBLIC_GITHUB_USERNAME;
 
 export const socialMedia = [    
     {
         id: 2,
         icon: xIcon,
         name: "X / Twitter",
-        username: "@chaos_atul",
-        link: "https://x.com/chaos_atul"
+        username: `@${xUserName}`,
+        link: `https://x.com/${xUserName}`
     },
     {
         id: 3,
         icon: linkedinIcon,
         name: "LinkedIn",
-        username: "atultegar",
-        link: "https://www.linkedin.com/in/atultegar/"
+        username: linkedinUSerName,
+        link: `https://www.linkedin.com/in/${linkedinUSerName}`
     },
     {
         id: 4,
         icon: youtubeIcon,
         name: "YouTube",
-        username: "@atultegar444",
-        link: "https://www.youtube.com/@atultegar444"
+        username: `@${ytUserName}`,
+        link: `https://www.youtube.com/@${ytUserName}?sub_confirmation=1`
     },
     {
         id: 5,
         icon: githubIcon,
         name: "GitHub",
-        username: "atultegar",
-        link: "https://github.com/atultegar"
+        username: githubUserName,
+        link: `https://github.com/${githubUserName}`
     },
     {
         id: 6,
@@ -81,26 +85,26 @@ export const socialMedia = [
 
 export function SectionTwo() {
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10 mx-auto max-w-7xl">
             <div className="w-full relative col-span-1">
-                <Image
-                src={bimsoftwares}
-                alt="bimsoftwares"
-                className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
-                <Card className="bg-gray-100 dark:bg-black border-none">
-                    <CardHeader>
-                        <CardTitle>Explore our stack</CardTitle>
-                        <CardDescription>Check out the tool we use daily</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-wrap gap-4 justify-center mx-auto">
-                        {icons.map((item, index) => (
-                            <Image key={index} src={item} alt='Icon' className="w-20 h-20 rounded-lg shadow text-center dark:shadow-stone-950" />
-                        ))}
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
+                    <Image
+                    src={bimsoftwares}
+                    alt="bimsoftwares"
+                    className="w-full h-full object-cover rounded-lg" />
+                </div>
+                <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
+                    <Card className="bg-gray-100 dark:bg-black border-none">
+                        <CardHeader>
+                            <CardTitle>Explore our stack</CardTitle>
+                            <CardDescription>Check out the tool we use daily</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex flex-wrap gap-4 justify-center mx-auto">
+                            {icons.map((item, index) => (
+                                <Image key={index} src={item} alt='Icon' className="w-20 h-20 rounded-lg shadow text-center dark:shadow-stone-950" />
+                            ))}
+                        </CardContent>
+                    </Card>
+                </div>            
+        </section>
     )
 }

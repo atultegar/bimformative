@@ -11,6 +11,13 @@ export const blogsType = defineType({
     type: 'document',
     fields: [
         defineField({
+            name: 'featured',
+            title: 'Featured',
+            type: 'boolean',
+            description: 'Mark this blog as featured.',
+            initialValue: false,
+        }),
+        defineField({
             name: 'title',
             title: 'Title of blog article',
             type: 'string',
