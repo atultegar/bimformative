@@ -26,7 +26,7 @@ async function getData() {
   return data;
 }
 
-export default async function CsharpPage() {
+export default async function PythonPage() {
     const data: codeSnippet[] = await getData();
 
     return (

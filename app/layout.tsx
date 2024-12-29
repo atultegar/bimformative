@@ -46,7 +46,7 @@ export default function RootLayout({
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange>
-          <NotificationBar />
+          {/* <NotificationBar /> */}
           <Navbar />
           <main className="w-full h-full mx-auto">{children}</main>
           <Toaster />

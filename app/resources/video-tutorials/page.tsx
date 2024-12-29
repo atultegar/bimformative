@@ -40,7 +40,7 @@ export default async function Resources() {
                         {idx % 2 === 0 ? (
                             <>
                             {/* Video on the left */}
-                            <div className="inline-block w-full lg:rounded overflow-hidden h-full cursor-pointer">
+                            <div className="inline-block w-full lg:rounded overflow-hidden h-full cursor-pointer border border-gray-200 dark:border-gray-700">
                                 <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.youtube}`} />                                                      
                             </div>
                             {/* Name and Description on the right */}
@@ -58,7 +58,7 @@ export default async function Resources() {
                                 <p className="mt-2 text-gray-700 dark:text-gray-300">{item.description}</p>
                             </div>
                             {/* Video on the right */}
-                            <div className="inline-block w-full lg:rounded overflow-hidden h-full cursor-pointer">
+                            <div className="inline-block w-full lg:rounded overflow-hidden h-full cursor-pointer border border-gray-200 dark:border-gray-700">
                                 <YouTubePlayer url={`https://www.youtube.com/watch?v=${item.youtube}`} />                                                      
                             </div>
                             </>

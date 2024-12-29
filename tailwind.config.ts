@@ -55,12 +55,36 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	}
+  		},
+		animation: {
+			["infinite-slider"]: "infiniteSlider 50s linear infinite",
+			"marquee-horizontal": "marquee-x var(--duration) infinite linear",
+        	"marquee-vertical": "marquee-y var(--duration) linear infinite",
+		},
+		keyframes: {
+			infiniteSlider: {
+				"0%": { transform: "translateX(0)" },
+				"100%": { 
+					transform: "translateX(calc(-250px * 5))",
+				},
+			},
+			"marquee-x": {
+				from: { transform: "translateX(0)" },
+				to: { transform: "translateX(calc(-100% - var(--gap)))"},
+			},
+			"marquee-y": {
+				from: { transform: "translateY(0)" },
+				to: { transform: "translateY(calc(-100% - var(--gap)))"},
+			},
+		},
+  	},
   },
   corePlugins: {
     aspectRatio: false,
   },
   plugins: [require("tailwindcss-animate"), require('@tailwindcss/aspect-ratio'), require('@tailwindcss/typography'),],
 };
+
+
+
 export default config;

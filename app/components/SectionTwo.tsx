@@ -24,6 +24,8 @@ import youtubeIcon from "@/public/social-media/youtube-dark.svg";
 import linkedinIcon from "@/public/social-media/linkedin.svg";
 import xIcon from "@/public/social-media/x.svg";
 import emailIcon from "@/public/social-media/gmail.svg";
+import { InfiniteSlider } from "./InfiniteSlider";
+import Marquee from "./animata/container/marquee";
 
 const icons = [
     autocad,
@@ -85,26 +87,30 @@ export const socialMedia = [
 
 export function SectionTwo() {
     return (
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10 mx-auto max-w-7xl">
-            <div className="w-full relative col-span-1">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-10 mx-auto max-w-full dark:bg-black bg-white">
+            {/* <div className="w-full relative col-span-1">
                     <Image
                     src={bimsoftwares}
                     alt="bimsoftwares"
                     className="w-full h-full object-cover rounded-lg" />
-                </div>
-                <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
-                    <Card className="bg-gray-100 dark:bg-black border-none">
-                        <CardHeader>
-                            <CardTitle>Explore our stack</CardTitle>
-                            <CardDescription>Check out the tool we use daily</CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex flex-wrap gap-4 justify-center mx-auto">
-                            {icons.map((item, index) => (
-                                <Image key={index} src={item} alt='Icon' className="w-20 h-20 rounded-lg shadow text-center dark:shadow-stone-950" />
-                            ))}
-                        </CardContent>
-                    </Card>
-                </div>            
+            </div>
+            <div className="flex flex-col w-full h-full col-span-1 lg:col-span-2 gap-4">
+                <Card className="bg-gray-100 dark:bg-black border-none">
+                    <CardHeader>
+                        <CardTitle>Explore our stack</CardTitle>
+                        <CardDescription>Check out the tool we use daily</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-wrap gap-4 justify-center mx-auto">
+                        {icons.map((item, index) => (
+                            <Image key={index} src={item} alt='Icon' className="w-20 h-20 rounded-lg shadow text-center dark:shadow-stone-950" />
+                        ))}
+                    </CardContent>
+                </Card>
+            </div> */}
+            <div className="items-center justify-center col-span-1 lg:col-span-3 text-center mx-auto mb-10">
+                <p className="text-2xl font-semibold leading-none tracking-tight py-5 mt-10">Check out the tool we use daily</p>                    
+                <InfiniteSlider Logos={icons} />
+            </div>                         
         </section>
     )
 }

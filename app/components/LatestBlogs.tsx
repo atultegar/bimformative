@@ -30,20 +30,20 @@ async function getData() {
 export default async function LatestBlogs() {
     const data: simpleBlogCard[] = await getData();
     return (
-        <section className="max-w-7xl mx-auto mt-10 py-16 bg-gray-100 dark:bg-black">
+        <section className="max-w-7xl mx-auto mt-10 py-16">
             <h2 className="text-center text-3xl font-semibold">Latest Blogs</h2>
-            <div className="lg:flex md:flex sm:flex mt-8 max-w-4xl gap-6 mx-auto items-center justify-between">
+            <div className="lg:flex md:flex sm:flex mt-8 max-w-4xl gap-6 mx-auto items-start justify-center">
                 {data.map((post, index) => (
-                    <article key={index}>
+                    <article key={index} className="w-[500px] place-items-center">
                         <Link key={index} href={`/blog/${post.currentSlug}`} className="hover:underline">
-                        <div className="d-block lg:w-[400px] h-[250px] sm:w-[300px] border border-gray-300 dark:border-stone-950 drop-shadow-md content-center">
+                        <div className="lg:w-[400px] h-[250px] sm:w-[300px] border border-gray-300 dark:border-stone-950 drop-shadow-md">
                             <Image src= {urlFor(post.titleImage).url()}
                                 alt="image"
                                 fill={true}
-                                className="mx-auto d-block object-contain hover:opacity-50"/>
+                                className="object-contain hover:opacity-50"/>
                         </div>                        
                         </Link>
-                        <h3 className="text-balance text-center mt-2 text-lg font-semibold leading-snug">
+                        <h3 className="text-center mt-2 text-lg font-semibold leading-snug lg:w-[400px] sm:w-[300px]">
                             <Link href={`/blog/${post.currentSlug}`} className="hover:underline">
                                 {post.title}
                             </Link>

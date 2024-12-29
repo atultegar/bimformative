@@ -51,11 +51,11 @@ export default function ResourceHighlights() {
 
 
     return (
-        <section className="max-w-7xl mx-auto mt-10 py-16 bg-gray-100 dark:bg-black">
+        <section className="max-w-full mx-auto mt-10 py-16 bg-gray-100 dark:bg-black">
             <h2 className="text-center text-3xl font-semibold">Explore Our Resources</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 gap-y-5 mt-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 gap-y-5 mt-8 max-w-4xl mx-auto">
                 {resources.map((res, index) => (
-                    <div key={index} className="p-6 rounded-lg shadow text-center dark:shadow-stone-950">
+                    <div key={index} className="p-6 rounded-lg shadow text-center dark:shadow-gray-600">
                         <h3 className="text-5xl font-bold text-primary">
                             <Counter targetValue={counts[res.countKey as keyof typeof counts] || 0} className="font-bold text-4xl" />
                         </h3>

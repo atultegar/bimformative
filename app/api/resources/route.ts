@@ -18,26 +18,33 @@ export const GET =  async (req: NextRequest) => {
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
 
-    // Sanity query for blogs with search filter and pagination
+    // Sanity query for resources with search filter and pagination
     const query = `
-        {
-            "blogs": *[_type == 'blog' && (title match $search)] | order(_createdAt desc) [${offset}...${offset + limit}] {
-            _type, title, smallDescription, "currentSlug": slug.current,"tags": tags[]->name, _id
-            },
-            "dynamoscripts": *[_type == 'dynamoscript' && (title match $search)] | order(_createdAt desc) [${offset}...${offset + limit}] {
-            _type, title, "tags": tags, _id
-            },
-        }
-        `;   
+        [
+            ...*[_type == 'blog' && (title match $search || tags[]->name match $search)] | order(_createdAt desc) {_type, title, smallDescription, "currentSlug": slug.current, titleImage, date, featured, "author": author->{"name": coalesce(name, "Anonymous"), picture}, "tags": tags[]->name, _id},
+            ...*[_type == 'dynamoscript' && (title match $search || tags match $search)] | order(_createdAt desc) {_type, title, scriptfile, description, tags, "fileUrl": scriptfile.asset->url, youtubelink, "scripttype":scripttype->name, dynamoplayer, externalpackages, pythonscripts, "image":image.asset->url, _id},
+            ...*[_type == 'codeSnippet' && (title match $search)] | order(_createdAt desc) {_type, title, codeField, _id},
+            ...*[_type == 'videoTutorial' && (name match $search)] | order(_createdAt desc) {_type, name, description, "youtube":url.id, _id},
+            ...*[_type == 'otherassets' && (title match $search || tags match $search)] | order(_createdAt desc) {_type, file, title, description, "image": image.asset->url, assettype, youtubelink, tags, "fileUrl": file.asset->url, _id},
+            ...*[_type == 'docs' && (name match $search || tags match $search)] | order(_createdAt desc) {_type, name, description, url, "imageUrl": image.asset->url, tags, _id},
+        ]`;
+
+    const searchQuery = `${query}[${offset}...${offset + limit}]`;
+    
+    const countQuery = `count(${query})`;
     
 
     try{
         const queryParams = {
             search: `${search}*`,
         };
-        const result = await client.fetch(query, queryParams);
+        const result = await client.fetch(searchQuery, queryParams);
+        const totalCount = await client.fetch(countQuery, queryParams);
 
         return NextResponse.json({ 
+            totalCount,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / limit),
             result 
         });
     } catch(error) {

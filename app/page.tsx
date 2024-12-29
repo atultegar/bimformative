@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <div className="mx-auto">
       <Hero />
-      <AboutSection />
       <SectionTwo />
+      <AboutSection />      
       <ResourceHighlights />
       <LatestBlogs />
       <NewsletterSignup />
