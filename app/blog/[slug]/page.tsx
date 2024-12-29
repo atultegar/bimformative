@@ -9,6 +9,7 @@ import DateComponent from "@/app/components/Date";
 import Link from "next/link";
 import CodeBlock from "@/app/components/CodeBlock";
 import { Metadata } from "next";
+import SocialShare from "@/app/components/SocialShare";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -87,7 +88,7 @@ export default async function BlogArticle({params}: BlogArticleProps) {
     const { slug } = await params;
     const data: fullBlog = await getData(slug);    
     return (
-        <div className="mt-8 max-w-7xl w-full px-4 md:px-8 mx-auto">
+        <div className="mt-8 max-w-3xl w-full px-4 md:px-8 mx-auto">
             <div className="max-w-4xl mx-auto flex justify-between items-center mb-5">
                 <div className="text-gray-400">
                     <DateComponent dateString={data.date} />
@@ -127,6 +128,7 @@ export default async function BlogArticle({params}: BlogArticleProps) {
                     style={{objectPosition: "center"}}
                     />
             </div>
+            <SocialShare url={data.currentSlug} title={data.title} />
             {/* <div className="mt-5 max-w-4xl mx-auto flex flex-wrap gap-2">
                 {data.tags.map((tagItem, index) => (
                     <Badge

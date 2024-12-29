@@ -43,7 +43,8 @@ const DialogDetails: React.FC<DialogDetailsProps> = ({ script }) => {
                             </ul>
                         ) : (
                             <p className="text-gray-500">No external packages listed.</p>
-                        )}                                             
+                        )}
+                        <hr className="mt-5"/>
                     </div>                    
                 </DialogDescription>
             </DialogHeader>
