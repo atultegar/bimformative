@@ -11,6 +11,15 @@ import { useState } from "react";
 export function MobileMenu() {
     const location = usePathname();
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    const navigationItemsAll = [        
+        ...navigationItems.map((item) => item),
+        {
+            name: 'Contact Us',
+            href: '/contact'            
+        },
+    ];
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -20,7 +29,7 @@ export function MobileMenu() {
             </SheetTrigger>
             <SheetContent>
                 <div className="mt-5 flex px-2 space-y-1 flex-col">
-                {navigationItems.map((item, index) => (
+                {navigationItemsAll.map((item, index) => (
                     <div key={index} className="flex flex-col">
                         {item.submenu ? (
                             <div>
@@ -56,15 +65,14 @@ export function MobileMenu() {
                             "group flex items-center px-2 py-2 text-md font-semibold rounded-md"
                         )}>
                             {item.name}
-                        </Link>}
-                    
+                        </Link>}                    
                     </div>
                 ))}
                 </div>
-                <SheetFooter className="mt-5">
-                <SheetClose asChild>
-                    <Button type="submit">Close</Button>
-                </SheetClose>
+                <SheetFooter className="mt-5">                    
+                    <SheetClose asChild>
+                        <Button type="submit">Close</Button>
+                    </SheetClose>
                 </SheetFooter>
             </SheetContent>
         </Sheet>
