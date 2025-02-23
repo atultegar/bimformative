@@ -1,5 +1,4 @@
 import React from "react";
-import SVGCanvas from "../components/svg/SVGCanvas";
 import { client, urlFor } from "../lib/sanity";
 import { Node } from "../lib/interface";
 import SVGCanvasD3 from "../components/svg/SvgCanvasD3";
@@ -10,7 +9,7 @@ async function getData() {
     "code": scriptView.code
   }`;
 
-  const data = await client.fetch(query);
+  const data: scriptData[] = await client.fetch(query);
 
   return data;
 }
@@ -21,7 +20,7 @@ interface scriptData {
 }
 
 export default async function Canvas() {
-    const data: scriptData = await getData();
+    const data: scriptData[] = await getData();
     const code = JSON.parse(data[0].code);
 
     const nodes = code.Nodes;

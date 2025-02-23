@@ -14,7 +14,7 @@ interface SVGCanvasD3Props {
 }
 
 function rounded_rect(x: number, y:number, w:number, h:number, r:number, tl:boolean, tr:boolean, bl:boolean, br:boolean) {
-    var retval;
+    let retval;
     retval  = "M" + (x + r) + "," + y;
     retval += "h" + (w - 2*r);
     if (tr) { retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r; }
@@ -61,14 +61,16 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
                 const bbox = container.node()?.getBBox();
                 const padding = 20;
                 
-                const newViewBox = [
-                    bbox?.x - padding,
-                    bbox?.y - padding,
-                    bbox?.width + 2 * padding,
-                    bbox?.height + 2 * padding
-                ].join(" ");
+                if (bbox) {
+                    const newViewBox = [
+                        bbox.x - padding,
+                        bbox.y - padding,
+                        bbox.width + 2 * padding,
+                        bbox.height + 2 * padding
+                    ].join(" ");
+                    svg.transition().duration(750).attr("viewBox", newViewBox);
+                }
 
-                svg.transition().duration(750).attr("viewBox", newViewBox);
             }            
 
             // Export as PNG/JPG
@@ -233,25 +235,26 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
                         .text(output.Name);
                 }, []);
                 
-                node.InputValueWidth > 0 ? (
+                if (node.InputValueWidth > 0) {
                     nodeGroup.append("rect")
-                        .attr("x", node.X + node.Width - node.InputValueWidth -25)
+                        .attr("x", node.X + node.Width - node.InputValueWidth - 25)
                         .attr("y", node.Y + 45)
                         .attr("width", node.InputValueWidth)
                         .attr("height", 25)
                         .attr("fill", "rgba(60, 60, 60, 0.9)")
-                        .attr("stroke", "gray"),
+                        .attr("stroke", "gray");
                     nodeGroup.append("text")
-                        .attr("x", node.X + node.Width - node.InputValueWidth -20)
+                        .attr("x", node.X + node.Width - node.InputValueWidth - 20)
                         .attr("y", node.Y + 45 + 12.5)
                         .attr("font-size", 12)
                         .attr("dominant-baseline", "middle")
                         .attr("fill", "white")
-                        .text(node.InputValue),
-                ): null;
+                        .text(node.InputValue);
+                }
             });
 
             nodeGroup.raise();
+            zoomToFit();
         }
     }, [connectors, nodes]);
 

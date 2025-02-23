@@ -7,7 +7,6 @@ import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import dynamoImage from "@/public/dynamo.png";
 import { handleDownload } from "@/app/api/handleDownload";
 import { urlFor } from "../lib/sanity";
-import SVGCanvas from "./svg/SVGCanvas";
 import SVGCanvasD3 from "./svg/SvgCanvasD3";
 
 interface DialogDetailsProps {
