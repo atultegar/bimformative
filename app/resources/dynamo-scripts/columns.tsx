@@ -24,7 +24,8 @@ export type DynamoScript = {
     fileUrl: string
     description: string
     youtubelink: string
-    image: string  
+    image: string
+    code: string
 }
 
 export const columns: ColumnDef<DynamoScript>[] = [

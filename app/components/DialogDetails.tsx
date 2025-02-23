@@ -7,6 +7,8 @@ import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import dynamoImage from "@/public/dynamo.png";
 import { handleDownload } from "@/app/api/handleDownload";
 import { urlFor } from "../lib/sanity";
+import SVGCanvas from "./svg/SVGCanvas";
+import SVGCanvasD3 from "./svg/SvgCanvasD3";
 
 interface DialogDetailsProps {
     script: {
@@ -16,12 +18,22 @@ interface DialogDetailsProps {
         youtubelink?: string;
         fileUrl: string;
         image: string;
+        code: string;
     };
 }
 
 const DialogDetails: React.FC<DialogDetailsProps> = ({ script }) => {
+    let nodes = [];
+    let connectors = [];
+    try {
+        const parsedCode = JSON.parse(script.code);
+        nodes = parsedCode.Nodes || [];
+        connectors = parsedCode.Connectors || [];
+    } catch (error) {
+        console.error(error);
+    }
     return (
-        <DialogContent>
+        <DialogContent className="sm:max-w-[1250px]">
             <DialogHeader>
                 <DialogTitle className="flex items-center">
                     <Image src={dynamoImage} alt="Dynamo" className="w-8 h-8" />
@@ -29,9 +41,14 @@ const DialogDetails: React.FC<DialogDetailsProps> = ({ script }) => {
                     
                 </DialogTitle>
                 <DialogDescription className="items-start">
-                    {/* <div>
-                        <Image src={script.image} alt="Dynamo" width={1500} height={1500} className="w-[1500px] bg-white" />
-                    </div> */}
+                    <div>
+                        {nodes.length > 0 && connectors.length > 0 ? (
+                            <SVGCanvasD3 nodes={nodes} connectors={connectors} canvasWidth={1200} canvasHeight={675} />
+                        ): (
+                            <p className="text-gray-500">No code snippet available.</p>
+                        )}
+                        
+                    </div>
                     {script.description}
                     <div className="mt-5">
                         <strong>External Packages:</strong>

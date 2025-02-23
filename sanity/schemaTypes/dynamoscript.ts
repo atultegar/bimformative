@@ -59,6 +59,11 @@ export const dynamoScriptType = defineType({
             name: 'youtubelink',
             title: 'YouTube Link',
             type: 'url',
+        }),
+        defineField({
+            name: 'scriptView',
+            title: 'Script View',
+            type: 'code',
         }),        
         defineField({
             name: 'tags',

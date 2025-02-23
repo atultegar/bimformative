@@ -191,7 +191,7 @@ function ResourcesContent() {
                 <p>{}</p>
             </div>
 
-            {/* Tab Blogs  */}
+            
             <Tabs defaultValue="blogs" className="w-full mt-10">
                 <TabsList>
                     <TabsTrigger value="blogs">Blogs ({counts.blogCount})</TabsTrigger>
@@ -201,6 +201,8 @@ function ResourcesContent() {
                     <TabsTrigger value="otherassets">Other Assets ({counts.otherAssetCount})</TabsTrigger>
                     <TabsTrigger value="docs">Documentations ({counts.docCount})</TabsTrigger>
                 </TabsList>
+
+                {/* Tab Blogs  */}
                 <TabsContent value="blogs">
                     <div className="mt-0 mb-16 p-5 grid grid-cols-1 gap-y-20 md:grid-cols-3 md:gap-x-16 md:gap-y-20 lg:gap-x-10 content-center bg-muted rounded-md">
                         {blogData.map((post, idx) => (

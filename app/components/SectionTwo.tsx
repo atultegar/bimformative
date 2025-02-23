@@ -18,6 +18,7 @@ import bim360 from "@/public/bim-icons/bim360.png";
 import python from "@/public/bim-icons/pythonLogo.png";
 import csharp from "@/public/bim-icons/csharpLogo2023.png";
 import vb from "@/public/bim-icons/vb.png";
+import blender from "@/public/bim-icons/blender.png";
 
 import githubIcon from "@/public/social-media/github.svg";
 import youtubeIcon from "@/public/social-media/youtube-dark.svg";
@@ -35,6 +36,7 @@ const icons = [
     inventor,
     navisworks,
     bim360,
+    blender,
     python,
     csharp,
     vb,

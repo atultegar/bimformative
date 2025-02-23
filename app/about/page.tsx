@@ -5,6 +5,7 @@ import NewsletterSignup from "../components/NewsletterSignup";
 import { PageBanner } from "../components/PageBanner";
 import Mission from "@/public/mission.png";
 import AboutCover from "@/public/about-cover.png";
+import MeetTheDeveloper from "../components/MeetTheDeveloper";
 
 export const metadata: Metadata = {
     title: "About"
@@ -15,6 +16,10 @@ export default function AboutPage() {
         <div className="max-w-7xl w-full px-4 md:px-8 mx-auto" >
             <PageBanner imageSrc={AboutCover} title="Welcome to BIMformative"  
                 description="Your trusted resource for insights, documentation, and technical guidance on Building Information Modeling (BIM) for Infrastructure."/>
+            <div className="mt-5">
+                <MeetTheDeveloper />
+            </div>
+            
             
             <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gray-100 dark:bg-black rounded-xl lg:h-[400px] items-center">
                 <Image src={Mission} alt="Mission" className="justify-self-center lg:col-span-2 w-36 h-36 dark:invert"/>

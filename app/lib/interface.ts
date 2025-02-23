@@ -44,6 +44,7 @@ export interface dynamoscript {
     externalpackages: string[];
     pythonscripts: boolean;
     image: string;
+    code: string;
 }
 
 export interface otherassets {
@@ -85,6 +86,38 @@ export interface DocsCard {
     tags: string[];
     description: string;
     url: string;
+}
+
+export interface Node {
+    Id: string;
+    Name: string;
+    X: number;
+    Y: number;
+    Width: number;
+    Height: number;
+    Inputs: Array<InputOutput>;
+    Outputs: Array<InputOutput>;
+    InputValue: string;
+    InputValueWidth: number;
+}
+
+export interface InputOutput {
+    Id: string;
+    Name: string;
+    Type: string;
+    X: number;
+    Y: number;
+    Width: number;
+}
+
+export interface Connector {
+    Id: string;
+    StartId: string;
+    EndId: string;
+    StartX: number;
+    StartY: number;
+    EndX: number;
+    EndY: number;
 }
 
 // name,

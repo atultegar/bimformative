@@ -8,6 +8,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BackgroundCircles } from "./design/Hero";
 
 
 export default function ContactForm() {
@@ -112,6 +113,7 @@ export default function ContactForm() {
                     </Button>
                 </div>
             </form>
+            <BackgroundCircles />
         </div>
         
     );

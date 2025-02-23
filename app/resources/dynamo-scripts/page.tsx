@@ -32,6 +32,7 @@ async function getData() {
     externalpackages,
     pythonscripts,
     "image": image.asset->url,
+    "code": scriptView.code
   }`;
 
   const data = await client.fetch(query);
