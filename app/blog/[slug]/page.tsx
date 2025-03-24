@@ -59,7 +59,7 @@ const serializers = {
         },
         code: ({ value }: {value: {code: string; language: string}}) => {
             return (
-                <CodeBlock code={value.code} language={value.language} />       
+                <CodeBlock title="code" code={value.code} language={value.language} />       
             );
         },
     },
