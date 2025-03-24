@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function Footer() {
     return (
-        <footer className="relative w-full mb-2 mt-5 bg-gray-100 dark:bg-black">
+        <footer className="relative w-full mb-2 mt-0 bg-gray-100 dark:bg-black">
             <div className="w-full px-8 mx-auto max-w-7xl py-5">
                 <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2 border-t border-gray-300 dark:border-stone-600">
                     <h5 className="mb-2 text-xl font-semibold text-primary py-2 flex flex-wrap gap-2">

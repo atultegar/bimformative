@@ -32,7 +32,7 @@ async function getData(onlyFeatured: boolean = false) {
     titleImage,
     date,
     featured,
-    "author": author->{"name": coalesce(name, "Anonymous"), picture},
+    "author": author->{"name": coalesce(givenName+" "+familyName, "Anonymous"), pictureurl},
     "tags": coalesce(tags, ["Untagged"]),
   }`;
 
@@ -50,7 +50,7 @@ async function getBlogs(tagName?: string, onlyFeatured: boolean = false) {
     titleImage,
     date,
     featured,
-    "author": author->{"name": coalesce(name, "Anonymous"), picture},
+    "author": author->{"name": coalesce(name, "Anonymous"), pictureurl},
     "tags": coalesce(tags[]->name, ["Untagged"]),}`
     : `*[_type == 'blog' ${onlyFeatured ? "&& featured == true": ""}] | order(_createdAt desc) {
     title,
@@ -59,7 +59,7 @@ async function getBlogs(tagName?: string, onlyFeatured: boolean = false) {
     titleImage,
     date,
     featured,
-    "author": author->{"name": coalesce(name, "Anonymous"), picture},
+    "author": author->{"name": coalesce(givenName+" "+familyName, "Anonymous"), picture},
     "tags": coalesce(tags[]->name, ["Untagged"]),}`;
 
     const blogs = await client.fetch(query);
@@ -124,11 +124,11 @@ export default async function BlogPage() {
                                 </Button>
                             </div>
                             <Link href={`/blog/${featuredPost.currentSlug}`}>
-                                <div className="md:col-start-2 col-start-1 mt-10 md:mt-0 d-block w-full h-[200px] md:h-[300px] border border-gray-300 dark:border-stone-900 drop-shadow-sm bg-white content-center">
+                                <div className="md:col-start-2 col-start-1 mt-10 md:mt-0 block w-full h-[200px] md:h-[300px] border border-gray-300 dark:border-stone-900 drop-shadow-sm bg-white content-center">
                                     <Image src= {urlFor(featuredPost.titleImage).url()}
                                     alt="image"
                                     fill={true}
-                                    className="mx-auto w-auto h-auto object-contain hover:opacity-50"/>
+                                    className="mx-auto w-auto h-auto object-cover transition-transform hover:scale-105"/>
                                 </div>
                             </Link>
                         </CardContent>

@@ -9,6 +9,8 @@ import NotificationBar from "./components/NotificationBar";
 import { ToastProvider } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AuthProvider } from "./components/AuthProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});
@@ -39,6 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <ClerkProvider>
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
@@ -56,5 +59,6 @@ export default function RootLayout({
         </ThemeProvider>        
       </body>
     </html>
+    </ClerkProvider>
   );
 }

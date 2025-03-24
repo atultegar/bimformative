@@ -30,8 +30,8 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, X } from "lucid
 import { SiAutodeskrevit, SiAutocad } from "react-icons/si";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
 export const types = [
@@ -45,7 +45,6 @@ export const types = [
         label: "Civil 3D",
         icon: SiAutocad,
     },
-
 ]
 
 export function DataTable<TData, TValue>({
@@ -54,19 +53,20 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    
+    const pageSize = 10; // or any default page size
 
     const table = useReactTable({
-        data,
         columns,
+        data,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        autoResetPageIndex: false,
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
+        getFacetedUniqueValues: getFacetedUniqueValues(),        
         state: {
             sorting,
             columnFilters,

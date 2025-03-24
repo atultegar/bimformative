@@ -4,7 +4,8 @@ import React, {useEffect, useRef, useState} from "react";
 import * as d3 from "d3";
 import { Node, InputOutput, Connector } from "@/app/lib/interface";
 import { Button } from "@/components/ui/button";
-import { ScanSearch, Save } from "lucide-react";
+import { ScanSearch, Save, Fullscreen } from "lucide-react";
+import { set } from "zod";
 
 interface SVGCanvasD3Props {
     nodes: Array<Node>;
@@ -35,6 +36,7 @@ function rounded_rect(x: number, y:number, w:number, h:number, r:number, tl:bool
 const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidth, canvasHeight }) => {
     const svgRef = useRef<SVGSVGElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     useEffect(() => {
         if (svgRef.current) {
@@ -48,7 +50,7 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
 
             // Zoom and Pan setup
             const zoom = d3.zoom<SVGSVGElement, unknown>()
-                .scaleExtent([0.1, 5])
+                .scaleExtent([0.1, 10])
                 .on("zoom", (event) => {
                     nodeGroup.attr("transform", event.transform);
                     connectorGroup.attr("transform", event.transform);
@@ -71,7 +73,7 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
                     svg.transition().duration(750).attr("viewBox", newViewBox);
                 }
 
-            }            
+            }
 
             // Export as PNG/JPG
             const exportImage = (format: "png" | "jpg") => {
@@ -115,7 +117,7 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
 
                 img.onload = () => {
                     canvas.width = svgElement.clientWidth;
-                    canvas.height = svgElement.clientHeight;
+                    canvas.height = svgElement.clientHeight;                    
                     ctx?.clearRect(0, 0, canvas.width, canvas.height);
                     ctx?.drawImage(img, 0, 0);
                     URL.revokeObjectURL(url);
@@ -258,26 +260,41 @@ const SVGCanvasD3: React.FC<SVGCanvasD3Props> = ({ nodes, connectors, canvasWidt
         }
     }, [connectors, nodes]);
 
+    function toggleFullScreen(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+        if (!document.fullscreenElement) {
+            if (wrapperRef.current?.requestFullscreen) {
+                wrapperRef.current.requestFullscreen();
+            }
+            setIsFullScreen(true);
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+            setIsFullScreen(false);
+        }
+    }
+
     return (
         <div ref={wrapperRef} className="relative w-full" >
             {/* Toolbar */ }            
-            <div className="absolute bg-gray-300 dark:bg-stone-900 p-2 z-10 flex justify-end border-gray-500 border-2">
+            <div className="absolute top-0 right-0 bg-gray-300 dark:bg-stone-900 p-2 z-10 flex justify-end border-gray-950 border-1">
                 <Button variant="ghost" onClick={() => (window as any).zoomToFit()} className="mr-4">
                     <ScanSearch/>Zoom to Fit
                 </Button>
                 <Button variant="ghost" onClick={() => (window as any).exportImage("png")} className="mr-4">
-                    <Save/>Save as PNG
+                    <Save/>Save as Image
                 </Button>
-                <Button variant="ghost" onClick={() => (window as any).exportImage("jpg")}>
-                    <Save/>Save as JPG
-                </Button>
+                <Button variant="ghost" onClick={toggleFullScreen} className="mr-4">
+                    {isFullScreen ? <Fullscreen/> :<Fullscreen />}
+                    {isFullScreen ? "Exit Fullscreen" : "Full Screen" }
+                </Button>                
             </div>
             <svg 
             ref={svgRef} 
-            width={canvasWidth} 
-            height={canvasHeight}
+            width={isFullScreen ? "100%": canvasWidth} 
+            height={isFullScreen? "100%": canvasHeight}
             style={{ 
-                border: "2px solid gray", 
+                border: "1px solid gray", 
                 backgroundColor: '#f9f9f9',
                 backgroundImage: "linear-gradient(120deg, #f3e7e9 0%, #e3eeff 100%)",
                 cursor: "grab"}} />

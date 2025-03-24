@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
-import dynamoImage from "@/public/dynamo.png";
-import { handleDownload } from "@/app/api/handleDownload";
-import { urlFor } from "../lib/sanity";
+import { handleDownload } from "@/app/actions/clientActions";
+import { useRouter } from "next/navigation";
+
+
 
 
 interface DialogDetailsProps {
@@ -28,6 +29,7 @@ const DialogAssetDetails: React.FC<DialogDetailsProps> = ({ otherasset }) => {
         excelsheet: 'Excel Sheet',
         lisp: 'Lisp',
     };
+    const router = useRouter();
     return (
         <DialogContent>
             <DialogHeader>

@@ -8,10 +8,26 @@ export const authorType = defineType({
     type: "document",
     fields: [
         defineField({
-            name: "name",
-            title: "Name",
+            name: "id",
+            title: "Id",
             type: "string",
             validation: (rule) => rule.required(),
+        }),
+        defineField({
+            name: "givenName",
+            title: "Given Name",
+            type: "string",
+            validation: (rule) => rule.required(),
+        }),
+        defineField({
+            name: "familyName",
+            title: "Family Name",
+            type: "string",
+        }),
+        defineField({
+            name: "email",
+            title: "Email",
+            type: "string",
         }),
         defineField({
             name: "picture",
@@ -32,8 +48,23 @@ export const authorType = defineType({
                         });
                     },
                 },
-            ],            
-            validation: (rule) => rule.required(),
+            ],
+        }),
+        defineField({
+            name: "pictureurl",
+            title: "Picture Url",
+            type: "string",
         }),
     ],
+    preview: {
+                select: {
+                    firstName: "givenName",
+                    lastName: "familyName"
+                },
+                prepare({ firstName, lastName }) {
+                    const title = `${firstName} ${lastName}`;
+                    
+                    return { title };
+                },
+            },
 });

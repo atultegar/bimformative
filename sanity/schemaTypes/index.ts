@@ -12,6 +12,7 @@ import { videoTutorial } from "./videoTutorial";
 import { otherAssets } from "./otherassets";
 import { contactmessage } from "./contactmessage";
 import { roadmapItems } from "./roadmapItems";
+import { commentsType } from "./comments";
 
 export const schemaTypes = [
     projectsType, 
@@ -27,5 +28,6 @@ export const schemaTypes = [
     videoTutorial, 
     otherAssets, 
     contactmessage,
-    roadmapItems
+    roadmapItems,
+    commentsType,
 ];

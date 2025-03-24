@@ -3,11 +3,13 @@ import { YouTubePreview } from "./youTubeType/YouTubePreview";
 import YouTubePlayer from "react-player/youtube";
 import {youtubeInput} from 'sanity-plugin-youtube-input';
 import { youTube } from "./youTubeType";
+import { VideoIcon } from "@sanity/icons";
 
 export const videoTutorial = defineType({
     name: 'videoTutorial',
     title: 'Video Tutorial',
     type: 'document',
+    icon: VideoIcon,
     fields: [
         defineField({
             name: 'name',

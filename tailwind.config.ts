@@ -60,9 +60,14 @@ const config: Config = {
 			["infinite-slider"]: "infiniteSlider 50s linear infinite",
 			"marquee-horizontal": "marquee-x var(--duration) infinite linear",
         	"marquee-vertical": "marquee-y var(--duration) linear infinite",
+			"caret-blink": "caret-blink 1.25s ease-out infinite",
 		},
 		keyframes: {
-			infiniteSlider: {
+			"caret-blink": {
+				"0%, 70%, 100%": { opacity: "1" },
+				"20%, 50%": { opacity: "0" },
+			},
+			"infiniteSlider": {
 				"0%": { transform: "translateX(0)" },
 				"100%": { 
 					transform: "translateX(calc(-250px * 5))",
@@ -84,7 +89,5 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate"), require('@tailwindcss/aspect-ratio'), require('@tailwindcss/typography'),],
 };
-
-
 
 export default config;

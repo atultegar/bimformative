@@ -43,11 +43,11 @@ export default async function PythonPage() {
                                     </h3>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent className="max-w-5xl">
+                            <DialogContent className="max-w-5xl bg-transparent border-none">
                                 <DialogHeader>
-                                    <DialogTitle>{item.title}</DialogTitle>
+                                    <DialogTitle></DialogTitle>
                                     <DialogDescription className="mt-2">
-                                        <CodeBlock language={item.codeField.language} code={item.codeField.code} />
+                                        <CodeBlock language={item.codeField.language} code={item.codeField.code} title={item.title} />
                                     </DialogDescription>                                    
                                 </DialogHeader>
                             </DialogContent>

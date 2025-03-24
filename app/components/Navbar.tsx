@@ -11,6 +11,12 @@ import { Charm } from "next/font/google";
 import Image from "next/image";
 import logoLight from "../../public/logo-light-2.png"
 import logoDark from "../../public/logo-dark-2.png"
+import { LoginLink, LogoutLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { Button } from "@/components/ui/button";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
+import UserMenu from "./UserMenu";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 
@@ -60,6 +66,9 @@ export function Navbar() {
         return () => window.removeEventListener('scroll', scrollHandler);
     }, [top]);
     const pathname = usePathname();
+    const {user, getUser} = useKindeBrowserClient();
+    const alsoUser = getUser();
+
     return (
     <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-violet-50 dark:bg-zinc-900`} w-full shadow-sm shadow-gray-300 dark:shadow-stone-900`}>
         <div className="max-w-full grid grid-cols-12 mx-auto px-4 md:px-8 py-2">
@@ -115,8 +124,8 @@ export function Navbar() {
                 </NavigationMenu>
             </div>
 
-            <div className="flex items-center justify-end md:col-span-3 col-span-6">
-                <a href="/contact" className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-primary text-primary hidden sm:block">
+            <div className="flex items-center justify-end md:col-span-3 col-span-6 gap-2">                
+                <a href="/contact" className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-1 font-medium border-primary text-primary hidden sm:block">
                     <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-primary top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
                     <span className="relative text-primary transition duration-300 group-hover:text-white ease">Contact Us</span>
                 </a>
@@ -124,6 +133,14 @@ export function Navbar() {
                 <div className="sm:hidden">
                     <MobileMenu />
                 </div>              
+                <SignedOut>
+                    <Button variant={"ghost"} asChild>
+                        <SignInButton mode="modal" />
+                    </Button>
+                </SignedOut>
+                <SignedIn>
+                    <UserMenu />
+                </SignedIn>
             </div>
         </div>        
         

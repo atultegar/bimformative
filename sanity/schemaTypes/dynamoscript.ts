@@ -1,22 +1,17 @@
 import { defineField, defineType } from "sanity";
 import { dynamosoftwares } from "./dynamosoftwares";
+import { CodeBlockIcon } from "@sanity/icons";
 
 export const dynamoScriptType = defineType({
     name: 'dynamoscript',
     title: 'Dynamo Script',
     type: 'document',
+    icon: CodeBlockIcon,
     fields: [
         defineField({
             name: 'scriptfile',
             title: 'Script File',
             type: 'file',
-            fields: [
-                {
-                    name: 'description',
-                    type: 'string',
-                    title: 'Description'
-                }
-            ]
         }),
         defineField({
             name: 'title',
@@ -40,6 +35,17 @@ export const dynamoScriptType = defineType({
             to: {type: "dynamosoftwares"}
         }),
         defineField({
+            name: 'author',
+            title: 'Author',
+            type: 'reference',
+            to: {type: "author"}
+        }),
+        defineField({
+            name: 'dynamoversion',
+            title: 'Dynamo Version',
+            type: 'string',
+        }),
+        defineField({
             name: 'dynamoplayer',
             title: 'Dynamo Player Ready',
             type: 'boolean',
@@ -57,8 +63,21 @@ export const dynamoScriptType = defineType({
         }),
         defineField({
             name: 'youtubelink',
-            title: 'YouTube Link',
+            title: 'Demo Video Link',
             type: 'url',
+        }),
+        defineField({
+            name: 'downloads',
+            title: 'Downloads Count',
+            type: 'number',
+            initialValue: 0,
+            validation: rule => rule.integer()
+        }),
+        defineField({
+            name: 'likes',
+            title: 'Likes',
+            type: 'array',
+            of: [{type: 'string'}],
         }),
         defineField({
             name: 'scriptView',
@@ -70,6 +89,12 @@ export const dynamoScriptType = defineType({
             title: 'Tags',
             type: 'array',
             of: [{type: 'string'}],
+        }),
+        defineField({
+            name: 'comments',
+            title: 'Comments',
+            type: 'array',
+            of: [{type: 'reference', to: {type:'comment'}}],
         }),
     ]
 })

@@ -29,10 +29,11 @@ export interface fullBlog {
 
 export interface Author {
     name: string;
-    picture: any;
+    pictureurl: string;
 }
 
 export interface dynamoscript {
+    _id: string;
     scriptfile: File;
     title: string;
     description: string;
@@ -45,6 +46,20 @@ export interface dynamoscript {
     pythonscripts: boolean;
     image: string;
     code: string;
+    author: string;
+    authorPicture: string;
+    downloads: number;
+    likes: string[];
+    dynamoversion: string;
+    comments: comment[];
+}
+
+export interface comment {
+    userid: string;
+    username: string;
+    userpicture: string;    
+    text: string;
+    timestamp: string;   
 }
 
 export interface otherassets {
@@ -120,7 +135,18 @@ export interface Connector {
     EndY: number;
 }
 
-// name,
-//         slug,
-//         _id,
-//         "postCount": count(*[_type == "blog" && references("tags", ^._id)])
+export interface User {
+    Id: string;
+    Email: string;
+    LastName: string;
+    FirstName: string;
+    Picture: string;
+}
+
+export interface DbUser{
+    id: string;
+    givenName: string;
+    familyName: string;
+    email: string;
+    pictureurl: string;
+}
