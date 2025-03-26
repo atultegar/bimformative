@@ -1,8 +1,9 @@
+import exp from "constants";
 import type { NextConfig } from "next";
 
 const {withNextVideo} = require('next-video/process')
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig = {  
    
   /* config options here */
   images: {
@@ -29,6 +30,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
+  },  
 };
 
 export default withNextVideo(nextConfig);

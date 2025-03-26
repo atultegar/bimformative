@@ -59,7 +59,8 @@ export interface comment {
     username: string;
     userpicture: string;    
     text: string;
-    timestamp: string;   
+    timestamp: string;
+    id: string;
 }
 
 export interface otherassets {

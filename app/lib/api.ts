@@ -25,11 +25,12 @@ export async function getAllDynamoScripts() {
         likes,
         dynamoversion,
         "comments": comments[]-> {
-          "userid": user->_id,
+          "userid": user->id,
           "username": coalesce(user->givenName) + " " +coalesce(user->familyName),
           "userpicture": user->pictureurl,
           text,
           timestamp,
+          "id": _id,
           },
       }`;
     
@@ -59,11 +60,12 @@ export async function getDynScriptsByUser(userId: string){
         likes,
         dynamoversion,
         "comments": comments[]-> {
-          "userid": user->_id,
+          "userid": user->id,
           "username": coalesce(user->givenName) + " " +coalesce(user->familyName),
           "userpicture": user->pictureurl,
           text,
-          timestamp,
+          timestamp,          
+          "id": _id,
           },
        }`;
   

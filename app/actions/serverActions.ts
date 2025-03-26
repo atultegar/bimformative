@@ -236,10 +236,29 @@ export async function addComment(scriptId: string, text: string) {
         username: userName,
         userpicture: userPic,
         text: newCommentDoc.text, 
-        timestamp: newCommentDoc.timestamp, } 
+        timestamp: newCommentDoc.timestamp,
+        id: newComment._id,} 
     console.log(newCommentLocal);
 
     await client.patch(scriptId).setIfMissing({ comments: [] }).append("comments", [{_ref: newComment._id}]).commit({autoGenerateArrayKeys: true});
 
     return newCommentLocal;
+}
+
+export async function deleteComment(scriptId: string, commentId: string) {
+    
+    const query = `*[_type == "dynamoscript" && _id == "${scriptId}"][0] {
+        comments,
+        }`;
+
+    const data = await client.fetch(query);
+    const comment = data.comments.filter((comment: any) => comment._ref == commentId)[0];
+    const commentToRemove = [`comments[_key=="${comment._key}"]`];
+
+    await client.patch(scriptId).unset(commentToRemove).commit();
+    await client.delete(commentId);
+
+    console.log("Comment removed: ", comment._key);
+
+    return comment;
 }

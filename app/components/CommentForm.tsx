@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useTransition } from "react";
-import { addComment } from "../actions/serverActions";
+import { addComment, deleteComment } from "../actions/serverActions";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { comment } from "../lib/interface";
@@ -37,6 +37,18 @@ export default function CommentForm( {script} : {script: any}) {
         }        
     };
 
+    const handleDelete = async (comment: any) => {
+        startTransition(async () => {
+            // Delete comment
+            const removedComment = await deleteComment(script._id, comment.id);
+            if (removedComment) {
+                setComments(comments.filter((c) => c.id !== comment.id));
+            } else {
+                console.error("Unable to delete comment");
+            }
+        });
+    }
+
     return (
         <>
             <strong className="w-[250px]">Comments ({comments?.length || 0}):</strong>
@@ -63,7 +75,7 @@ export default function CommentForm( {script} : {script: any}) {
                             </div>
                             <div>
                                 {comment.userid === user?.id ? (
-                                    <MessageSquareX color="red" className="hover:opacity-50 hover:cursor-pointer" />
+                                    <MessageSquareX color="red" className="hover:opacity-50 hover:cursor-pointer" onClick={() => handleDelete(comment)} />
                                 ) : null}
                             </div>
                         </div>

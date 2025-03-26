@@ -29,6 +29,7 @@ export default async function Dashboard(): Promise<JSX.Element>{
     const user = await currentUser();
     const userId = user?.id;
     const userImage = user?.imageUrl;
+    console.log("User ID", userId);
     
     const data = userId ? await getDynScriptsByUser(userId) : [];
 
