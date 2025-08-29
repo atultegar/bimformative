@@ -28,6 +28,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         port: "",
       },
+      {
+        hostname: "images.clerk.dev",
+        protocol: "https",
+        port: "",
+      },
     ],
   },
   experimental: {

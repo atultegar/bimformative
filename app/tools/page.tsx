@@ -31,7 +31,7 @@ export default async function ProjectsPage() {
     const data: ProjectsCard[] = await getData();
     return (
         <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px]">
-            <PageBanner title="Projects" description="Check out what projects I have created" />            
+            <PageBanner title="Tools" description="Check out the tools I have created" />           
             <div className="mt-10 mb-16">
                 {data.map((item, idx) => (
                     <div key={idx}>

@@ -10,6 +10,7 @@ import Link from "next/link";
 import CodeBlock from "@/app/components/CodeBlock";
 import { Metadata } from "next";
 import SocialShare from "@/app/components/SocialShare";
+import { getBlogData } from "@/app/lib/api";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -20,7 +21,7 @@ interface BlogArticleProps {
 
 export async function generateMetadata({params}: BlogArticleProps): Promise<Metadata> {
     const { slug } = await params;
-    const data: fullBlog = await getData(slug);
+    const data: fullBlog = await getBlogData(slug);
     return {
         title: data.title,
         description: data.smallDescription,
@@ -32,23 +33,6 @@ export async function generateMetadata({params}: BlogArticleProps): Promise<Meta
             ]
         }
     }
-}
-
-async function getData(slug: string){
-    const query = `
-        *[_type == "blog" && slug.current=='${slug}'] {
-        "currentSlug": slug.current,
-            title,
-            content,
-            titleImage,
-            date,
-            "tags": coalesce(tags, ["untagged"]),
-            smallDescription,
-        }[0]`;
-
-    const data = await client.fetch(query)
-
-    return data;
 }
 
 const serializers = {
@@ -86,7 +70,7 @@ export async function generateStaticParams() {
 
 export default async function BlogArticle({params}: BlogArticleProps) {    
     const { slug } = await params;
-    const data: fullBlog = await getData(slug);    
+    const data: fullBlog = await getBlogData(slug);    
     return (
         <div className="mt-8 max-w-3xl w-full px-4 md:px-8 mx-auto">
             <div className="max-w-4xl mx-auto flex justify-between items-center mb-5">

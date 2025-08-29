@@ -34,6 +34,8 @@ export interface Author {
 
 export interface dynamoscript {
     _id: string;
+    _createdAt: string;
+    _updatedAt: string;
     scriptfile: File;
     title: string;
     description: string;

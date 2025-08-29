@@ -47,8 +47,8 @@ export const navigationItems = [
         ]
     },
     {
-        name: 'Projects',
-        href: '/projects'
+        name: 'Tools',
+        href: '/tools'
     },
     {
         name: 'About',

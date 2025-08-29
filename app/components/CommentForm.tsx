@@ -50,7 +50,7 @@ export default function CommentForm( {script} : {script: any}) {
     }
 
     return (
-        <>
+        <div className="flex-col items-center justify-self-center">
             <strong className="w-[250px]">Comments ({comments?.length || 0}):</strong>
             <div className="flex items-start gap-5 max-w-3xl mt-5">
                 <Textarea placeholder="Type your comments here." value={text} onChange={(e) => setText(e.target.value)} />
@@ -87,7 +87,7 @@ export default function CommentForm( {script} : {script: any}) {
                 ))}
             </div>            
 
-        </>
+        </div>
         
     )
 
