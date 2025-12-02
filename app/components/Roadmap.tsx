@@ -7,8 +7,14 @@ import { use, useEffect, useState } from "react";
 import { set } from "zod";
 import ProgressBar from "./ProgressBar";
 
+
 async function fetchRoadmapItems() {
-    const res = await fetch("/api/roadmap");
+    const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
+    const res = await fetch("/api/roadmap", {
+        headers: {
+            "x-api-key": API_KEY
+        },
+    });
     const data = await res.json();
     console.log(data);
     return data;

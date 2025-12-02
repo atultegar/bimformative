@@ -1,3 +1,5 @@
+import { Any } from "next-sanity";
+
 export interface ProjectsCard {
     title: string;
     _id: string;
@@ -152,4 +154,26 @@ export interface DbUser{
     familyName: string;
     email: string;
     pictureurl: string;
+}
+
+export interface PythonNode {
+    nodeId: string;
+    code: string;
+}
+
+export interface UploadScript {
+    userId: string;
+    title: string;
+    slug: string;
+    description?: string | null;
+    script_type?: string;
+    tags?: string[] | string;
+    changelog?: string;
+    dynFile: File | Blob | Buffer;
+    jsonContent?: any;
+    scriptView?: string;
+    dynamoVersion?: string;
+    isPlayerReady?: boolean;
+    externalPackages?: string[];
+    pythonNodes?: PythonNode[];
 }

@@ -1,7 +1,12 @@
 import { Webhook} from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { client } from "@/app/lib/sanity";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: Request) {
     const SIGNING_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -46,18 +51,15 @@ export async function POST(req: Request) {
     const eventType = evt.type;
     
     if (evt.type === "user.created") {
-        const { id, email_addresses, first_name, last_name, image_url } = evt.data;
-        const userData = {
-            _type: "author",
-            _id: id,
-            id: id,
-            givenName: first_name,
-            familyName: last_name,
-            email: email_addresses[0].email_address,
-            pictureurl: image_url,
-        };
-        const author = await client.createOrReplace(userData);
-        console.log(`New author creates: ${author}`);
+        const { id, email_addresses, image_url, username } = evt.data;
+        
+        // Insert or update profile
+        await supabase.from("profiles").upsert({
+            id,
+            email: email_addresses?.[0]?.email_address,
+            username,
+            avatar_url: image_url,
+        });
     }
 
     return new Response("Webhook received", { status: 200 });

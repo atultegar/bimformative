@@ -23,10 +23,10 @@ import { UserProfile } from "@clerk/nextjs";
 import Link from "next/link";
 import UploadScript from "../components/UploadScript";
 
-export default async function Dashboard(): Promise<JSX.Element>{
-    const { getUser: getKindeUser } = getKindeServerSession();
-    const {isAuthenticated, getPermission} = getKindeServerSession();
-    const user = await currentUser();
+export default async function Dashboard(): Promise<JSX.Element>{    
+    const user = process.env.NODE_ENV === "development"
+        ? { id: "user_admin", imageUrl: "", fullName: "Admin", primaryEmailAddress: {emailAddress: "admin@bimformative.com"}} // mock user in dev
+        : await currentUser();
     const userId = user?.id;
     const userImage = user?.imageUrl;
     console.log("User ID", userId);

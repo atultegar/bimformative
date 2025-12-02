@@ -70,82 +70,83 @@ export function Navbar() {
     const alsoUser = getUser();
 
     return (
-    <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-violet-50 dark:bg-zinc-900`} w-full shadow-sm shadow-gray-300 dark:shadow-stone-900`}>
-        <div className="max-w-full grid grid-cols-12 mx-auto px-4 md:px-8 py-2">
-            <div className="col-span-6 flex md:col-span-3">
-                <Link href="/">                
-                    {/* <h1 className="text-4xl font-bold text-blue-950 dark:text-white">
-                        BIM<span className={`text-blue-400 font-bold italic text-3xl ${charm.className}`}>formative</span>
-                    </h1> */}
-                    {/* Light mode logo */}
-                    <Image src={logoLight} width={250} height={80} alt="logo" className="block dark:hidden"/>
-                    {/* Dark mode logo */}
-                    <Image src={logoDark} width={250} height={80} alt="logo" className="hidden dark:block"/>
-                </Link>
-            </div>
-                <div className="hidden sm:flex justify-center items-center col-span-6">
-                <NavigationMenu>
-                    <NavigationMenuList>
-                        {navigationItems.map((item,index) => (
-                            <NavigationMenuItem key={index}>                            
-                                {item.submenu ? (
-                                    <div>
-                                        <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
-                                        <NavigationMenuContent>
-                                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                                                {item.submenu.map((subItem, subIndex) => (
-                                                    <ListItem
-                                                    key={subIndex}
-                                                    title={subItem.name}
-                                                    href={subItem.href}>
-                                                        {subItem.description}
-                                                    </ListItem>
-                                                ))}
-                                            </ul>
-                                        </NavigationMenuContent>
-                                    </div>
-                                    // <div>
-                                    //     {item.submenu.map((subItem, subIndex) => (
-                                    //         <Link href={subItem.href} key={subIndex} legacyBehavior passHref>
-                                    //             <a>{subItem.name}</a>
-                                    //         </Link>
-                                    //     ))}
-                                    // </div>
-                                ) : <Link href={item.href} legacyBehavior passHref>
+        <nav className= {`sticky top-0 left-0 z-20 ${!top && `bg-violet-50 dark:bg-zinc-900`} w-full shadow-sm shadow-gray-300 dark:shadow-stone-900`}>
+            <div className="max-w-full grid grid-cols-12 mx-auto px-4 md:px-8 py-2">
+                <div className="col-span-6 flex md:col-span-3">
+                    <Link href="/">                
+                        {/* <h1 className="text-4xl font-bold text-blue-950 dark:text-white">
+                            BIM<span className={`text-blue-400 font-bold italic text-3xl ${charm.className}`}>formative</span>
+                        </h1> */}
+                        {/* Light mode logo */}
+                        <Image src={logoLight} width={250} height={80} alt="logo" className="block dark:hidden"/>
+                        {/* Dark mode logo */}
+                        <Image src={logoDark} width={250} height={80} alt="logo" className="hidden dark:block"/>
+                    </Link>
+                </div>
+                    <div className="hidden sm:flex justify-center items-center col-span-6">
+                    <NavigationMenu>
+                        <NavigationMenuList>
+                            {navigationItems.map((item,index) => (
+                                <NavigationMenuItem key={index}>                            
+                                    {item.submenu ? (
+                                        (<div>
+                                            <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
+                                            <NavigationMenuContent>
+                                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                                    {item.submenu.map((subItem, subIndex) => (
+                                                        <ListItem
+                                                        key={subIndex}
+                                                        title={subItem.name}
+                                                        href={subItem.href}>
+                                                            {subItem.description}
+                                                        </ListItem>
+                                                    ))}
+                                                </ul>
+                                            </NavigationMenuContent>
+                                        </div>)
+                                        // <div>
+                                        //     {item.submenu.map((subItem, subIndex) => (
+                                        //         <Link href={subItem.href} key={subIndex} legacyBehavior passHref>
+                                        //             <a>{subItem.name}</a>
+                                        //         </Link>
+                                        //     ))}
+                                        // </div>
+                                    ) : <Link href={item.href}>
+                                        {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                                        }
                                         <NavigationMenuLink
                                             active={pathname == item.href}
                                             className={navigationMenuTriggerStyle()}>
                                                 {item.name}
                                         </NavigationMenuLink>
-                                </Link>}
-                            </NavigationMenuItem>
-                        ))}
-                    </NavigationMenuList>
-                </NavigationMenu>
-            </div>
+                                    </Link>}
+                                </NavigationMenuItem>
+                            ))}
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                </div>
 
-            <div className="flex items-center justify-end md:col-span-3 col-span-6 gap-2">                
-                <a href="/contact" className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-1 font-medium border-primary text-primary hidden sm:block">
-                    <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-primary top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-                    <span className="relative text-primary transition duration-300 group-hover:text-white ease">Contact Us</span>
-                </a>
-                <ModeToggle />
-                <div className="sm:hidden">
-                    <MobileMenu />
-                </div>              
-                <SignedOut>
-                    <Button variant={"ghost"} asChild>
-                        <SignInButton mode="modal" />
-                    </Button>
-                </SignedOut>
-                <SignedIn>
-                    <UserMenu />
-                </SignedIn>
+                <div className="flex items-center justify-end md:col-span-3 col-span-6 gap-2">                
+                    <a href="/contact" className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-1 font-medium border-primary text-primary hidden sm:block">
+                        <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-primary top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
+                        <span className="relative text-primary transition duration-300 group-hover:text-white ease">Contact Us</span>
+                    </a>
+                    <ModeToggle />
+                    <div className="sm:hidden">
+                        <MobileMenu />
+                    </div>              
+                    <SignedOut>
+                        <Button variant={"ghost"} asChild>
+                            <SignInButton mode="modal" />
+                        </Button>
+                    </SignedOut>
+                    <SignedIn>
+                        <UserMenu />
+                    </SignedIn>
+                </div>
             </div>
-        </div>        
-        
-    </nav>
-    )
+        </nav>
+    );
 }
 
 const ListItem = React.forwardRef<

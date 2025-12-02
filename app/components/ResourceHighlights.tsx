@@ -2,10 +2,17 @@
 import React, { useEffect, useState } from "react";
 import Counter from "./animata/text/counter";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 async function fetchCounts() {
+    const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
     try {
-        const response = await fetch("/api/resourceCount");
+        const response = await fetch("/api/resourceCount", {
+           headers: {
+            "x-api-key": API_KEY
+            },
+        
+        });
         if(!response.ok) {
             throw new Error("Failed to fetch resource counts:");
         }

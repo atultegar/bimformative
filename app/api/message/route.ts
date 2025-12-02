@@ -1,6 +1,8 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 // Define the response data type
 type Data = {message?: string, error?: string};
@@ -15,10 +17,61 @@ const url = "https://wlb0lt21.api.sanity.io/v2024-01-01/data/mutate/production";
 const error_message = "There was a problem, please try again.";
 const success_message = "Awesome! Message sent successfully!";
 
+const redis = Redis.fromEnv();
+
+const ratelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(3, "1 m"), // 3 requests per minute
+});
+
+async function validateTurnstile(token: string) {
+    const secret = process.env.TURNSTILE_SECRET_KEY;
+
+    const response = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `secret=${secret}&response=${token}`,
+        }
+    );
+
+    return await response.json();
+}
 
 //Subscription handler function
 export const POST = async (request: Request) => {
+    const body = await request.json();
+    const turnstileToken = body.turnstileToken;
+
+    if (!turnstileToken) {
+        NextResponse.json(
+            { error: "Missing Turnstile token" },
+            { status: 400 }
+        );
+    }
+
+    // Validate Turnstile
+    const turnstileResult = await validateTurnstile(turnstileToken);
+    if (!turnstileResult.success) {
+        return NextResponse.json(
+            { error: "Bot detected. Verification failed." },
+            { status: 401 }
+        );
+    }
     
+    // Rate limiter
+    const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+    const { success } = await ratelimit.limit(ip);
+
+    if (!success) {
+        return NextResponse.json(
+            { error: "Too many requests"},
+            { status: 429 }
+        );
+    }
+
+
     // 1. Validate email address    
     const res = await request.json();
     const email = res.email;
