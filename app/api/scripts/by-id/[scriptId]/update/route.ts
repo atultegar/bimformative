@@ -12,7 +12,6 @@ export const POST = withAuth(
             const description = String(formData.get("description") ?? "").trim();
             const tagsRaw = formData.get("tags") as string | null;
             const scriptType = String(formData.get("scriptType") ?? "").trim();
-            const demoLink = String(formData.get("demoLink") ?? "").trim();
 
             let tags: string[] = [];
             try {
@@ -31,7 +30,6 @@ export const POST = withAuth(
                     description: description || undefined,
                     script_type: scriptType || undefined,
                     tags: tags.length ? tags : undefined,
-                    demo_link: demoLink || undefined,
                     updated_at: new Date().toISOString(),
                 })
                 .eq("id", scriptId);

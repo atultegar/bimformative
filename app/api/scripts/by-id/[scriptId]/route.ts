@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "@/app/lib/auth/withAuth";
 import { supabaseServer } from "@/lib/supabase/server";
 import { withOwnerCheck } from "@/app/lib/withOwnerCheck";
+import { extractStoragePath } from "@/lib/supabase/storage";
+import { supabase } from "@/lib/supabase/client";
+
+type DynamoScript = {
+    title: string;
+    description: string;
+    script_type: string;
+    tags: string[];
+    current_version_number: number;
+}
 
 export const PUT = withAuth(
     withOwnerCheck(async ({ req, userId, scriptId, script }) => {
@@ -167,6 +177,181 @@ export const PUT = withAuth(
             
         } catch {
             return NextResponse.json({ error: "Some error occured"}, { status: 500 });
+        }
+    })
+);
+
+export const GET = withAuth(async ({ req, userId, params }) => {
+    const supabase = supabaseServer();
+    const resolvedParams = await params;
+    const scriptId = resolvedParams?.scriptId;
+
+    const { data, error } = await supabase
+        .from("dynscripts_with_current_version")
+        .select("id, owner_id, title, slug, description, script_type, tags, updated_at, current_version_number")        
+        .eq("id", scriptId)
+        .single();
+
+    if (error) {
+        return NextResponse.json({ error: error.message}, { status: 500});
+    }
+    
+    return NextResponse.json({ success: true, script: data }, { status: 200 });
+});
+
+export const DELETE = withAuth(
+    withOwnerCheck(async({ req, userId, params }) => {
+        try {
+            const resolvedParams = await params;
+            const scriptId = resolvedParams.scriptId;
+
+            const supabase = supabaseServer();
+
+            // 1. Validate script exists
+            const { data: existing, error: findErr } = await supabase
+                .from("dynscripts")
+                .select("id, current_version_number, owner_id, slug")
+                .eq("id", scriptId)
+                .single();
+
+            if (findErr || !existing) {
+                return NextResponse.json(
+                    { error: "Script not found" },
+                    { status: 404 }                
+                );
+            }
+
+            // 2. Get all versions for this script
+            const { data: versions, error: versionError } = await supabase
+                .from("dynscript_versions")
+                .select("id, script_id, version_number, dyn_file_url")
+                .eq("script_id", scriptId)
+                .order("version_number", { ascending: true });
+
+            if (versionError || !versions) {
+                return NextResponse.json(
+                    { error: "Failed fetching script versions"},
+                    { status: 500 }
+                );
+            }
+
+            // 3. Delete storage files first
+            const deleteFiles: string[] = [];
+            versions.map(v => {
+                const relativeFileUrl = extractStoragePath(v.dyn_file_url, "dynamo-scripts");
+
+                if(relativeFileUrl){
+                    deleteFiles.push(relativeFileUrl);
+                }                
+            })
+
+            if (deleteFiles.length > 0) {
+                const { error: deleteVerErr } = await supabase.storage
+                    .from("dynamo-scripts")
+                    .remove(deleteFiles);
+
+                if (deleteVerErr) {
+                    console.warn(
+                        "⚠️ Warning: Failed to delete storage file:",
+                        deleteVerErr.message
+                    );
+                }
+            }
+
+
+            // 4. Delete Script - It will also delete all version rows from dynscript_versions table
+            if (existing) {
+                const { error: deleteErr } = await supabase
+                    .from("dynscripts")
+                    .delete()
+                    .eq("id", scriptId);
+
+                if (deleteErr) {
+                    return NextResponse.json(
+                        { error: deleteErr.message },
+                        { status: 500}
+                    )
+                }
+            }            
+
+            return NextResponse.json(
+                { success: true, message: "Script and all its versions deleted successfully." }
+            )
+        } catch (err) {
+            return NextResponse.json(
+                { error: "Unexpected server error" },
+                { status: 500 }
+            );
+        }
+    })
+);
+
+export const PATCH = withAuth(
+    withOwnerCheck(async({ req, userId, params }) => {
+        try {
+            const resolvedParams = await params;
+            const scriptId = resolvedParams.scriptId;
+
+            const updates: DynamoScript = await req.json();
+
+            const {title, description, script_type, tags, current_version_number } = updates;
+
+            // check if the new version is valid
+            const { data: script, error: scriptError } = await supabase
+                .from("dynscripts")
+                .select("current_version_number")
+                .eq("id", scriptId)
+                .single();
+
+            if (scriptError || !script) {
+                return NextResponse.json(
+                    { error: "Script not found"},
+                    { status: 404 }
+                );
+            }
+
+            // Update the script details
+            const { error: updateError } = await supabase
+                .from("dynscripts")
+                .update({
+                    title,
+                    description,
+                    script_type,
+                    tags,
+                    current_version_number
+                })
+                .eq("id", scriptId);
+
+            if (updateError) {
+                return NextResponse.json(
+                    { error: "Failed to update script" },
+                    { status: 500 }
+                );
+            }
+
+            // Set the selected version as current in dynscript_versions table
+            const { error: versionError } = await supabase
+                .from("dynscript_versions")
+                .update({ is_current: true })
+                .eq("script_id", scriptId)
+                .eq("version_number", current_version_number);
+
+            if (versionError) {
+                return NextResponse.json(
+                    { error: "Failed to update version" },
+                    { status: 500 }
+                );
+            }
+
+            return NextResponse.json(
+                { message: "Script updated successfully", script: "data" },
+                { status: 200 }
+            )
+        } catch (error) {
+            return NextResponse.json(
+                { error: "Internal server error"},
+                { status: 500 }
+            );
         }
     })
 );

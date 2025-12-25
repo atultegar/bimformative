@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { UUID } from "crypto";
 import { NextResponse } from "next/server";
 
 const DEV_BYPASS = process.env.NODE_ENV === "development";
@@ -14,7 +13,13 @@ export type WithAuthContext = {
 
 export function withAuth(handler: (ctx: WithAuthContext) => Promise<Response>
 ) {
+    
     return async (req: Request, context: any) => {
+        const resolvedParams = 
+        typeof context?.params?.then === "function"
+        ? await context.params
+        : context?.params;
+        
         // 1. Development bypass
         if (DEV_BYPASS) {
             return handler({ req, userId: DEV_USER_ID, params: context?.params });

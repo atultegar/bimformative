@@ -2,11 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { navigationItems } from "./Navbar";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { navigationItems } from "./navbar/navigation.config";
 
 export function MobileMenu() {
     const location = usePathname();

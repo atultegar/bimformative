@@ -9,10 +9,10 @@ export interface ProjectsCard {
     link: string;
 }
 
-export interface simpleBlogCard {
+export interface SimpleBlogCard {
     title: string;
     smallDescription: string;
-    currentSlug: string;
+    slug: string;
     titleImage: any;
     date: string;
     author: Author;
@@ -117,6 +117,8 @@ export interface Node {
     Height: number;
     Inputs: Array<InputOutput>;
     Outputs: Array<InputOutput>;
+    NodeType: string;
+    Code: string;
     InputValue: string;
     InputValueWidth: number;
 }
@@ -176,4 +178,26 @@ export interface UploadScript {
     isPlayerReady?: boolean;
     externalPackages?: string[];
     pythonNodes?: PythonNode[];
+}
+
+export interface ScriptVersion {
+    id: string;
+    version_number: number;
+    title: string;
+    updated_at: string;
+    dyn_file_url: string;
+    changelog: string;
+    is_current: boolean;
+}
+
+export interface User {
+    id: string;
+    email: string;
+    username: string;
+    avatar_url: string;
+    created_at: string;
+    updated_at: string;
+    first_name: string;
+    last_name: string;
+    role: string;
 }

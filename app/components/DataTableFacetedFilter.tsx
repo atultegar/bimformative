@@ -1,11 +1,24 @@
+"use client";
 import React from "react";
 import { Column } from "@tanstack/react-table";
 import { Check, PlusCircle} from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { 
+    Popover, 
+    PopoverContent, 
+    PopoverTrigger 
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
+import { 
+    Command, 
+    CommandEmpty, 
+    CommandGroup, 
+    CommandInput, 
+    CommandItem, 
+    CommandList, 
+    CommandSeparator 
+} from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -15,17 +28,45 @@ interface DataTableFacetedFilterProps<TData, TValue> {
         label: string
         value: string
         icon?: React.ComponentType<{ className?: string }>
-    }[]
+    }[];
+    onSelect?: (value: string) => void;
+    selectedValue?: string;
 }
 
 export function DataTableFacetedFilter<TData, TValue>({
     column,
     title,
     options,
+    onSelect,
+    selectedValue,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-    const facets = column?.getFacetedUniqueValues()
-    const selectedValues = new Set(column?.getFilterValue() as string[])
-    const lowerCaseSelectedValues = new Set(Array.from(selectedValues).map(value => value.toLowerCase()));
+    const facets = column?.getFacetedUniqueValues() ?? new Map();
+
+    const rawFilterValue = column?.getFilterValue() as string[] | undefined;
+    const selectedValues = new Set(
+        selectedValue ? [selectedValue] :rawFilterValue ?? []
+    );
+
+    const lowerCaseSelectedValues = new Set(
+        Array.from(selectedValues).map(value => value.toLowerCase())
+    );
+
+    const toggleValue = (value: string) => {
+        if (onSelect) {
+            onSelect(value);
+            return;
+        }
+        const updated = new Set(selectedValues);
+
+        if (updated.has(value)) {
+            updated.delete(value);
+        } else {
+            updated.add(value);
+        }
+
+        const filterValues = Array.from(updated);
+        column?.setFilterValue(filterValues.length > 0 ? filterValues : undefined);
+    };
 
     return (
         <Popover>
@@ -33,14 +74,19 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
                     <PlusCircle />
                     {title}
+
                     {selectedValues?.size > 0 && (
                         <>
                             <Separator orientation="vertical" className="mx-2 h-4" />
+
+                            {/* mobile badge count */}
                             <Badge
                                 variant="secondary"
                                 className="rounded-sm px-1 font-normal lg:hidden">
                                     {selectedValues.size}
                             </Badge>
+
+                            {/* desktop badge labels */}
                             <div className="hidden space-x-1 lg:flex">
                                 {selectedValues.size > 2 ? (
                                     <Badge
@@ -50,7 +96,8 @@ export function DataTableFacetedFilter<TData, TValue>({
                                     </Badge>
                                 ) : (
                                     options
-                                    .filter((option) => lowerCaseSelectedValues.has(option.value.toLowerCase()))
+                                    .filter((option) => 
+                                        lowerCaseSelectedValues.has(option.value.toLowerCase()))
                                     .map((option) => (
                                         <Badge
                                             variant="secondary"
@@ -65,66 +112,60 @@ export function DataTableFacetedFilter<TData, TValue>({
                     )}
                 </Button>
             </PopoverTrigger>
+
             <PopoverContent className="w-[200px] p-0" align="start">
                 <Command>
                     <CommandInput placeholder={title} />
                     <CommandList>
                         <CommandEmpty>No results found.</CommandEmpty>
+
                         <CommandGroup>
                         {options.map((option) => {
                             const isSelected = selectedValues.has(option.value)
                             return (
-                            <CommandItem
-                                key={option.value}
-                                onSelect={() => {
-                                if (isSelected) {
-                                    selectedValues.delete(option.value)
-                                } else {
-                                    selectedValues.add(option.value)
-                                }
-                                const filterValues = Array.from(selectedValues)
-                                column?.setFilterValue(
-                                    filterValues.length ? filterValues : undefined
-                                )
-                                }}
-                            >
-                                <div
-                                className={cn(
-                                    "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                                    isSelected
-                                    ? "bg-primary text-primary-foreground"
-                                    : "opacity-50 [&_svg]:invisible"
-                                )}
+                                <CommandItem
+                                    key={option.value}
+                                    onSelect={() => toggleValue(option.value)}
                                 >
-                                <Check />
-                                </div>
+                                    <div
+                                        className={cn(
+                                            "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                            isSelected
+                                            ? "bg-primary text-primary-foreground"
+                                            : "opacity-50 [&_svg]:invisible"
+                                        )}
+                                    >
+                                        <Check className="h-3 w-3" />
+                                    </div>
                                 
-                                <span>{option.label}</span>
-                                {facets?.get(option.value) && (
-                                <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                                    {facets.get(option.value)}
-                                </span>
-                                )}
-                            </CommandItem>
-                            )
+                                    <span>{option.label}</span>
+
+                                    {facets.get(option.value) && (
+                                        <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                                            {facets.get(option.value)}
+                                        </span>
+                                    )}
+                                </CommandItem>
+                            );
                         })}
                         </CommandGroup>
+
                         {selectedValues.size > 0 && (
-                        <>
-                            <CommandSeparator />
-                            <CommandGroup>
-                            <CommandItem
-                                onSelect={() => column?.setFilterValue(undefined)}
-                                className="justify-center text-center"
-                            >
-                                Clear filters
-                            </CommandItem>
-                            </CommandGroup>
-                        </>
+                            <>
+                                <CommandSeparator />
+                                <CommandGroup>
+                                    <CommandItem
+                                        onSelect={() => column?.setFilterValue(undefined)}
+                                        className="justify-center text-center"
+                                    >
+                                        Clear filters
+                                    </CommandItem>
+                                </CommandGroup>
+                            </>
                         )}
                     </CommandList>
                 </Command>
-      </PopoverContent>
+            </PopoverContent>
         </Popover>
-    )
+    );
 }

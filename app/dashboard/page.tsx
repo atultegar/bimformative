@@ -1,39 +1,51 @@
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import Image from "next/image";
-import { client } from "../lib/sanity";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "../resources/dynamo-scripts/data-table";
-import { columns, DynamoScript } from "../resources/dynamo-scripts/columns";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import UploadForm from "../components/UploadForm";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import dynamo from "@/public/dynamo.png";
-import UploadDialog from "../components/UploadDialog";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
-import { Upload } from "lucide-react";
-import {getDynScriptsByUser, getUser} from "@/app/lib/api";
-import { UserDataTable } from "./datatable";
-import { usercolumns } from "./usercolumns";
-import { currentUser } from "@clerk/nextjs/server";
+import {getAllDynamoScripts} from "@/app/lib/api";
+import { auth } from "@clerk/nextjs/server";
 import { UserProfile } from "@clerk/nextjs";
-import Link from "next/link";
 import UploadScript from "../components/UploadScript";
+import { User } from "../lib/interface";
+import { getScriptsCountByUserId, getUserById } from "@/lib/supabase/db";
+import { ClientDataTable } from "./client-data-table-wrapper";
+import { getAllScriptsByUserId, scriptsLikedByUserId } from "@/lib/services/scripts.service";
+
+const DEV_BYPASS = process.env.NODE_ENV === "development";
+const DEV_USER_ID = process.env.DEV_FAKE_USER_ID as string ?? "dev-user";
+
+async function getCurrentUserId(): Promise<string> {
+    if (DEV_BYPASS) {
+        return DEV_USER_ID;
+    }
+
+    const { userId } = await auth();
+    if (!userId) {
+        return "guest";
+    }
+    return userId;
+}
+
 
 export default async function Dashboard(): Promise<JSX.Element>{    
-    const user = process.env.NODE_ENV === "development"
-        ? { id: "user_admin", imageUrl: "", fullName: "Admin", primaryEmailAddress: {emailAddress: "admin@bimformative.com"}} // mock user in dev
-        : await currentUser();
-    const userId = user?.id;
-    const userImage = user?.imageUrl;
-    console.log("User ID", userId);
-    
-    const data = userId ? await getDynScriptsByUser(userId) : [];
+    const currentUserId = await getCurrentUserId();
+    const currentUser: User = await getUserById(currentUserId);
+    const page = 1;
+    const limit = Number(await getScriptsCountByUserId(currentUserId));
 
-    if (!user) {
+    const data = await getAllScriptsByUserId(currentUserId);
+    const likesRes = await scriptsLikedByUserId(currentUserId);
+        
+    const likedSet = new Set(likesRes.map(l => l.script_id));
+
+    const scriptData = data.map(s => ({
+        ...s,
+        liked_by_user: likedSet.has(s.id),
+    }));
+
+
+    if (currentUserId == "guest") {
         return (
             <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px] justify-items-start">
                 <div className="flex items-center space-x-4">
@@ -49,17 +61,17 @@ export default async function Dashboard(): Promise<JSX.Element>{
 
     return (
         <section className="mt-10 max-w-7xl w-full px-4 md:px-8 mx-auto min-h-[900px] justify-items-start">            
-            {user && (
+            {currentUser && (
                 <>
                     <div className="grid grid-cols-7 items-center gap-10">
-                        {userImage ? (
-                            <Image src={userImage} alt="profile" width={150} height={150} className="rounded-full col-span-1" />
+                        {currentUser.avatar_url ? (
+                            <Image src={currentUser.avatar_url} alt="profile" width={150} height={150} className="rounded-full col-span-1" />
                         ) : (
                             <Skeleton className="h-[150px] w-[150px] rounded-full" />
                         )}
                         <div className="col-start-2 col-span-2">
-                            <h1 className="text-4xl font-semibold mb-5">{user.fullName}</h1>
-                            <p className="text-muted-foreground">{user.primaryEmailAddress?.emailAddress}</p>
+                            <h1 className="text-4xl font-semibold mb-5">{currentUser.first_name} {currentUser.last_name}</h1>
+                            <p className="text-muted-foreground">{currentUser.email}</p>
                         </div>
                         <div className="flex flex-col gap-5 col-start-7 col-span-1">                            
                             <Dialog>
@@ -83,9 +95,9 @@ export default async function Dashboard(): Promise<JSX.Element>{
                         <TabsContent value="dynamoscript">
                             <div className="-mt-1 p-2 content-center bg-transparent rounded-md border">
                                 <div className="w-full flex flex-col mx-auto place-items-end">
-                                    <UploadScript userId={user?.id} />  
+                                    <UploadScript userId={currentUser.id} />  
                                 </div>
-                                <UserDataTable columns={usercolumns} data={data} />
+                                <ClientDataTable currentUserId={currentUserId} data={scriptData} />
                             </div>
                         </TabsContent>
                     </Tabs>

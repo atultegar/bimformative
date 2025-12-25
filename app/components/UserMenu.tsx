@@ -2,7 +2,6 @@
 import { LayoutDashboard, ToyBrick, Search } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 
-
 export default function UserMenu() {
     return (
         <UserButton>

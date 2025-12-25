@@ -83,8 +83,8 @@ export function UserDataTable<TData, TValue>({
                         value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
                         onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
                         className="max-w-sm" />
-                        {table.getColumn("scripttype") && (
-                            <DataTableFacetedFilter column={table.getColumn("scripttype")}
+                        {table.getColumn("script_type") && (
+                            <DataTableFacetedFilter column={table.getColumn("script_type")}
                             title="Type"
                             options={types} />
                         )}

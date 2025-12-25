@@ -104,6 +104,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                 fd.append("demoLink", values.youtubevideo);
             }
             fd.append("parsedJson", JSON.stringify(analyzeData));
+            fd.append("isPublic", values.shareagree ? "true" : "false")
 
             const res = await fetch("/api/scripts/publish", {
                 method: "POST",
@@ -183,14 +184,14 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                     </Button>
 
                     {/* METADATA FIELDS - they stay visible but disables until analyzed */}
-                    <div className={analyzeData ? "" : "opacity-50 pointer-events-none"}>
+                    <div className={analyzeData ? "space-y-2" : "opacity-50 pointer-events-none space-y-3"}>
                         {/* TITLE */}
                         <FormField
                             control={form.control}
                             name="title"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Title</FormLabel>
+                                    <FormLabel className="mx-3">Title</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Script Title" {...field} />
                                     </FormControl>
@@ -204,7 +205,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                             name="description"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel className="mx-3">Description</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Short description" {...field} />
                                     </FormControl>
@@ -219,8 +220,8 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                             name="scripttype"
                             render={({field}) => (
                                 <FormItem className="space-y-3">
-                                    <FormLabel>Script Type</FormLabel>
-                                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-5">
+                                    <FormLabel className="mx-3">Script Type</FormLabel>
+                                    <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-5 mx-3">
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <RadioGroupItem value="Revit" />
                                             <FormLabel className="font-normal">Revit</FormLabel>
@@ -240,7 +241,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                             name="youtubevideo"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Demo Link</FormLabel>                            
+                                    <FormLabel className="mx-3">Demo Link</FormLabel>                            
                                     <FormControl>
                                         <Input placeholder="e.g. https://www.youtube.com/watch?v=xxxxxxx" type="url" {...field} />
                                     </FormControl>
@@ -254,7 +255,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                             name="tags"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Tags</FormLabel>                            
+                                    <FormLabel className="mx-3">Tags</FormLabel>                            
                                     <FormControl>
                                         <TagsInput
                                             value={field.value ?? []}
@@ -271,11 +272,16 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                             control={form.control}
                             name="shareagree"
                             render={({field}) => (
-                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                    <FormLabel>
-                                        I agree that this script will be public and freely accessible on BIMformative.
-                                    </FormLabel>
+                                <FormItem className="space-y-2 rounded-md border p-4">
+                                    <div className="flex flex-row items-start space-x-3">
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <FormLabel>
+                                            Public
+                                        </FormLabel>
+                                    </div>                                    
+                                    <FormMessage>
+                                        Public scripts are visible to everyone. Private scripts are visible only to you.
+                                    </FormMessage>
                                 </FormItem>
                             )}
                         />

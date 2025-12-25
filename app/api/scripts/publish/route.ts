@@ -62,6 +62,7 @@ export const POST = withAuth(async ({ req, userId }) => {
         const scriptType = String(formData.get("scriptType") ?? "").trim();
         const tagsRaw = formData.get("tags") as string | null; 
         const demoLink = String(formData.get("demoLink") ?? "").trim();
+        const isPublic = formData.get("isPublic") === "true";
                 
 
         // parse tags if present
@@ -99,6 +100,7 @@ export const POST = withAuth(async ({ req, userId }) => {
                     script_type: scriptType || null,
                     tags,
                     current_version_number: null,
+                    is_public: isPublic,
                 }])
                 .select()
                 .single();
@@ -118,6 +120,7 @@ export const POST = withAuth(async ({ req, userId }) => {
                     description: description || undefined,
                     script_type: scriptType || undefined,
                     tags: tags.length ? tags : undefined,
+                    is_public: isPublic || false,
                 })
                 .eq("id", scriptId);
             if (updateMetaErr) {

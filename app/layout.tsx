@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Navbar } from "./components/Navbar";
+
 import { Inter, Inter_Tight } from "next/font/google";
 import { Footer } from "./components/Footer";
 import { ThemeProvider } from "./components/theme-provider";
@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "./components/AuthProvider";
 import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "./components/Navbar";
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});

@@ -6,89 +6,82 @@ import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
-import DialogDetails from "@/app/components/DialogDetails";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useRouter } from "next/navigation";
 import DownloadButton from "@/app/components/DownloadButton";
 import LikeButton from "@/app/components/LikeButton";
-import { comment } from "@/app/lib/interface";
-
-
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { VersionSheetContent } from "../../components/scripts/version-sheet-content";
+import { ScriptMinimal } from "@/lib/types/script";
 
 export type DynamoScript = {
-    _id: string
-    title: string
-    scripttype: string
-    dynamoplayer: boolean
-    externalpackages: string[]
-    pythonscripts: boolean
-    fileUrl: string
-    description: string
-    youtubelink: string
-    image: string
-    code: string
-    author: string
-    authorPicture: string
-    downloads: number
-    likes: string[]
-    dynamoversion: string
-    tags: string[]
-    comments: comment[]
-}
+    id: string;
+    slug: string;
+    title: string;
+    script_type: string;
+    description: string;
+    current_version_number: number;
+    dynamo_version: string;
+    owner_id: string;
+    owner_first_name: string;
+    owner_last_name: string;
+    owner_avatar_url: string;
+    downloads_count: number;
+    likes_count: number;
+    demo_link: string | null;
+    dyn_file_url: string | null;
+};
 
-export const columns: ColumnDef<DynamoScript>[] = [
+export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
+    // TITLE
     {
         accessorKey: "title",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                        Title
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-            )
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Title <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({row}) => {
             const script = row.original
             return (
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="ghost">{script.title}</Button>
-                    </DialogTrigger>
-                    <DialogDetails script={script} />
-                </Dialog>
+                <Button variant={"ghost"} asChild>
+                    <Link href={`/resources/dynamo-scripts/${script.slug}`}>{script.title}</Link>
+                </Button>
             )
         }
-    },    
+    },
+    
+    // SCRIPT TYPE
     {
-        accessorKey: "scripttype",
+        accessorKey: "script_type",
         header: () => <div className="text-left">Type</div>,
         cell: ({row}) => {
-            const scriptType = row.getValue<string>("scripttype");
+            const scriptType = row.getValue<string>("script_type")?.toLowerCase();
 
             // Map tags to corrsponding images
-            const imageMapping: { [key: string]: { src: any; alt: string}} = {
-                revit: {src: revitImage, alt: "Revit Logo"},
-                civil3d: { src: civil3dImage, alt: "Civil 3D Logo" },
+            const iconMap: Record<string, any> = {
+                revit: revitImage,
+                civil3d: civil3dImage,
             };
 
-            // Filter valid images based on the scripttypes array
-            const cleanedScriptType = scriptType.trim().toLowerCase();
-            const image = imageMapping[cleanedScriptType] || null;
-
+            const img = iconMap[scriptType];
+            
             return (
                 <div className="flex space-x-2 items-center">
-                    {image && <Image src={image.src} alt={image.alt} width={40} height={40} />}
+                    {img && <Image src={img} alt={scriptType} width={40} height={40} />}
                 </div>
             );
         },
     },
+
+    // DESCRIPTION
     {
         accessorKey: "description",
         header: () => <div className="text-center">Description</div>,
@@ -102,20 +95,21 @@ export const columns: ColumnDef<DynamoScript>[] = [
             );
         },
     },
+
+    // OWNER
     {
-        accessorKey: "author",
-        header: ({column}) => {
-            return (
-                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Author
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "owner_first_name",
+        header: ({column}) => (
+            <Button 
+                variant={"ghost"} 
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Author <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({row}) => {
-            const script = row.original;
-            const author = script.author;
-            const authorPic = script.authorPicture;
+            const author = row.original.owner_first_name + " " + row.original.owner_last_name;
+            const avatar = row.original.owner_avatar_url;
 
             return (
                 <div className="flex items-center justify-center line-clamp-1">
@@ -123,7 +117,7 @@ export const columns: ColumnDef<DynamoScript>[] = [
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Avatar className="w-8 h-8">
-                                    <AvatarImage src={authorPic}/>
+                                    <AvatarImage src={avatar}/>
                                     <AvatarFallback>{String(author).slice(0,2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </TooltipTrigger>
@@ -136,107 +130,91 @@ export const columns: ColumnDef<DynamoScript>[] = [
             );
         },
     },
-    // {
-    //     accessorKey: "externalpackages",
-    //     header: () => <div className="text-center">External Packages</div>,
-    //     cell: ({row}) => {
-    //         const extPacks = row.getValue<string[] | null>("externalpackages") || [];
 
-    //         return (
-    //             <div className="flex items-center justify-center">
-    //                 {extPacks.length > 0 ? (
-    //                     <CheckmarkCircleIcon className="h-8 w-8 text-green-500" />
-    //                 ): (
-    //                     <span className="text-gray-500"></span>
-    //                 )}
-    //             </div>
-    //         );
-    //     },
-    // },
+    // VERSION
     {
-        accessorKey: "youtubelink",
+        accessorKey: "current_version_number",
+        header: () => <div className="text-center">Version</div>,
+        cell: ({row}) => {
+            return (
+                <div className="flex items-center justify-center">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Badge variant={"outline"} className="cursor-pointer">V{row.original.current_version_number}</Badge>
+                        </SheetTrigger>
+                        <SheetContent className="w-[600px] sm:max-w-none overflow-y-auto">
+                            <SheetHeader>
+                                <SheetTitle>Version history</SheetTitle>
+                                <SheetDescription>{row.original.title}</SheetDescription>
+                            </SheetHeader>
+
+                            {/* Fetch and display versions */}
+                            <VersionSheetContent title={row.original.title} scriptOwnerId={row.original.owner_id} scriptId={row.original.id} currentUserId={currentUserId} />
+                        </SheetContent>
+                    </Sheet>       
+                </div>
+            );
+        },
+    },
+    
+    // DEMO LINK
+    {
+        accessorKey: "demo_link",
         header: () => <div className="text-center">Demo</div>,
         cell: ({row}) => {
-            const youtubelink = row.getValue<string>("youtubelink");
+            const link = row.original.demo_link;
+
+            const icon = link ? youtubeColor : youtubeDark;
 
             return (
                 <div className="flex items-center justify-center">
-                    <Link href={!youtubelink ? "/" : youtubelink}
+                    <Link 
+                        href={link || "#"}
                         rel="noopener noreferrer"
-                        target="_blank">
-                            <Image src = {!youtubelink ? youtubeDark : youtubeColor}
-                            alt = "Demo"
-                            className={!youtubelink ? "dark:invert w-6 h-6 opacity-50 cursor-not-allowed" : "w-6 h-6 hover:-translate-y-0.5 ease-in-out"} />
+                        target="_blank"
+                        className={link ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}
+                    >
+                        <Image src = {icon} alt = "Demo" className="w-6 h-6" />
                     </Link>                    
                 </div>
             );
         },
     },
-    {
-        accessorKey: "downloads",
-        header: ({column}) => {
-                return (
-                    <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                        Download
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                )
-            },
-        cell: ({row}) => {     
 
-            return (
-                <div className="flex items-center justify-center">
-                    <DownloadButton script={row.original} />
-                </div>
-            );
-        },
-    },
+    // DOWNLOADS
     {
-        accessorKey: "likes",
-        header: ({column}) => {
-                return (
-                    <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                        Likes
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                )
-            },
-        cell: ({row}) => {   
-
-            return (
-                <div className="flex items-center justify-center">                    
-                    <LikeButton script={row.original} />
-                </div>
-            );
-        },
+        accessorKey: "downloads_count",
+        header: ({column}) => (
+            <Button 
+                variant={"ghost"} 
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Download 
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({row}) => (
+            <div className="flex items-center justify-center">
+                <DownloadButton userId={currentUserId} slug={row.original.slug} downloadsCount={row.original.downloads_count} />
+            </div>
+        ),
     },
-    // {
-    //     id: "actions",
-    //     cell: ({ row }) => {
-    //         const script = row.original
-    //         const router = useRouter();
-            
-    //         return (
-    //             <Dialog>
-    //                 <DropdownMenu>
-    //                     <DropdownMenuTrigger asChild>
-    //                         <Button variant="ghost" className="h-8 w-8 p-0">
-    //                             <span className="sr-only">Open menu</span>
-    //                             <MoreHorizontal className="h-4 w-4" />
-    //                         </Button>
-    //                     </DropdownMenuTrigger>
-    //                     <DropdownMenuContent align="end">
-    //                         {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-    //                         <DialogTrigger asChild>
-    //                             <DropdownMenuItem>Details</DropdownMenuItem>
-    //                         </DialogTrigger>
-    //                         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(script.fileUrl+"?dl")}>Copy link</DropdownMenuItem>
-    //                         <DropdownMenuItem onClick={() => handleScriptDownload(script.fileUrl+"?dl", script._id, router.push, () => router.refresh())}>Download</DropdownMenuItem>
-    //                     </DropdownMenuContent>
-    //                 </DropdownMenu>
-    //                 <DialogDetails script={script} />
-    //             </Dialog>                
-    //         );
-    //     }
-    // },
-]
+
+    // LIKES
+    {
+        accessorKey: "likes_count",
+        header: ({column}) => (
+            <Button 
+                variant={"ghost"} 
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Likes <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({row}) => (
+            <div className="flex justify-center">                    
+                <LikeButton scriptId={row.original.id} likesCount={row.original.likes_count} likedByUser={row.original.liked_by_user} userId={currentUserId} />
+            </div>
+        ),
+    },
+];

@@ -5,45 +5,38 @@ import revitImage from "@/public/bim-icons/revit.png";
 import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { AppWindow, ArrowUpDown, Download, Edit, MoreHorizontal, TriangleAlert } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { ArrowUpDown } from "lucide-react";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
-import DialogDetails from "@/app/components/DialogDetails";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useRouter } from "next/navigation";
 import DownloadButton from "@/app/components/DownloadButton";
 import LikeButton from "@/app/components/LikeButton";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { deleteScript, handleScriptDownload } from "../actions/clientActions";
-import { deleteScriptById } from "../actions/serverActions";
-import { comment } from "../lib/interface";
 import UserActionMenu from "../components/UserActionMenu";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+import { VersionSheetContent } from "../components/scripts/version-sheet-content";
+import { ScriptDashboard } from "@/lib/types/script";
 
-type DynamoScript = {
-     _id: string
-        title: string
-    scripttype: string
-    dynamoplayer: boolean
-    externalpackages: string[]
-    pythonscripts: boolean
-    fileUrl: string
-    description: string
-    youtubelink: string
-    image: string
-    code: string
-    author: string
-    authorPicture: string
-    downloads: number
-    likes: string[]
-    dynamoversion: string
-    tags: string[]
-    comments: comment[]
-}
+export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[] => [
+    {
+        accessorKey: "is_public",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+            )
+        },
+        cell: ({row}) => {
+            const isPublic = row.getValue<boolean>("is_public");
+            return (
+                <Badge variant={"outline"} className={`${isPublic ? "text-primary" : "text-secondary-foreground"}`}>{isPublic ? "Public" : "Private"}</Badge>
+            )
+        }
+    },
 
-export const usercolumns: ColumnDef<DynamoScript>[] = [
     {
         accessorKey: "title",
         header: ({ column }) => {
@@ -57,22 +50,19 @@ export const usercolumns: ColumnDef<DynamoScript>[] = [
             )
         },
         cell: ({row}) => {
-            const script = row.original
             return (
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="ghost">{script.title}</Button>
-                    </DialogTrigger>
-                    <DialogDetails script={script} />
-                </Dialog>
+                <Button variant={"ghost"} asChild>
+                    <Link href={`/resources/dynamo-scripts/${row.original.slug}`}>{row.original.title}</Link>
+                </Button>
             )
         }
-    },    
+    },
+
     {
-        accessorKey: "scripttype",
+        accessorKey: "script_type",
         header: () => <div className="text-left">Type</div>,
         cell: ({row}) => {
-            const scriptType = row.getValue<string>("scripttype");
+            const scriptType = row.getValue<string>("script_type");
 
             // Map tags to corrsponding images
             const imageMapping: { [key: string]: { src: any; alt: string}} = {
@@ -104,40 +94,35 @@ export const usercolumns: ColumnDef<DynamoScript>[] = [
             );
         },
     },
+
     {
-        accessorKey: "author",
-        header: ({column}) => {
-            return (
-                <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Author
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "current_version_number",
+        header: () => <div className="text-center">Version</div>,
         cell: ({row}) => {
-            const script = row.original;
-            const author = script.author;
-            const authorPic = script.authorPicture;
+            const version = row.getValue<number>("current_version_number");
+            const slug = row.original.slug;
 
             return (
-                <div className="flex items-center justify-center line-clamp-1">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Avatar className="w-8 h-8">
-                                    <AvatarImage src={authorPic}/>
-                                    <AvatarFallback>{String(author).slice(0,2).toUpperCase()}</AvatarFallback>
-                                </Avatar>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{String(author)}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>                    
+                <div className="flex items-center justify-center">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Badge variant={"outline"} className="cursor-pointer">V{version}</Badge>
+                        </SheetTrigger>
+                        <SheetContent className="w-[600px] sm:max-w-none overflow-y-auto">
+                            <SheetHeader>
+                                <SheetTitle>Version history</SheetTitle>
+                                <SheetDescription>{row.original.title}</SheetDescription>
+                            </SheetHeader>
+
+                            {/* Fetch and display versions */}
+                            <VersionSheetContent title={row.original.title} scriptOwnerId={row.original.owner_id} scriptId={row.original.id} currentUserId={currentUserId} />
+                        </SheetContent>
+                    </Sheet>       
                 </div>
             );
         },
     },
+
     {
         accessorKey: "youtubelink",
         header: () => <div className="text-center">Demo</div>,
@@ -171,13 +156,13 @@ export const usercolumns: ColumnDef<DynamoScript>[] = [
 
             return (
                 <div className="flex items-center justify-center">
-                    <DownloadButton script={row.original} />
+                    <DownloadButton userId={currentUserId} slug={row.original.slug} downloadsCount={row.original.downloads_count} />
                 </div>
             );
         },
     },
     {
-        accessorKey: "likes",
+        accessorKey: "likes_count",
         header: ({column}) => {
                 return (
                     <Button variant={"ghost"} onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -190,7 +175,7 @@ export const usercolumns: ColumnDef<DynamoScript>[] = [
 
             return (
                 <div className="flex items-center justify-center">                    
-                    <LikeButton script={row.original} />
+                    <LikeButton scriptId={row.original.id} likesCount={row.original.likes_count} likedByUser={row.original.liked_by_user} userId={currentUserId} />
                 </div>
             );
         },
@@ -200,7 +185,7 @@ export const usercolumns: ColumnDef<DynamoScript>[] = [
         cell: ({ row }) => {
             const script = row.original            
             return (
-                <UserActionMenu script={script}/>
+                <UserActionMenu script={script} currentUserId={currentUserId} />
             );
         }
     },

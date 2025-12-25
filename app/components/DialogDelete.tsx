@@ -18,7 +18,7 @@ export default function DialogDelete({script, submitHandler}: {script: DynamoScr
                     variant={"destructive"}
                     onClick={async () => {
                         setPending(true);
-                        await deleteScript(script._id);
+                        await deleteScript(script.id);
                         setPending(false);
                         submitHandler();
                     }}

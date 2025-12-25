@@ -55,7 +55,7 @@ export function Hero() {
             
             <div className="relative w-full max-w-7xl mx-auto mt-5">
                 <div className="relative rounded-2xl overflow-hidden h-[500px] w-full m-auto">
-                    <Image src={HeroImage} alt="Hero Image" layout="fill" objectFit="cover" className="rounded-xl" />
+                    <Image src={HeroImage} alt="Hero Image" fill className="rounded-xl object-cover" priority />
                 </div>                
                 <div className="absolute inset-0 flex items-center justify-center">
                     <SearchBar />

@@ -3,11 +3,21 @@
 import { z } from "zod";
 import { scriptFormSchema } from "../lib/zodSchemas";
 import { client } from "../lib/sanity";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { comment } from "../lib/interface";
 import { auth } from "@clerk/nextjs/server";
+import { supabaseServer } from "@/lib/supabase/server";
+import { getScriptsCount, patchScript, scriptDownload, scriptDownloadUrlOnly, scriptLikedByUserId, updateScriptPrivate, updateScriptPublic } from "@/lib/services/scripts.service";
+import { getResourcesCount, getRoadmapItems } from "@/lib/services/sanity.service";
+import { ResourceCounts, RoadmapItem } from "@/lib/types/resources";
+import { Comment } from "@/lib/types/comment";
+import { deleteComment, getCommentsByScriptId, postCommentByScriptId } from "@/lib/services/comments.service";
+import { getProfileById } from "@/lib/services/profiles.service";
+import { Noto_Sans_Tamil_Supplement } from "next/font/google";
+import { deleteVersion, getAllVersions, getVersionById, setCurrentVersion } from "@/lib/services/versions.service";
+import { MinimalVersion } from "@/lib/types/version";
+import { deleteLike, postLike } from "@/lib/services/likes.service";
+import { ScriptUpdate } from "@/lib/types/script";
+
 
 const FUNCTION_URL = process.env.AZURE_FUNCTION_URL;
 
@@ -21,7 +31,7 @@ export async function addScriptToDataset(
     externalPackages:string[],
     scriptViewData: string,){
     try {
-        const file = data.scriptfile[0];
+        const file = data.scriptFile[0];
         const arrayBuffer = await file.arrayBuffer();
         const fileAsset = await client.assets.upload('file', Buffer.from(arrayBuffer), {filename: file.name});        
 
@@ -212,53 +222,276 @@ export async function deleteScriptById(scriptId: string) {
     }   
 }
 
-export async function addComment(scriptId: string, text: string) {
-    const { userId, redirectToSignIn } = await auth();
+export async function AddComment(userId: string, scriptId: string, comment: string) {
+    if(!userId || !scriptId) {
+        throw new Error("Missing userId or scriptId");
+    }
 
-    if(!userId) return redirectToSignIn();
-    const user = await client.fetch(`*[_type == 'author' && id == "${userId}"]`);
+    const supabase = await supabaseServer();
 
-    const userPic = user[0].pictureurl;
-    const userName = user[0].givenName + " " + user[0].familyName;
+    // 1. Ensure script exists
+    const {error: scriptError} = await supabase
+        .from("dynscripts")
+        .select("*")
+        .eq("id", scriptId)
+        .single();
 
-    const newCommentDoc = {
-        _type: "comment",
-        key: `${userId}-${Date.now()}`, // Unique key
-        sanitydocid: scriptId,
-        user: { _ref: user[0]._id, },
-        text: text,
-        timestamp: new Date().toISOString(),
-    };
+    if (scriptError) {
+        throw new Error("Script not found");
+    }
 
-    const newComment =  await client.create(newCommentDoc);
-    const newCommentLocal: comment = {
-        userid: userId ? userId : "", 
-        username: userName,
-        userpicture: userPic,
-        text: newCommentDoc.text, 
-        timestamp: newCommentDoc.timestamp,
-        id: newComment._id,} 
-    console.log(newCommentLocal);
+    // insert comment
+    const { data, error} = await supabase
+        .from("script_comments")
+        .insert({
+            script_id: scriptId,
+            user_id: userId,
+            comment: comment.trim(),
+        })
+        .select()
+        .single();
 
-    await client.patch(scriptId).setIfMissing({ comments: [] }).append("comments", [{_ref: newComment._id}]).commit({autoGenerateArrayKeys: true});
+    if (error) {
+        throw new Error("Failed to add comment");
+    }
 
-    return newCommentLocal;
+    return {comment: data};
 }
 
-export async function deleteComment(scriptId: string, commentId: string) {
+
+export async function LikeScript(userId: string, scriptId: string) {    
     
-    const query = `*[_type == "dynamoscript" && _id == "${scriptId}"][0] {
-        comments,
-        }`;
+    if(!userId || !scriptId) {
+        throw new Error("Missing userId or scriptId");
+    }
 
-    const data = await client.fetch(query);
-    const comment = data.comments.filter((comment: any) => comment._ref == commentId)[0];
-    const commentToRemove = [`comments[_key=="${comment._key}"]`];
+    const supabase = await supabaseServer();
 
-    await client.patch(scriptId).unset(commentToRemove).commit();
-    await client.delete(commentId);
+    // 1. Ensure script exists
+    const { data: script, error: scriptError} = await supabase
+        .from("dynscripts")
+        .select("*")
+        .eq("id", scriptId)
+        .single();
 
-    console.log("Comment removed: ", comment._key);
+    if (scriptError || !script) {
+        throw new Error("Script not found");
+    }
 
-    return comment;
+    // 2. Check if user already liked this script
+    const { data: existingLike } = await supabase
+        .from("script_likes")
+        .select("id")
+        .eq("script_id", scriptId)
+        .eq("user_id", userId)
+        .single();
+
+    let liked: boolean;
+
+    if (existingLike) {
+        // 3.a UNLIKE        
+        await supabase
+            .from("script_likes")
+            .delete()
+            .eq("id", existingLike.id);
+
+        liked = false;
+    } else {
+        // 3b. LIKE
+        await supabase
+            .from("script_likes")
+            .insert({
+                script_id: scriptId,
+                user_id: userId,
+            });
+
+        liked = true;
+    }
+
+    // 4. Get updated likes count
+    const { count } = await supabase
+        .from("script_likes")
+        .select("*", { count: "exact", head: true })
+        .eq("script_id", scriptId);
+
+    return {liked, likes: count ?? 0};
+}
+
+// NEW ACTIONS - using Supabase
+export async function downloadScriptAction(userId: string, slug: string) {
+    if (!userId) throw new Error("UNAUTHORIZED");
+
+    const { stream, filename } = await scriptDownload(slug, userId);
+
+    return new Response(stream, {
+        headers: {
+            "Content-Type": "application/octet-stream",
+            "Content-Disposition": `attachment; filename="${filename}"`,
+        },
+    });
+}
+
+// SCRIPT DOWNLOAD URL
+export async function getDownloadUrl(userId: string, slug: string) {
+    const { signedUrl, filename } = await scriptDownloadUrlOnly(userId, slug);
+
+    console.log(filename);
+
+    return {
+        url: signedUrl,
+        filename,
+    };
+}
+
+// RESOURCE COUNT
+export async function getResourceCounts(): Promise<ResourceCounts> {
+    const [ 
+        sanityCounts, 
+        scriptCount
+    ] = await Promise.all([
+        getResourcesCount(), // from Sanity
+        getScriptsCount(),   // from Supabase
+    ]);
+    
+    return {
+        blogCount: sanityCounts.blogs ?? 0,
+        docCount: sanityCounts.docs ?? 0,
+        tutorialCount: sanityCounts.tutorials ?? 0,
+        codeSnippetCount: sanityCounts.codeSnippets ?? 0,
+        otherAssetCount: sanityCounts.otherAssets ?? 0,
+        dynamoScriptCount: scriptCount ?? 0,
+    };
+}
+
+// ROADMAP ITEMS
+export async function getRoadmapItemsAction(): Promise<RoadmapItem[]>  {
+    const roadmapItems = await getRoadmapItems();
+
+    return roadmapItems;
+}
+
+// COMMENTS BY SCRIPT
+export async function getScriptCommentsAction(scriptId: string): Promise<Comment[]> {
+    const comments = await getCommentsByScriptId(scriptId);
+
+    if (!comments) return [];
+
+    // Normalize comments to match the Comment type: take the first profile entry (if any)
+    return comments.map((c: any) => {
+        const profile = Array.isArray(c.profiles) ? c.profiles[0] : c.profiles;
+        return {
+            id: c.id,
+            script_id: c.script_id,
+            user_id: c.user_id,
+            comment: c.comment,
+            created_at: c.created_at,
+            profiles: {
+                first_name: profile?.first_name ?? "",
+                last_name: profile?.last_name ?? "",
+                avatar_url: profile?.avatar_url ?? "",
+            },
+        } as Comment;
+    });
+}
+
+// POST COMMENT
+export async function postScriptCommentsAction(scriptId: string, userId: string, comment: string): Promise<Comment> {
+    const res = await postCommentByScriptId(scriptId, userId, comment);
+
+    const profiles = res.profiles;
+    return {
+        id: res.id,
+        script_id: res.script_id,
+        user_id: res.user_id,
+        comment: res.comment,
+        created_at: res.created_at,
+        profiles: {
+            first_name: profiles?.first_name ?? "",
+            last_name: profiles?.last_name ?? "",
+            avatar_url: profiles?.avatar_url ?? "", 
+        },
+    } as Comment;
+}
+
+// DELETE COMMENT
+export async function deleteCommentAction(commentId: string, userId: string) {
+    const res = await deleteComment(commentId, userId);
+
+    if (!res) return "FORBIDDEN";
+
+    return res;
+}
+
+// GET PROFILE BY ID
+export async function getProfileByIdAction(profileId: string) {
+    const profile = await getProfileById(profileId);
+
+    if (!profile) return null;
+
+    return profile;
+}
+
+// GET SCRIPT VERSIONS
+export async function getScriptVersionsAction(scriptId: string): Promise<MinimalVersion[]> {
+    const versions = await getAllVersions(scriptId);
+
+    if (versions.length < 1) return [];
+
+    return versions;
+}
+
+// GET VERSION BY ID
+export async function getVersionByIdAction(versionId: string) {
+    const version = await getVersionById(versionId);
+
+    if (!version) return null;
+
+    return version;
+}
+
+// SET CURRENT VERSION
+export async function setCurrentVersionAction(versionId: string, userId: string) {
+    const res = await setCurrentVersion(versionId, userId);
+
+    return res;
+}
+
+// DELETE VERSION BY ID
+export async function deleteVersionAction(versionId: string, userId: string) {
+    const res = await deleteVersion(versionId, userId);
+
+    return res; 
+}
+
+// POST OR REMOVE SCRIPT LIKE
+export async function postLikeAction(scriptId: string, userId: string) {
+    const likedByUser = await scriptLikedByUserId(userId, scriptId);
+
+    if (!likedByUser) {
+        const res = await postLike(scriptId, userId);
+        return res;
+    }
+
+    const deleteRes = await deleteLike(scriptId, userId);
+    return deleteRes;
+}
+
+// UPDATE SCRIPT STATUS
+export async function updateScriptStatusAction(scriptId: string, isPublic: boolean, userId: string) {
+    if (isPublic) {
+        const res = await updateScriptPrivate(scriptId, userId);
+        return res.message;
+    }
+
+    const publicRes = await updateScriptPublic(scriptId, userId);
+    return publicRes.message;
+}
+
+// UPDATE SCRIPT DATA
+export async function updateScriptAction(scriptId: string, payload: ScriptUpdate) {
+    await patchScript(scriptId, payload);
+
+    revalidatePath("/dashboard");
+
+    return "SUCCESS";    
 }
