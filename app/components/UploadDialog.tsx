@@ -22,12 +22,11 @@ import dynamoImage from "@/public/dynamo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CloudUpload, Paperclip } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { scriptFormSchema } from "../lib/zodSchemas";
-
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
+import { analyzeDynamoFileAction, publishScriptAction } from "../actions/serverActions";
 
 const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: ()=> void}) => {    
     const [pendingAnalyze, setPendingAnalyze] = useState(false);
@@ -53,33 +52,26 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
     // STEP 1: Analyze Script
     // ----------------------
     async function handleAnalyze() {
-        if (!uploadedFile) return alert("Please upload a Dynamo (.dyn) file first.");
+        if (!uploadedFile) {
+            alert("Please upload a Dynamo (.dyn) file first.");
+            return;
+        }
         
         setPendingAnalyze(true);
 
         try {
-            const fd = new FormData();
-            fd.append("file", uploadedFile ?? "");
+            const { parsedJson, scriptData } = 
+                await analyzeDynamoFileAction(uploadedFile);
 
-            const res = await fetch("/api/scripts/analyze", {
-                method: "POST",
-                headers: { "x-api-key": API_KEY },
-                body: fd,
-            });
-
-            if (!res.ok) throw new Error(await res.text());
-
-            const parsed = await res.json();
-            const scriptData = parsed.scriptData;
-            console.log(scriptData); //Check - Remove after
+            // Store for pubish step
             setAnalyzeData(scriptData);
 
             form.setValue("title", scriptData.Name ?? "");
             form.setValue("description", scriptData.Description ?? "");
             form.setValue("scriptFile", [uploadedFile]);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Analyze failed", err);
-            alert("Analyze failed");
+            alert(err.message ?? "Analyze failed");
         } finally {
             setPendingAnalyze(false);
         }        
@@ -89,38 +81,31 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
     // STEP 2: Publish Script
     // ----------------------
     async function handlePublish(values: z.infer<typeof scriptFormSchema>) {
-        if (!analyzeData) return alert("Analyze the script first.");
+        if (!analyzeData) {
+            alert("Analyze the script first.");
+            return;
+        }
         
         setPendingPublish(true);
 
         try {
-            const fd = new FormData();
-            fd.append("file", values.scriptFile[0]);
-            fd.append("title", values.title);
-            fd.append("description", values.description);
-            fd.append("tags", values.tags.join(","));
-            fd.append("scriptType", values.scripttype);
-            if (values.youtubevideo) {
-                fd.append("demoLink", values.youtubevideo);
-            }
-            fd.append("parsedJson", JSON.stringify(analyzeData));
-            fd.append("isPublic", values.shareagree ? "true" : "false")
-
-            const res = await fetch("/api/scripts/publish", {
-                method: "POST",
-                headers: { "x-api-key": API_KEY },
-                body: fd,
-            });
-
-            if (!res.ok) throw new Error(await res.text());
+            await publishScriptAction({
+                file: values.scriptFile[0],
+                parsedJson: analyzeData,
+                title: values.title,
+                description: values.description,
+                scriptType: values.scripttype.toLowerCase(),
+                tags: values.tags,
+                isPublic: values.shareagree,
+            })
 
             submitHandler();
             alert("Script published successfully");
-        } catch (err) {
-            console.error("Publish failed:", err);
-            alert("Publish failed");
-        } finally {
             resetAll();
+        } catch (err: any) {
+            console.error("Publish failed:", err);
+            alert(err.message ?? "Publish failed");
+        } finally {
             setPendingPublish(false);
         }        
     }

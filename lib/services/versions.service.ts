@@ -1,8 +1,9 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { VERSION_SHEET_FIELDS } from "./versions.select";
-import { createSignedUrl, extractStoragePath } from "../supabase/storage";
+import { createSignedUrl, extractStoragePath, extractStoragePaths } from "../supabase/storage";
 import { SCRIPT_OWNER_FIELDS } from "./scripts.select";
 
+// GET ALL VERSIONS
 export async function getAllVersions(scriptId: string) {
     const supabase = supabaseServer();
 
@@ -232,4 +233,48 @@ export async function deleteVersion(versionId: string, userId: string) {
     if (deleteErr) throw new Error("FAILED_TO_DELETE");
 
     return true;
+}
+
+// DELETE ALL VERSIONS
+export async function deleteAllVersions(scriptId: string) {
+    const supabase = supabaseServer();
+
+    const { data: versions, error: versionsErr } = await supabase
+        .from("dynscript_versions")
+        .select("id, dyn_file_url")
+        .eq("script_id", scriptId);
+
+    if (versionsErr) throw versionsErr;
+    if (!versions || versions.length === 0) return;
+
+    const versionIds = versions.map(v => v.id);
+    const fileUrls = versions.map(v => v.dyn_file_url);
+
+    const storagePaths = extractStoragePaths(fileUrls, "dynamo-scripts");
+    
+    // Delete Python nodes in one query
+    const { error: pythonDeleteErr } = await supabase
+        .from("dynscript_python_nodes")
+        .delete()
+        .in("script_version_id", versionIds);
+
+    if (pythonDeleteErr) throw pythonDeleteErr;
+
+    // Delete versions in one query
+    const { error: versionsDeleteErr } = await supabase
+        .from("dynscript_versions")
+        .delete()
+        .eq("script_id", scriptId);
+
+    if (versionsDeleteErr) throw versionsDeleteErr;
+
+    // Delete files from storage
+    if (storagePaths.length > 0) {
+        const { error: filesDeleteErr } = await supabase
+            .storage
+            .from("dynamo-scripts")
+            .remove(storagePaths);
+
+        if (filesDeleteErr) throw filesDeleteErr;
+    }    
 }

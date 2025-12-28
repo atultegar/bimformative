@@ -6,20 +6,34 @@ import { client } from "../lib/sanity";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase/server";
-import { getScriptsCount, patchScript, scriptDownload, scriptDownloadUrlOnly, scriptLikedByUserId, updateScriptPrivate, updateScriptPublic } from "@/lib/services/scripts.service";
+import { deleteScript, getScriptsCount, patchScript, publishScript, publishVersion, scriptDownload, scriptDownloadUrlOnly, scriptLikedByUserId, updateScriptPrivate, updateScriptPublic } from "@/lib/services/scripts.service";
 import { getResourcesCount, getRoadmapItems } from "@/lib/services/sanity.service";
 import { ResourceCounts, RoadmapItem } from "@/lib/types/resources";
 import { Comment } from "@/lib/types/comment";
 import { deleteComment, getCommentsByScriptId, postCommentByScriptId } from "@/lib/services/comments.service";
 import { getProfileById } from "@/lib/services/profiles.service";
-import { Noto_Sans_Tamil_Supplement } from "next/font/google";
-import { deleteVersion, getAllVersions, getVersionById, setCurrentVersion } from "@/lib/services/versions.service";
+import { deleteAllVersions, deleteVersion, getAllVersions, getVersionById, setCurrentVersion } from "@/lib/services/versions.service";
 import { MinimalVersion } from "@/lib/types/version";
 import { deleteLike, postLike } from "@/lib/services/likes.service";
-import { ScriptUpdate } from "@/lib/types/script";
+import { PublishScriptInput, ScriptUpdate } from "@/lib/types/script";
+import { analyzeDynamoJson, parseDynamoJsonFromFile } from "@/lib/services/dynalyzer.service";
 
 
 const FUNCTION_URL = process.env.AZURE_FUNCTION_URL;
+const DEV_BYPASS = process.env.NODE_ENV === "development";
+const DEV_USER_ID = process.env.DEV_FAKE_USER_ID as string ?? "dev-user";
+
+async function getCurrentUserId(): Promise<string> {
+    if (DEV_BYPASS) {
+        return DEV_USER_ID;
+    }
+
+    const { userId } = await auth();
+    if (!userId) {
+        return "guest";
+    }
+    return userId;
+}
 
 
 export async function addScriptToDataset(
@@ -477,7 +491,11 @@ export async function postLikeAction(scriptId: string, userId: string) {
 }
 
 // UPDATE SCRIPT STATUS
-export async function updateScriptStatusAction(scriptId: string, isPublic: boolean, userId: string) {
+export async function updateScriptStatusAction(scriptId: string, isPublic: boolean) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) throw new Error("UNAUTHORIZED");
+
     if (isPublic) {
         const res = await updateScriptPrivate(scriptId, userId);
         return res.message;
@@ -489,9 +507,84 @@ export async function updateScriptStatusAction(scriptId: string, isPublic: boole
 
 // UPDATE SCRIPT DATA
 export async function updateScriptAction(scriptId: string, payload: ScriptUpdate) {
-    await patchScript(scriptId, payload);
+    const userId = await getCurrentUserId();
+
+    if (!userId) throw new Error("UNAUTHORIZED");
+
+    await patchScript(scriptId, userId, payload);
 
     revalidatePath("/dashboard");
 
-    return "SUCCESS";    
+    return "SUCCESS";  
+}
+
+// ANALYZE SCRIPT FILE
+export async function analyzeDynamoFileAction(file: File) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) throw new Error("UNAUTHORIZED");
+
+    const parsedJson = await parseDynamoJsonFromFile(file);
+    return analyzeDynamoJson(parsedJson);
+}
+
+// PUBLISH SCRIPT FILE
+export async function publishScriptAction(input: Omit<PublishScriptInput, "userId">) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+        throw new Error("UNAUTHORIZED");
+    }
+
+    const result = publishScript({
+        ...input,
+        userId,
+    });
+
+    revalidatePath("/resources/dynamo-scripts");
+    revalidatePath("/dashboard");
+
+    return result;
+}
+
+// PUBLISH SCRIPT VERSION
+export async function publishVersionAction(slug: string, file: File, parsedJson?: any | null, changelog?: string) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+        throw new Error("UNAUTHORIZED");
+    }
+
+    const result = await publishVersion(slug, userId, file, parsedJson, changelog);
+
+    revalidatePath("/resources/dynamo-scripts");
+    revalidatePath("/dashboard");
+
+    return result;    
+}
+
+// DELETE ALL VERSIONS
+export async function deleteAllVersionsAction(scriptId: string) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+        throw new Error("UNAUTHORIZED");
+    }
+
+    await deleteAllVersions(scriptId);
+}
+
+// DELETE SCRIPT INCLUDING ALL VERSIONS
+export async function deleteScriptAction(scriptId: string) {
+    const userId = await getCurrentUserId();
+
+    if (!userId) {
+        throw new Error("UNAUTHORIZED");
+    }
+
+    await deleteScript(scriptId, userId);
+    revalidatePath("/resources/dynamo-scripts");
+    revalidatePath("/dashboard");
+
+    return true;
 }

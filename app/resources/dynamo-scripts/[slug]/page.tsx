@@ -183,7 +183,7 @@ export default async function ScriptDetailsPage({ params }: { params: { slug: st
                                             <div key={i}>
                                                 <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <Button>
+                                                        <Button size={"sm"}>
                                                             <FaPython className="w-6 h-6" />
                                                             Python Node - {p.order_index + 1}
                                                         </Button>
@@ -218,6 +218,14 @@ export default async function ScriptDetailsPage({ params }: { params: { slug: st
                     </CardContent>
 
                     <CardFooter className="flex items-center justify-between px-6 py-4">
+                        <ClientVersionSheet
+                                title={dynScript.title}
+                                scriptId={dynScript.id}
+                                currentVersionNumber={dynScript.version_number}
+                                scriptOwnerId={dynScript.owner_id}
+                                currentUserId={currentUserId}
+                                variant="button"
+                            />                      
                         <LikeButton variant="full" scriptId={dynScript.id} likesCount={dynScript.likes_count} likedByUser={likedByUser} userId={currentUserId} />
                         <DownloadButton userId={currentUserId} slug={dynScript.slug} downloadsCount={dynScript.downloads_count} variant="full" />
                     </CardFooter>

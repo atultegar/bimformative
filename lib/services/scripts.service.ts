@@ -1,9 +1,14 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { SCRIPT_MINIMAL_FIELDS, SCRIPT_DETAIL_FIELDS, SCRIPT_OWNER_FIELDS, SCRIPT_SLUG_ONLY, SCRIPT_DOWNLOAD_FIELDS, PYTHON_SCRIPTS_FIELDS } from "./scripts.select";
-import { PaginationParams, PublicScriptFilters, ScriptUpdate } from "@/lib/types/script";
+import { PaginationParams, PublicScriptFilters, PublishScriptInput, PublishScriptResult, ScriptUpdate } from "@/lib/types/script";
 import { createSignedUrl } from "@/lib/supabase/storage";
 import { error } from "console";
+import { generateSlug } from "../utils";
+import { deleteAllVersions, getAllVersions } from "./versions.service";
 
+//#region MYREGION
+
+//#endregion
 
 // GET ALL PUBLIC SCRIPTS
 export async function getPublicScripts() {
@@ -148,6 +153,23 @@ export async function getScriptById(id: string, userId?: string) {
     }
 
     return data;    
+}
+
+// CHECK FOR OWNERSHIP
+export async function checkScriptOwnership(scriptId: string, userId: string) {
+    const supabase = supabaseServer();
+
+    const { data, error } = await supabase
+        .from("dynscripts")
+        .select("id, owner_id")
+        .eq("id", scriptId)
+        .single();
+
+    if (error || !data) throw new Error("SCRIPT_NOT_FOUND");
+
+    if (data.owner_id !== userId) return false;
+
+    return true;
 }
 
 // SCRIPT SLUGS
@@ -348,7 +370,7 @@ export async function updateScriptPrivate(scriptId: string, userId: string) {
 }
 
 // UPDATE SCRIPT DATA
-export async function patchScript(scriptId: string, script: ScriptUpdate) {
+export async function patchScript(scriptId: string, userId: string, script: ScriptUpdate) {
     const supabase = supabaseServer();
 
     const { title, description, script_type, tags, current_version } = script;
@@ -356,11 +378,13 @@ export async function patchScript(scriptId: string, script: ScriptUpdate) {
     // Check if the script is valid
     const { data: scriptData, error: scriptErr } = await supabase
         .from("dynscripts")
-        .select("id, current_version_number")
+        .select("id, current_version_number, owner_id")
         .eq("id", scriptId)
         .single();
 
     if (scriptErr || !scriptData) throw new Error("SCRIPT_NOT_FOUND");
+
+    if (scriptData.owner_id !== userId) throw new Error("UNAUTHORIZED");
 
     // Update the script details
     const { data, error: updateErr } = await supabase
@@ -399,4 +423,302 @@ export async function patchScript(scriptId: string, script: ScriptUpdate) {
         message: "Script updated successfully",
         script: data
     };    
+}
+
+// UPLOAD SCRIPT
+export async function publishScript(
+    input: PublishScriptInput
+): Promise<PublishScriptResult> {
+    const {
+        userId,
+        file,
+        parsedJson = null,
+        title = "",
+        description = "",
+        scriptType= "",
+        tags = [],
+        isPublic = false,
+    } = input;
+
+    if (!file) throw new Error("FILE_IS_REQUIRED");
+
+    const supabase = supabaseServer();
+
+    const baseTitle = title || file.name.replace(/\.[^/.]+$/, "");
+    const slug = generateSlug(baseTitle, userId);
+
+    const { data: existingScript, error: existingErr } = await supabase
+        .from("dynscripts")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+
+    let scriptId: string;
+
+    if (!existingScript){
+        // create new script row
+        const { data: newScript, error: createErr } = await supabase
+            .from("dynscripts")
+            .insert([{
+                owner_id: userId,
+                title: baseTitle,
+                slug,
+                description: description || null,
+                script_type: scriptType || null,
+                tags,
+                current_version_number: null,
+                is_public: isPublic,
+            }])
+            .select()
+            .single();
+
+        if (createErr) throw error;
+        scriptId = newScript.id;
+    } else {
+        // Script exists - optional metadata refresh
+        scriptId = existingScript.id;
+
+        const { error: updateMetaErr } = await supabase
+            .from("dynscripts")
+            .update({
+                title: title || undefined,
+                description: description || undefined,
+                script_type: scriptType || undefined,
+                tags: tags.length ? tags : undefined,
+                is_public: isPublic || false,
+            })
+            .eq("id", scriptId);
+
+        if (updateMetaErr) throw error;
+    }        
+
+    if (!scriptId) throw error;
+
+    // 2) Determine new version number
+    const { data: versionRows, error: versionSelectErr } = await supabase
+        .from("dynscript_versions")
+        .select("version_number")
+        .eq("script_id",scriptId)
+        .order("version_number", { ascending: false})
+        .limit(1);
+
+    if (versionSelectErr) throw versionSelectErr;
+
+    // Reset is_current = false for all versions
+    const { error: updateErr } = await supabase
+        .from("dynscript_versions")
+        .update({ is_current : false})
+        .eq("script_id",scriptId);
+
+    const newVersion = (versionRows?.[0]?.version_number ?? 0) + 1;
+
+    // 3) uplaod file to Supabase Storage
+    
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    const filePath = `${slug}/v${newVersion}.dyn`;
+
+    const { error: uploadError } = await supabase.storage
+        .from("dynamo-scripts")
+        .upload(filePath, fileBuffer, {
+            contentType: file.type || "application/json",
+            cacheControl: "3600",
+            upsert: true,
+        });
+
+    if (uploadError) throw uploadError;
+
+    const { data: urlData } = supabase.storage
+        .from("dynamo-scripts")
+        .getPublicUrl(filePath);
+
+    const fileUrl = urlData?.publicUrl ?? null;
+
+    // 4) Insert version entry into dynscript_versions and return full row (including id)
+    const versionInsert = {
+        script_id: scriptId,
+        version_number: newVersion,
+        is_current: true,
+        changelog: newVersion === 1 ? "first version" : "",
+        dyn_file_url: fileUrl,
+        dynamo_version: parsedJson?.DynamoVersion ?? null,
+        is_player_ready: parsedJson?.DynamoPlayerReady ?? false,
+        external_packages: parsedJson?.ExternalPackages ?? null,
+        nodes: parsedJson?.Nodes ?? null,
+        connectors: parsedJson?.Connectors ?? null,
+    };
+
+    const { data: versionRow, error: versionInsertErr } = await supabase
+        .from("dynscript_versions")
+        .insert([versionInsert])
+        .select()
+        .single();
+
+    if (versionInsertErr) throw versionInsertErr;
+
+    // 5) Insert python nodes if exist (use parsedJson.Nodes)
+    if (parsedJson?.Nodes?.length) {
+        const pythonNodes = parsedJson.Nodes
+            .filter((n: any) => n.NodeType === "PythonScriptNode")
+            .map((n: any, idx: number) => ({
+                script_version_id: versionRow.id,
+                node_id: n.Id,
+                order_index: idx,
+                python_code: n.Code ?? "",
+            }));
+
+        if (pythonNodes.length) {
+            await supabase.from("dynscript_python_nodes").insert(pythonNodes);
+        }
+    }
+
+    // 6) Set the newly published version as the current version
+    const { error: updateCurrentErr } = await supabase
+        .from("dynscripts")
+        .update({ current_version_number: newVersion })
+        .eq("id", scriptId);
+
+    if (updateCurrentErr) throw updateCurrentErr;
+
+    return {
+        scriptId,
+        version: newVersion,
+        downloadUrl: fileUrl,
+        versionRow,
+    };    
+}
+
+// DELETE SCRIPT
+export async function deleteScript(scriptId: string, userId: string) {
+    const supabase = supabaseServer();
+
+    // Check for existing script
+    const { data: scriptData, error: scriptErr } = await supabase
+        .from("dynscripts")
+        .select("id, current_version_number, owner_id")
+        .eq("id", scriptId)
+        .single();
+
+    if (scriptErr || !scriptData) throw new Error("SCRIPT_NOT_FOUND");
+
+    if (scriptData.owner_id !== userId) throw new Error("UNAUTHORIZED");
+
+    // Delete all versions including python nodes
+    await deleteAllVersions(scriptId);
+
+    const { error: scriptDeleteErr } = await supabase
+        .from("dynscripts")
+        .delete()
+        .eq("id", scriptId);
+
+    if (scriptDeleteErr) throw scriptDeleteErr;   
+}
+
+// PUBLISH VERSION
+export async function publishVersion(slug: string, userId: string, file: File, parsedJson?: any | null, changelog?: string) {
+    if (!file) throw new Error("FILE_IS_REQUIRED");
+
+    const supabase = supabaseServer();
+
+    const { data: existingScript, error: existingErr } = await supabase
+        .from("dynscripts")
+        .select("id, owner_id")
+        .eq("slug", slug)
+        .maybeSingle();
+
+    if (existingErr || !existingScript) throw new Error("SCRIPT_NOT_FOUND");
+
+    if (existingScript.owner_id !== userId) throw new Error("UNAUTHORIZED");
+
+    const scriptId = existingScript.id;
+
+    // Determine new version number
+    const { data: versionRows, error: versionSelectErr } = await supabase
+        .from("dynscript_versions")
+        .select("version_number")
+        .eq("script_id",scriptId)
+        .order("version_number", { ascending: false})
+        .limit(1);
+
+    if (versionSelectErr) throw versionSelectErr;
+
+    // Reset is_current = false for all versions
+    const { error: updateErr } = await supabase
+        .from("dynscript_versions")
+        .update({ is_current : false})
+        .eq("script_id",scriptId);        
+
+    const newVersion = (versionRows?.[0]?.version_number ?? 0) + 1;
+
+    // 3) Upload file to supabase storage
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    const filePath = `${slug}/v${newVersion}.dyn`;
+
+    const { error: uploadError } = await supabase.storage
+        .from("dynamo-scripts")
+        .upload(filePath, fileBuffer, {
+            contentType: file.type || "application/json",
+            cacheControl: "3600",
+            upsert: true,
+        });
+
+    if (uploadError) throw uploadError;
+
+    const { data: urlData } = supabase.storage
+        .from("dynamo-scripts")
+        .getPublicUrl(filePath);
+
+    const fileUrl = urlData?.publicUrl ?? null;
+
+    // 4) Insert version entry into dynscript_versions and return full row (including id)
+    const versionInsert = {
+        script_id: scriptId,
+        version_number: newVersion,
+        is_current: true,
+        changelog: changelog,
+        dyn_file_url: fileUrl,
+        dynamo_version: parsedJson?.DynamoVersion ?? null,
+        is_player_ready: parsedJson?.DynamoPlayerReady ?? false,
+        external_packages: parsedJson?.ExternalPackages ?? null,
+        nodes: parsedJson?.Nodes ?? null,
+        connectors: parsedJson?.Connectors ?? null,
+    };
+
+    const { data: versionRow, error: versionInsertErr } = await supabase
+        .from("dynscript_versions")
+        .insert([versionInsert])
+        .select()
+        .single();
+
+    if (versionInsertErr) throw versionInsertErr;
+
+    // 5) Insert python nodes if exist (use parsedJson.Nodes)
+    if (parsedJson?.Nodes?.length) {
+        const pythonNodes = parsedJson.Nodes
+            .filter((n: any) => n.NodeType === "PythonScriptNode")
+            .map((n: any, idx: number) => ({
+                script_version_id: versionRow.id,
+                node_id: n.Id,
+                order_index: idx,
+                python_code: n.Code ?? "",
+            }));
+
+        if (pythonNodes.length) {
+            await supabase.from("dynscript_python_nodes").insert(pythonNodes);
+        }
+    }
+
+    // 6) Set the newly published version as the current version
+    const { error: updateCurrentErr } = await supabase
+        .from("dynscripts")
+        .update({ current_version_number: newVersion })
+        .eq("id", scriptId);
+
+    if (updateCurrentErr) throw updateCurrentErr;
+
+    return {
+        scriptId,
+        version: newVersion,
+        downloadUrl: fileUrl,
+        versionRow,
+    };
 }

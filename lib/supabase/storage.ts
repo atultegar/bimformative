@@ -13,6 +13,22 @@ export function extractStoragePath(publicUrl: string, bucketName: string) {
     }
 }
 
+export function extractStoragePaths(
+    publicUrls: (string | null | undefined)[], 
+    bucketName: string
+): string[] {
+    return publicUrls
+        .filter(Boolean)
+        .map((publicUrl) => {
+            const marker = `/storage/v1/object/public/${bucketName}/`;
+            const idx = publicUrl!.indexOf(marker);
+            return idx !== -1
+            ? publicUrl!.slice(idx + marker.length)
+            : null;
+        })
+        .filter(Boolean) as string[]
+}
+
 export async function createSignedUrl(publicUrl: string){
     // publicUrl: https://lkkvozprbvysnqhcstbp.supabase.co/storage/v1/object/public/dynamo-scripts/adaptive-point-elevation-update-d53d9e/v1.dyn
     

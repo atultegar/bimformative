@@ -63,6 +63,7 @@
     "next-sanity": "^11.6.6",
     "next-themes": "^0.3.0",
     "next-video": "^2.5.1",
+    "openapi3-ts": "^4.5.0",
     "prism-react-renderer": "^2.4.0",
     "prismjs": "^1.29.0",
     "react": "^19.2.1",
@@ -83,6 +84,7 @@
     "slugify": "^1.6.6",
     "sonner": "^2.0.1",
     "svix": "^1.62.0",
+    "swagger-ui-react": "^5.31.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2"
@@ -98,6 +100,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/swagger-ui-react": "^5.18.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.0",
     "postcss": "^8",

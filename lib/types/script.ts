@@ -76,4 +76,27 @@ export type ScriptPublish = {
     demo_link: string;
     is_public: boolean;
 }
-    
+
+export type PublishScriptInput = {
+    userId: string;
+    file: File;
+    parsedJson?: any | null;
+    title?: string;
+    description?: string;
+    scriptType?: string;
+    tags?: string[];
+    demoLink?: string;
+    isPublic?: boolean;
+}
+
+export type PublishScriptResult = {
+    scriptId: string;
+    version: number;
+    downloadUrl: string | null;
+    versionRow: any;
+}
+
+export type VersionPublish = {
+    scriptFile: File;
+    changelog: string;
+}

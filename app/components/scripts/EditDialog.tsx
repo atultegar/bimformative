@@ -76,12 +76,7 @@ export default function EditDialog({
 
             onOpenChange(false);
         });
-    }
-
-    console.log({
-        formValue: form.watch("current_version"),
-        versions: versions.map(v => v.version_number.toString())
-    });
+    }    
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
