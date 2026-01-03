@@ -38,7 +38,7 @@ export const versionColumns = (title: string, isOwner: boolean, userId: string):
         header: "Version",
         cell: ({ row }) => (
             <div className="items-center justify-center">
-                <Badge variant={row.original.is_current ? "default" :"outline"}>V{row.original.version_number}</Badge>
+                <Badge variant={"outline"} className={`${row.original.is_current ? "text-primary" : "text-secondary-foreground"}`}>V{row.original.version_number}</Badge>
             </div>
             
         ),

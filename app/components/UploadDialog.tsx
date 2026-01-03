@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { scriptFormSchema } from "../lib/zodSchemas";
 import { analyzeDynamoFileAction, publishScriptAction } from "../actions/serverActions";
+import { toast } from "sonner";
 
 const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: ()=> void}) => {    
     const [pendingAnalyze, setPendingAnalyze] = useState(false);
@@ -43,7 +44,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
             description: "",
             youtubevideo: "",
             tags: [],
-            scripttype: "Revit",
+            scripttype: "revit",
             shareagree: false,
         },      
     });
@@ -53,7 +54,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
     // ----------------------
     async function handleAnalyze() {
         if (!uploadedFile) {
-            alert("Please upload a Dynamo (.dyn) file first.");
+            toast.error("Please upload a Dynamo (.dyn) file first.");
             return;
         }
         
@@ -70,8 +71,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
             form.setValue("description", scriptData.Description ?? "");
             form.setValue("scriptFile", [uploadedFile]);
         } catch (err: any) {
-            console.error("Analyze failed", err);
-            alert(err.message ?? "Analyze failed");
+            toast.error(err.message ?? "Analyze failed");
         } finally {
             setPendingAnalyze(false);
         }        
@@ -82,7 +82,7 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
     // ----------------------
     async function handlePublish(values: z.infer<typeof scriptFormSchema>) {
         if (!analyzeData) {
-            alert("Analyze the script first.");
+            toast.warning("Analyze the script first.");
             return;
         }
         
@@ -100,11 +100,10 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
             })
 
             submitHandler();
-            alert("Script published successfully");
+            toast.success("Script published successfully");
             resetAll();
         } catch (err: any) {
-            console.error("Publish failed:", err);
-            alert(err.message ?? "Publish failed");
+            toast.error(err.message ?? "Publish failed");
         } finally {
             setPendingPublish(false);
         }        
@@ -208,11 +207,11 @@ const UploadDialog = ({userId, submitHandler}: {userId: string, submitHandler: (
                                     <FormLabel className="mx-3">Script Type</FormLabel>
                                     <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-5 mx-3">
                                         <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <RadioGroupItem value="Revit" />
+                                            <RadioGroupItem value="revit" />
                                             <FormLabel className="font-normal">Revit</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <RadioGroupItem value="Civil3D" />
+                                            <RadioGroupItem value="civil3d" />
                                             <FormLabel className="font-normal">Civil 3D</FormLabel>
                                         </FormItem>
                                     </RadioGroup>

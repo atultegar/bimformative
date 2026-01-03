@@ -8,6 +8,7 @@ import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "
 import { CloudUpload, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export default function UploadVersionDialog({
     slug, 
@@ -32,7 +33,7 @@ export default function UploadVersionDialog({
 
     async function handleAnalyze() {
         if (!uploadedFile) {
-            alert("Please upload a Dynamo (.dyn) file first.");
+            toast.warning("Please upload a Dynamo (.dyn) file first.");
             return;
         }
 
@@ -45,8 +46,7 @@ export default function UploadVersionDialog({
             setAnalyzeData(scriptData);
             form.setValue("scriptFile", uploadedFile);
         } catch (err: any) {
-            console.error("Analyze failed", err);
-            alert(err.message ?? "Analyze failed");
+            toast.error(err.message ?? "Analyze failed");
         } finally {
             setPendingAnalyze(false);
         }
@@ -54,14 +54,14 @@ export default function UploadVersionDialog({
 
     async function handlePublish(values: VersionPublish) {
         if (!analyzeData) {
-            alert("Analyze the script first.");
+            toast.warning("Analyze the script first.");
             return;
         }
         setPendingPublish(true);
 
         startTransition(async () => {
             await publishVersionAction(slug, values.scriptFile, analyzeData, values.changelog);
-            alert("Version published successfully");
+            toast.success("Version published successfully");
             resetAll();
             setPendingPublish(false);
             onOpenChange(false);

@@ -26,10 +26,15 @@ import CommentForm from "@/app/components/CommentForm";
 import ClientVersionSheet from "@/app/components/scripts/ClientVersionSheet";
 import { auth } from "@clerk/nextjs/server";
 import { getScriptBySlug, getScriptSlugs, pythonScriptsByVersionId, scriptLikedByUserId } from "@/lib/services/scripts.service";
+import { ScriptSlug } from "@/app/lib/interface";
 
 
 const DEV_BYPASS = process.env.NODE_ENV === "development";
 const DEV_USER_ID = process.env.DEV_FAKE_USER_ID as string ?? "dev-user";
+
+interface ScriptPageProps {
+    params: Promise<{ slug: string}>;
+}
 
 async function getCurrentUserId(): Promise<string> {
     if (DEV_BYPASS) {
@@ -44,14 +49,14 @@ async function getCurrentUserId(): Promise<string> {
 }
 
 export async function generateStaticParams() {
-    const slugs = await getScriptSlugs();
+    const slugs: ScriptSlug[] = await getScriptSlugs();
 
     return slugs?.map((s) => ({
         slug: s.slug,
     }));
 }
 ''
-export async function generateMetadata({ params }: { params: { slug: string }}): Promise<Metadata> {
+export async function generateMetadata({ params }: ScriptPageProps): Promise<Metadata> {
     const scriptParams = await params;
     
     const userId = await getCurrentUserId();
@@ -73,7 +78,7 @@ export async function generateMetadata({ params }: { params: { slug: string }}):
     }
 }
 
-export default async function ScriptDetailsPage({ params }: { params: { slug: string}}) {
+export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
     const currentUserId = await getCurrentUserId();
     const scriptParam = await params;
     const dynScript  = await getScriptBySlug(scriptParam.slug, currentUserId);
@@ -225,7 +230,7 @@ export default async function ScriptDetailsPage({ params }: { params: { slug: st
                                 scriptOwnerId={dynScript.owner_id}
                                 currentUserId={currentUserId}
                                 variant="button"
-                            />                      
+                            />                     
                         <LikeButton variant="full" scriptId={dynScript.id} likesCount={dynScript.likes_count} likedByUser={likedByUser} userId={currentUserId} />
                         <DownloadButton userId={currentUserId} slug={dynScript.slug} downloadsCount={dynScript.downloads_count} variant="full" />
                     </CardFooter>

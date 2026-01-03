@@ -96,7 +96,7 @@ export default function CompareVersionDialog({ scriptTitle, versions }:CompareSc
 
         load();
         
-    }, [versionAId, versionBId, API_KEY]);
+    }, [versionAId, versionBId]);
 
     // Still loading
     if (!versionAData || !versionBData) {

@@ -1,3 +1,4 @@
+import { ScriptMinimal } from "@/lib/types/script";
 import { Any } from "next-sanity";
 
 export interface ProjectsCard {
@@ -17,16 +18,18 @@ export interface SimpleBlogCard {
     date: string;
     author: Author;
     tags: string[];
+    featured: boolean;
 }
 
-export interface fullBlog {
-    currentSlug: string;
+export interface FullBlog {    
     title: string;
-    content: any;
+    smallDescription: string;    
+    slug: string;    
     titleImage: any;
-    date: string;
+    date: string;    
+    author: Author;
     tags: string[];
-    smallDescription: string;
+    content: any;    
 }
 
 export interface Author {
@@ -200,4 +203,48 @@ export interface User {
     first_name: string;
     last_name: string;
     role: string;
+}
+
+export interface ScriptSlug {
+    id: string;
+    slug: string;
+    updated_at: string;
+};
+
+export interface PaginatedResult<T> {
+    data: T[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+export interface PublicScript {
+    id: string;
+    owner_id: string;
+    title: string;
+    slug: string;
+    description: string;
+    script_type: string;
+    current_version_number: number;
+    owner_first_name: string;
+    owner_last_name: string;
+    owner_avatar_url: string;
+    demo_link: string;
+    downloads_count: number;
+    likes_count: number;
+}
+
+export interface SanitySearchParams {
+    search: string;
+    page?: number;
+    limit?: number;
+}
+
+export interface SanitySearchResult<T = any> {
+    results: T[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
 }

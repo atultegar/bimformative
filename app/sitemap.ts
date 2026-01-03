@@ -1,25 +1,24 @@
 import { MetadataRoute } from "next";
-import { simpleBlogCard, tag } from "./lib/interface";
-import { client } from "./lib/sanity";
+import { ScriptSlug, SimpleBlogCard } from "./lib/interface";
+import { getBlogs } from "@/lib/services/sanity.service";
+import { getScriptSlugs } from "@/lib/services/scripts.service";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const query = `
-        *[_type == 'blog'] | order(_createdAt desc) {
-        title,
-            smallDescription,
-            "currentSlug": slug.current,
-            titleImage,
-            date,
-            "author": author->{"name": coalesce(name, "Anonymous"), picture},
-            "tags": coalesce(tags, ["Untagged"]),
-        }`;
-
-    const blogs: simpleBlogCard[] = await client.fetch(query);
+    const blogs: SimpleBlogCard[] = await getBlogs();
     const blogUrls: MetadataRoute.Sitemap = blogs.map((blog) => ({
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${blog.currentSlug}`,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${blog.slug}`,
         lastModified: new Date(blog.date),
         changeFrequency: 'never',
         priority: 1,
+    }))
+
+    const scriptSlugs: ScriptSlug[] = await getScriptSlugs();
+    const scriptUrls: MetadataRoute.Sitemap = scriptSlugs.map((script) => ({
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/resources/dynamo-scripts/${script.slug}`,
+        lastModified: new Date(script.updated_at),
+        changeFrequency: 'never',
+        priority: 1,
+
     }))
 
     return [
@@ -101,7 +100,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'yearly',
             priority: 0.5,
         },        
-        ...blogUrls
+        ...blogUrls,
+        ...scriptUrls
     ]
 
 }

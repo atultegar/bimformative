@@ -3,22 +3,17 @@ import { PlayIcon } from "@sanity/icons"
 import { YouTubePreview } from './YouTubePreview';
 
 
-export const youTube = defineType({
+export default{
     name: "youtube",
-    type: "object",
-    title: "YouTube Embed",
+    type: "string",
+    title: "YouTube URL",
     icon: PlayIcon,
-    fields: [
-        defineField({
-            name: "url",
-            type: "url",
-            title: "YouTube video URL",
-        }),
-    ],
     preview: {
-        select: {title: 'url'},
+        select: {
+            title: "."
+        }
     },
     components: {
         preview: YouTubePreview,
     },
-})
+}

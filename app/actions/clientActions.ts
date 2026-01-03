@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { 
     deleteScriptById, 
     fetchScriptDownloadUrl, 
@@ -44,7 +45,7 @@ export async function handleScriptDownload(scriptId: string) {
         // Fetch authenticated download URL
         const downloadUrl = await fetchScriptDownloadUrl(scriptId);
         if(!downloadUrl) {
-            alert("No download URL available");
+            toast.warning("No download URL available");
             return;
         }
 
@@ -87,7 +88,7 @@ export async function handleScriptFileDownload(userId: string, slug: string) {
         const url = URL.createObjectURL(blob);
 
         if(!url || url === "") {
-            alert("No download URL available");
+            toast.info("No download URL available");
         }
 
         // Trigger download
@@ -98,9 +99,8 @@ export async function handleScriptFileDownload(userId: string, slug: string) {
         a.click();
 
         URL.revokeObjectURL(url);
-    } catch (error) {
-        console.error("Download failed:", error);
-        alert("Download failed:");
+    } catch (error: any) {
+        toast.error(error ?? "Download failed:");
     }
 }
 
@@ -136,9 +136,9 @@ export async function handleScriptVersionDownload(title: string, versionId: stri
 
         URL.revokeObjectURL(url);
         
-    } catch (error) {
+    } catch (error: any) {
         console.error("Download failed:", error);
-        alert("Download failed:");
+        toast.error(error ?? "Download failed:");
     }
 }
 

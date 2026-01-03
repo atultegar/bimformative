@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 import { YouTubePreview } from "./youTubeType/YouTubePreview";
 import YouTubePlayer from "react-player/youtube";
 import {youtubeInput} from 'sanity-plugin-youtube-input';
-import { youTube } from "./youTubeType";
+import youTubeType from "./youTubeType";
 import { VideoIcon } from "@sanity/icons";
 
 export const videoTutorial = defineType({
@@ -24,7 +24,7 @@ export const videoTutorial = defineType({
         defineField({
             name: 'url',
             title: 'YouTube Video URL',
-            type: 'youtubeVideo',
+            type: 'youTubeType',
         }),
     ]
 })

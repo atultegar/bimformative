@@ -1,7 +1,7 @@
 // ScriptViewCanvas.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as d3 from "d3";
 import { Node, Connector } from "@/app/lib/interface";
 import { Button } from "@/components/ui/button";
@@ -80,63 +80,7 @@ const ScriptViewCanvas: React.FC<ScriptViewCanvasProps> = ({
 
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  // draw/update function
-  useEffect(() => {
-    if (!svgRef.current) return;
-
-    // create a typed d3 selection from the DOM node
-    const svg = d3.select<SVGSVGElement, unknown>(svgRef.current);
-    // clear previous content
-    svg.selectAll("*").remove();
-
-    // create container groups
-    const container = svg.append("g").attr("class", "container");
-    const nodeGroup = container.append("g").attr("class", "nodes");
-    const connectorGroup = container.append("g").attr("class", "connectors");
-
-    // store container DOM node for bbox calculations
-    containerRef.current = container.node() as SVGGElement | null;
-
-    // create zoom behavior (one per instance)
-    const zoom = d3
-      .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.1, 10])
-      .on("zoom", (event) => {
-        // apply transform to container <g>
-        container.attr("transform", event.transform);
-      });
-
-    zoomRef.current = zoom;
-    svg.call(zoom as any);
-
-    // draw connectors and nodes
-    drawConnectors(connectorGroup, connectors);
-    drawNodes(nodeGroup, nodes, {
-      highlightAdded,
-      highlightRemoved,
-      highlightChanged,
-    });
-
-    // initially zoom to fit *after* drawing
-    // use setTimeout(0) to allow browser to paint in tricky cases (optional)
-    // but typically calling right away works because elements are appended synchronously.
-    setTimeout(() => {
-      zoomToFit();
-    }, 0);
-
-    // cleanup: remove listeners if component unmounts
-    return () => {
-      try {
-        svg.on(".zoom", null);
-      } catch {
-        /* ignore */
-      }
-    };
-    // we intentionally re-run when nodes/connectors/highlight sets change
-  }, [nodes, connectors, highlightAdded, highlightRemoved, highlightChanged]);
-
-  // Zoom-to-fit implementation that uses zoom.transform so zoom state is consistent
-  const zoomToFit = () => {
+  const zoomToFit = useCallback(() => {
     if (!svgRef.current || !containerRef.current || !zoomRef.current) return;
 
     const svgEl = svgRef.current;
@@ -168,6 +112,7 @@ const ScriptViewCanvas: React.FC<ScriptViewCanvasProps> = ({
     // center translation
     const midX = svgW / 2;
     const midY = svgH / 2;
+
     const bboxCenterX = bbox.x + bbox.width / 2;
     const bboxCenterY = bbox.y + bbox.height / 2;
 
@@ -176,15 +121,62 @@ const ScriptViewCanvas: React.FC<ScriptViewCanvasProps> = ({
 
     const transform = d3.zoomIdentity.translate(tx, ty).scale(scale);
 
-    const svg = d3.select(svgEl);
-
-    // apply animated transform using the zoom behavior so its internal state updates
-    svg
+    const svg = d3.select(svgEl)
       .transition()
-      .duration(650)
-      // cast is required to satisfy TS because d3 typings are strict for .call with transform
-      .call((zoomRef.current as unknown as any).transform, transform);
-  };
+      .duration(650)      
+      .call((zoomRef.current as any).transform, transform);
+  }, [width, height]);
+
+  // draw/update function
+  useEffect(() => {
+    if (!svgRef.current) return;
+
+    // create a typed d3 selection from the DOM node
+    const svg = d3.select(svgRef.current);
+    // clear previous content
+    svg.selectAll("*").remove();
+
+    // create container groups
+    const container = svg.append("g").attr("class", "container");
+    const nodeGroup = container.append("g").attr("class", "nodes");
+    const connectorGroup = container.append("g").attr("class", "connectors");
+
+    // store container DOM node for bbox calculations
+    containerRef.current = container.node();
+
+    // create zoom behavior (one per instance)
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.1, 10])
+      .on("zoom", (event) => {
+        // apply transform to container <g>
+        container.attr("transform", event.transform);
+      });
+
+    zoomRef.current = zoom;
+    svg.call(zoom as any);
+
+    
+
+    // draw connectors and nodes
+    drawConnectors(connectorGroup, connectors);
+    drawNodes(nodeGroup, nodes, {
+      highlightAdded,
+      highlightRemoved,
+      highlightChanged,
+    });
+
+    requestAnimationFrame(() => zoomToFit());
+    
+    // cleanup: remove listeners if component unmounts
+    return () => {
+      svg.on(".zoom", null);
+    };
+    // we intentionally re-run when nodes/connectors/highlight sets change
+  }, [nodes, connectors, highlightAdded, highlightRemoved, highlightChanged, zoomToFit,]);
+
+  // Zoom-to-fit implementation that uses zoom.transform so zoom state is consistent
+  
 
   const toggleFullScreen = () => {
     if (!wrapperRef.current) return;
@@ -200,13 +192,15 @@ const ScriptViewCanvas: React.FC<ScriptViewCanvasProps> = ({
   // Optional: auto-zoom-to-fit when container resizes (useful in responsive layouts)
   useEffect(() => {
     if (!wrapperRef.current) return;
+
     const ro = new ResizeObserver(() => {
       // small debounce
-      requestAnimationFrame(() => zoomToFit());
+      requestAnimationFrame(zoomToFit);
     });
+
     ro.observe(wrapperRef.current);
     return () => ro.disconnect();
-  }, []);
+  }, [zoomToFit]);
 
   return (
     <div ref={wrapperRef} className="relative w-full">

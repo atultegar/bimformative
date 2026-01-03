@@ -5,7 +5,7 @@ import revitImage from "@/public/bim-icons/revit.png";
 import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, History } from "lucide-react";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Badge } from "@/components/ui/badge";
 import { VersionSheetContent } from "../components/scripts/version-sheet-content";
 import { ScriptDashboard } from "@/lib/types/script";
+import ClientVersionSheet from "../components/scripts/ClientVersionSheet";
 
 export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[] => [
     {
@@ -104,20 +105,13 @@ export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[]
 
             return (
                 <div className="flex items-center justify-center">
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Badge variant={"outline"} className="cursor-pointer">V{version}</Badge>
-                        </SheetTrigger>
-                        <SheetContent className="w-[600px] sm:max-w-none overflow-y-auto">
-                            <SheetHeader>
-                                <SheetTitle>Version history</SheetTitle>
-                                <SheetDescription>{row.original.title}</SheetDescription>
-                            </SheetHeader>
-
-                            {/* Fetch and display versions */}
-                            <VersionSheetContent title={row.original.title} scriptOwnerId={row.original.owner_id} scriptId={row.original.id} currentUserId={currentUserId} />
-                        </SheetContent>
-                    </Sheet>       
+                    <ClientVersionSheet 
+                        title={row.original.title} 
+                        currentVersionNumber={version} 
+                        scriptOwnerId={row.original.owner_id} 
+                        scriptId={row.original.id} 
+                        currentUserId={currentUserId} 
+                    />
                 </div>
             );
         },
@@ -185,7 +179,7 @@ export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[]
         cell: ({ row }) => {
             const script = row.original            
             return (
-                <UserActionMenu script={script} currentUserId={currentUserId} />
+                <UserActionMenu script={script} />
             );
         }
     },

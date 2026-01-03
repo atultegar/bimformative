@@ -11,10 +11,6 @@ export default function UserMenu() {
                     labelIcon = {<LayoutDashboard className="w-4 h-4"/>}                    
                     href="/dashboard" />
                 <UserButton.Link 
-                    label="Dynamo Playground"
-                    labelIcon = {<ToyBrick className="w-4 h-4"/>}                    
-                    href="/upload" />
-                <UserButton.Link 
                     label="Search"
                     labelIcon = {<Search className="w-4 h-4"/>}                    
                     href="/search" />

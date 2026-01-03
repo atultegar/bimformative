@@ -5,24 +5,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "../resources/dynamo-scripts/data-table";
 import { columns } from "../resources/dynamo-scripts/columns";
 import BlogPostCard from "../components/BlogPostCard";
 import { OtherDataTable } from "../resources/other-assets/other-data-table";
 import { othercolumns } from "../resources/other-assets/other-columns";
-import { set } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { YouTubePlayer } from "../components/YouTubePlayer";
 import Link from "next/link";
 import Image from "next/image";
 import { SiGitbook } from "react-icons/si";
-import { codeSnippet, DocsCard, simpleBlogCard, videoTutorial } from "../lib/interface";
+import { codeSnippet, DocsCard, SimpleBlogCard, videoTutorial } from "../lib/interface";
 import { useRouter, useSearchParams } from "next/navigation";
 import searchCover from "@/public/search-cover.png";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import CodeBlock from "../components/CodeBlock";
-import { TbBrandCSharp, TbBrandPython } from "react-icons/tb";
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 
@@ -133,7 +131,7 @@ function ResourcesContent() {
         updateCounts();
     }, [searchTerm]);
 
-    const [blogData, setBlogData] = useState<simpleBlogCard[]>([]);
+    const [blogData, setBlogData] = useState<SimpleBlogCard[]>([]);
     const [dynamoScriptData, setDynamoScriptData] = useState([]);
     const [codeSnippetData, setCodeSnippetData] = useState<codeSnippet[]>([]);
     const [otherAssetsData, setOtherAssetsData] = useState([]);
@@ -214,7 +212,7 @@ function ResourcesContent() {
                 {/* Tab Dynamo Scripts  */}
                 <TabsContent value="dynamoscripts">
                     <div className="container max-w-[1280px] mx-auto py-10">
-                        <DataTable columns={columns} data={dynamoScriptData} />
+                        {/* <DataTable columns={columns} data={dynamoScriptData} /> */}
                     </div>
                 </TabsContent>
 

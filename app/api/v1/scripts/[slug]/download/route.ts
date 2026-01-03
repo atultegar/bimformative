@@ -5,11 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 const DEV_MODE = process.env.NODE_ENV === "development";
 const DEV_FAKE_USER_ID = process.env.DEV_FAKE_USER_ID ?? null;
 
-export async function GET(
-    req: Request,
-    {params}: { params: { slug: string} }
-) {
-    const { slug } = await params;
+export async function GET(req: Request, ctx: RouteContext<"/api/v1/scripts/[slug]/download">) {
+    const { slug } = await ctx.params;
 
     let userId: string | null = null;
 

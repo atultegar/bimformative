@@ -6,7 +6,7 @@ import { client } from "../lib/sanity";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase/server";
-import { deleteScript, getScriptsCount, patchScript, publishScript, publishVersion, scriptDownload, scriptDownloadUrlOnly, scriptLikedByUserId, updateScriptPrivate, updateScriptPublic } from "@/lib/services/scripts.service";
+import { deleteScript, getScriptById, getScriptsCount, patchScript, publishScript, publishVersion, scriptDownload, scriptDownloadUrlOnly, scriptLikedByUserId, updateScriptPrivate, updateScriptPublic } from "@/lib/services/scripts.service";
 import { getResourcesCount, getRoadmapItems } from "@/lib/services/sanity.service";
 import { ResourceCounts, RoadmapItem } from "@/lib/types/resources";
 import { Comment } from "@/lib/types/comment";
@@ -17,6 +17,11 @@ import { MinimalVersion } from "@/lib/types/version";
 import { deleteLike, postLike } from "@/lib/services/likes.service";
 import { PublishScriptInput, ScriptUpdate } from "@/lib/types/script";
 import { analyzeDynamoJson, parseDynamoJsonFromFile } from "@/lib/services/dynalyzer.service";
+import { subscribeToKit } from "@/lib/services/kit.service";
+import { ContactPayload } from "@/lib/types/contact";
+import { headers } from "next/headers";
+import { submitContactMessage } from "@/lib/services/contact.service";
+import { toast } from "sonner";
 
 
 const FUNCTION_URL = process.env.AZURE_FUNCTION_URL;
@@ -137,7 +142,7 @@ export async function getFileDownloadUrl (fileUrl: string){
 
 export async function updateDownloadCount(scriptId:string) {
     if(!scriptId) {
-        alert("Script Id is required")
+        toast.warning("Script Id is required")
         return;
     }
 
@@ -148,7 +153,7 @@ export async function updateDownloadCount(scriptId:string) {
     const script = await client.fetch(query);
 
     if(!script) {
-        alert("Script not found");
+        toast.warning("Script not found");
         return;
     }
 
@@ -162,7 +167,7 @@ export async function updateLikeCount(scriptId: string) {
     const { userId, redirectToSignIn } = await auth();    
 
     if(!scriptId) {
-        alert("Script Id is required")
+        toast.warning("Script Id is required")
         return;
     }
 
@@ -175,7 +180,7 @@ export async function updateLikeCount(scriptId: string) {
     const script = await client.fetch(query);
 
     if(!script) {
-        console.error("Script not found");
+        toast.warning("Script not found");
         return;
     }
 
@@ -205,10 +210,11 @@ export async function fetchScriptDownloadUrl(scriptId: string) {
     const script = await client.fetch(query);
 
     if(!script?.fileUrl) {
-        alert("File not found");
+        toast.error("File not found");
+        return;
     }
 
-    return script.fileUrl;    
+    return script.fileUrl;
 }
 
 export async function deleteScriptById(scriptId: string) {
@@ -445,6 +451,11 @@ export async function getProfileByIdAction(profileId: string) {
     return profile;
 }
 
+// GET SCRIPT by ID
+export async function getScriptByIdAction(scriptId: string) {
+    return await getScriptById(scriptId);
+}
+
 // GET SCRIPT VERSIONS
 export async function getScriptVersionsAction(scriptId: string): Promise<MinimalVersion[]> {
     const versions = await getAllVersions(scriptId);
@@ -515,7 +526,7 @@ export async function updateScriptAction(scriptId: string, payload: ScriptUpdate
 
     revalidatePath("/dashboard");
 
-    return "SUCCESS";  
+    return "SUCCESS"; 
 }
 
 // ANALYZE SCRIPT FILE
@@ -587,4 +598,30 @@ export async function deleteScriptAction(scriptId: string) {
     revalidatePath("/dashboard");
 
     return true;
+}
+
+// SUBSCRIBE NEWSLETTER
+export async function subscribeAction(email: string) {
+    return subscribeToKit(email);
+}
+
+// SUBMIT CONTACT MESSAGE
+export async function submitContactAction(payload: ContactPayload) {
+    const headerList = headers();
+    const ip = (await headerList).get("x-forwarded-for")?.split(",")[0] ?? "unknown";
+
+    const result = await submitContactMessage(payload, ip);
+
+    if (!result.ok) {
+        return {
+            success: false,
+            error: result.error,
+            status: result.status,
+        };
+    }
+
+    return {
+        success: true,
+        message: result.message,
+    };
 }

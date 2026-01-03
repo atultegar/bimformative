@@ -1,21 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
-import { simpleBlogCard } from "../lib/interface";
+import { SimpleBlogCard } from "../lib/interface";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BlogPostCard from "./BlogPostCard";
 import { Search } from "lucide-react";
 
 interface SearchProps {
-    blogs: simpleBlogCard[];
+    blogs: SimpleBlogCard[];
 }
 
 const SearchBlogs: React.FC<SearchProps> = ({blogs}) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [tempSearchTerm, setTempSearchTerm] = useState("");
 
-    const filteredBlogs:simpleBlogCard[] = blogs.filter(
+    const filteredBlogs:SimpleBlogCard[] = blogs.filter(
         (blog) =>
             blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             blog.smallDescription.toLowerCase().includes(searchTerm.toLowerCase())

@@ -35,7 +35,8 @@ export const SCRIPT_OWNER_FIELDS = `
 
 export const SCRIPT_SLUG_ONLY = `
     id,
-    slug
+    slug,
+    updated_at
 `;
 
 export const SCRIPT_DOWNLOAD_FIELDS = `

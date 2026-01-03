@@ -16,6 +16,7 @@ import backCurves from "@/public/background-curves.png";
 import SearchBar from "./SearchBar";
 import { BackgroundCircles } from "./design/Hero";
 import { useRef } from "react";
+import { AuroraText } from "@/components/ui/magicui/aurora-text";
 
 const charm = Charm({ weight: "700", subsets: ["latin"]});
 

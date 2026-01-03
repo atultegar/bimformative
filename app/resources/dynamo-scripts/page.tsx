@@ -11,6 +11,15 @@ const DEV_USER_ID = process.env.DEV_FAKE_USER_ID ?? "dev-user";
 
 export const revalidate = 30;
 
+interface ScriptsPageProps {
+    searchParams: Promise<{
+        page?: string;
+        limit?: string;
+        search?: string;
+        type?: string;
+    }>; 
+}
+
 export const metadata: Metadata = {
     title : "Dynamo Scripts"
 }
@@ -30,19 +39,12 @@ async function getCurrentUserId(): Promise<string> {
 
 export default async function DynamoScriptPage({
     searchParams,
-}: {
-    searchParams?: {
-        page?: string;
-        limit?: string;
-        search?: string;
-        type?: string;
-    };
-}) {
-    const awaitSearchParams = await searchParams;
-    const page = Number(awaitSearchParams?.page ?? 1);
-    const limit = Number(awaitSearchParams?.limit ?? 10);
-    const search = awaitSearchParams?.search ?? "";
-    const type = awaitSearchParams?.type ?? "";
+}: ScriptsPageProps) {
+    const params = await searchParams;
+    const page = Number(params?.page ?? 1);
+    const limit = Number(params?.limit ?? 10);
+    const search = params?.search ?? "";
+    const type = params?.type ?? "";
 
     const currentUserId = await getCurrentUserId();
    

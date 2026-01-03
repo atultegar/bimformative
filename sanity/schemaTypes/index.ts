@@ -5,7 +5,7 @@ import { dynamoScriptType } from "./dynamoscript";
 import { dynamosoftwares } from "./dynamosoftwares";
 import { projectsType } from "./project";
 import { tag } from "./tag";
-import { youTube } from "./youTubeType";
+import youTubeType from "./youTubeType";
 import { testimonial } from "./testimonial";
 import { docsType } from "./docsType";
 import { videoTutorial } from "./videoTutorial";
@@ -18,7 +18,7 @@ export const schemaTypes = [
     projectsType, 
     blogsType, 
     authorType, 
-    youTube, 
+    youTubeType, 
     dynamoScriptType, 
     codeType, 
     tag, 

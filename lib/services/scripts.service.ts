@@ -5,6 +5,7 @@ import { createSignedUrl } from "@/lib/supabase/storage";
 import { error } from "console";
 import { generateSlug } from "../utils";
 import { deleteAllVersions, getAllVersions } from "./versions.service";
+import { PaginatedResult, PublicScript, ScriptSlug } from "@/app/lib/interface";
 
 //#region MYREGION
 
@@ -42,7 +43,7 @@ export async function getScriptsCount() {
 export async function getPublicScriptsPaged(
     filters: PublicScriptFilters = {},
     pagination: PaginationParams = {}
-) {
+): Promise<PaginatedResult<PublicScript>> {
     const supabase = supabaseServer();
 
     const {
@@ -72,6 +73,7 @@ export async function getPublicScriptsPaged(
     }
 
     const { data, error, count } = await query
+        .returns<PublicScript[]>()
         .order("created_at", {ascending: false })
         .range(from, to);
 
@@ -173,7 +175,7 @@ export async function checkScriptOwnership(scriptId: string, userId: string) {
 }
 
 // SCRIPT SLUGS
-export async function getScriptSlugs() {
+export async function getScriptSlugs(): Promise<ScriptSlug[]> {
     const supabase = supabaseServer();
 
     const { data, error } = await supabase
@@ -181,9 +183,9 @@ export async function getScriptSlugs() {
         .select(SCRIPT_SLUG_ONLY)
         .order("created_at", { ascending: false });
 
-    if (error || !data) return null;
+    if (error || !data) throw new Error("SCRIPTS_NOT_FOUND");
 
-    return data;    
+    return data;
 }
 
 // SCRIPT DOWNLOAD

@@ -50,15 +50,16 @@ export async function POST(req: Request) {
     // Do something with payload
     const eventType = evt.type;
     
-    if (evt.type === "user.created") {
+    if (evt.type === "user.created" || evt.type === "user.updated") {
         const { id, email_addresses, image_url, username } = evt.data;
         
         // Insert or update profile
         await supabase.from("profiles").upsert({
             id,
-            email: email_addresses?.[0]?.email_address,
+            email: email_addresses?.[0]?.email_address ?? null,
             username,
             avatar_url: image_url,
+            updated_at: new Date().toISOString(),
         });
     }
 

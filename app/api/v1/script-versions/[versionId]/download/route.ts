@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
-import { scriptDownload } from "@/lib/services/scripts.service";
 import { auth } from "@clerk/nextjs/server";
 import { downloadVersion } from "@/lib/services/versions.service";
 
 const DEV_MODE = process.env.NODE_ENV === "development";
 const DEV_FAKE_USER_ID = process.env.DEV_FAKE_USER_ID ?? null;
 
-export async function GET(
-    req: Request,
-    {params}: { params: { versionId: string} }
-) {
-    const { versionId } = await params;
+export async function GET(req: Request, ctx: RouteContext<"/api/v1/script-versions/[versionId]/download">) {
+    const { versionId } = await ctx.params;
 
     let userId: string | null = null;
 

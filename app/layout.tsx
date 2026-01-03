@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { Inter, Inter_Tight } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Footer } from "./components/Footer";
 import { ThemeProvider } from "./components/theme-provider";
 import { Analytics } from '@vercel/analytics/react'
-import NotificationBar from "./components/NotificationBar";
-import { ToastProvider } from "@/components/ui/toast";
-import { Toaster } from "@/components/ui/toaster";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { AuthProvider } from "./components/AuthProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "./components/Navbar";
+import { Toaster } from "sonner";
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});
@@ -53,7 +50,7 @@ export default function RootLayout({
           {/* <NotificationBar /> */}
           <Navbar />
           <main className="w-full h-full mx-auto">{children}</main>
-          <Toaster />
+          <Toaster richColors expand={true} />
           <Footer />
           <Analytics />
           <SpeedInsights />        

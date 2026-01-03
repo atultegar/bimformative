@@ -13,24 +13,6 @@ export default function VersionActionMenu({ title, version, userId }: { title: s
         update = "updateDilaog",
     }
     const [dialog, setDialog] = useState<Dialogs | null>(null);
-    const [open, setOpen] = useState(false);        
-
-    const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
-
-    async function handleMakeCurrent() {
-        await fetch(`/api/script-versions/${version.id}/set-current`, {
-            method: "POST",
-            headers: { "x-api-key": API_KEY }
-        });
-    }
-
-    async function handleDelete() {
-        await fetch(`/api/script-versions/${version.id}`, {
-            method: "DELETE",
-            headers: { "x-api-key": API_KEY }
-        });
-    }
-    
     
     return (
         <>

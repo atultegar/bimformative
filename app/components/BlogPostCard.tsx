@@ -2,18 +2,18 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DateComponent from "./Date";
-import { simpleBlogCard } from "../lib/interface"
+import { SimpleBlogCard } from "../lib/interface"
 import { urlFor } from "../lib/sanity";
 
 interface BlogPostCardProps {
-    post: simpleBlogCard;
+    post: SimpleBlogCard;
     idx: number;
 }
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, idx }) => {
     return (
         <article key={idx} className="group relative overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent shadow md transition-all hover:shadow-lg">
-            <Link href={`/blog/${post.currentSlug}`} className="block w-full h-full">
+            <Link href={`/blog/${post.slug}`} className="block w-full h-full">
                 <div className="relative h-48 w-full overflow-hidden">
                     <Image src= {urlFor(post.titleImage).url()}
                     alt="image"
@@ -33,8 +33,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, idx }) => {
                         <div className="flex items-center space-x-2">
                             <div className="relative size-8 overflow-hidden rounded-full">
                                 <Image
-                                    src={post.author.pictureurl}
-                                    alt={post.author.name}
+                                    src={post.author.pictureurl ?? null}
+                                    alt={post.author.name ?? ""}
                                     fill
                                     className="object-cover"
                                     />

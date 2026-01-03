@@ -9,6 +9,7 @@ import { ScriptDashboard } from "@/lib/types/script";
 import { deleteScriptAction, updateScriptStatusAction } from "../actions/serverActions";
 import { useRouter } from "next/navigation";
 import UploadVersionDialog from "./UploadVersion";
+import { toast } from "sonner";
 
 export default function UserActionMenu({script}: {script: ScriptDashboard}) {
     const router = useRouter();
@@ -23,10 +24,10 @@ export default function UserActionMenu({script}: {script: ScriptDashboard}) {
             const res = await updateScriptStatusAction(script.id, script.is_public);
 
             if (res === "SUCCESS") {
-                alert(script.is_public ? "Script set to private" : "Script set to public");
+                toast.success(script.is_public ? "Script set to private" : "Script set to public");
                 router.refresh();
             } else {
-                alert("Error updating script");
+                toast.error("Error updating script");
             }    
         });
     };
@@ -89,7 +90,7 @@ export default function UserActionMenu({script}: {script: ScriptDashboard}) {
                         <DialogHeader>
                             <DialogTitle>Delete Script</DialogTitle>
                             <DialogDescription>
-                                Are you sure want to delete script?
+                                Are you sure want to delete this script?
                             </DialogDescription>
                         </DialogHeader>
 

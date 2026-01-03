@@ -3,19 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import SVGCanvasD3 from "../components/svg/SvgCanvasD3";
+import SVGCanvasD3 from "../../components/svg/SvgCanvasD3";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckmarkCircleIcon, CloseCircleIcon } from "@sanity/icons";
 import { TagsInput } from "@/components/ui/tags-input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import CodeBlock from "../components/CodeBlock";
+import CodeBlock from "../../components/CodeBlock";
 import { FaPython } from "react-icons/fa6";
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "@/components/ui/file-upload";
 import { CloudUpload, Paperclip } from "lucide-react";
+import { analyzeDynamoFileAction } from "@/app/actions/serverActions";
+import { toast } from "sonner";
 
 
-export default function UploadPage() {
-    const [file, setFile] = useState<File>();
+export default function DynAnalyzerPage() {
     const [files, setFiles] = useState<File[] | null> (null);
     const [status, setStatus] = useState<"success" | "error" | "loading" | "idle">("idle");
     const [nodes, setNodes] = useState<any[]>([]);
@@ -36,7 +37,7 @@ export default function UploadPage() {
         e.preventDefault();
 
         if (!files) {
-            alert("Please select a file to upload")
+            toast.warning("Please select a file to upload")
             return;
         }
 
@@ -45,33 +46,24 @@ export default function UploadPage() {
             const data = new FormData();
             data.set('file', files[0])
 
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: data
-            });
+            const res = await analyzeDynamoFileAction(files[0]);
+            if (!res) throw new Error("File error");
 
-            if (!res.ok) throw new Error(await res.text());
-
-            const responseData = await res.json();
-            console.log("Response Data:", responseData);
-
-            if(responseData.success && responseData.data) {
-                setNodes(responseData.data.Nodes || []);
-                setConnectors(responseData.data.Connectors || []);
-                setScriptName(responseData.data.Name || "");
-                setDescription(responseData.data.Description || "");
-                setVersion(responseData.data.DynamoVersion || "");
-                setDynamoPlayer(responseData.data.DynamoPlayerReady || false);
-                setPythonScripts(responseData.data.PythonScripts || false);
-                setExternalPackages(responseData.data.ExternalPackages || []);
+            if (res.scriptData) {
+                setNodes(res.scriptData.Nodes || []);
+                setConnectors(res.scriptData.Connectors || []);
+                setScriptName(res.scriptData.Name || "");
+                setDescription(res.scriptData.Description || "");
+                setVersion(res.scriptData.DynamoVersion || "");
+                setDynamoPlayer(res.scriptData.DynamoPlayerReady || false);
+                setPythonScripts(res.scriptData.PythonScripts || false);
+                setExternalPackages(res.scriptData.ExternalPackages || []);
                 
                 setStatus("success");
-            } else {
-                throw new Error("Invalid response structure");
-            }
+            }           
 
         } catch (e:any) {
-            console.error("Upload error:", e);
+            toast.error("Upload error:", e);
             setStatus("error");
         }
     };

@@ -1,21 +1,25 @@
+import { getScriptByIdAction, getScriptVersionsAction, updateScriptAction } from "@/app/actions/serverActions";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScriptUpdate } from "@/lib/types/script";
+import { MinimalVersion } from "@/lib/types/version";
 import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY as string;
 const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHandler: () => void }) => {
     const [loading, setLoading] = useState(true);
-    const [versions, setVersions] = useState<any[] | null>(null);
+    const [versions, setVersions] = useState<MinimalVersion[]>([]);
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<ScriptUpdate>({
         title: "",
         description: "",
         script_type: "",
         tags: [] as string[],
-        current_version_number: 0,
+        current_version: "",
     });
 
     useEffect(() => {
@@ -24,30 +28,22 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
         const load = async () => {
             setLoading(true);
 
-            const sRes = await fetch(`/api/scripts/by-id/${scriptId}`, {
-                method: "GET",
-                headers: { "x-api-key": API_KEY }
-            });
-            const sJson = await sRes.json();
+            // Use server action
+            const script = await getScriptByIdAction(scriptId);
 
-            const vRes = await fetch(`/api/scripts/by-id/${scriptId}/get-versions`, {
-                method: "GET",
-                headers: { "x-api-key": API_KEY }
-            });
+            const versions = await getScriptVersionsAction(scriptId);
 
-            const vJson = await vRes.json();
-
-            if (sJson.script) {
+            if (script) {
                 setFormData({
-                    title: sJson.script.title,
-                    description: sJson.script.description,
-                    script_type: sJson.script.script_type,
-                    tags: sJson.script.tags ?? [],
-                    current_version_number: sJson.script.current_version_number,
+                    title: script.title,
+                    description: script.description,
+                    script_type: script.script_type,
+                    tags: script.tags ?? [],
+                    current_version: script.current_version_number,
                 });
             }
 
-            if (vJson.versions) setVersions(vJson.versions);
+            if (versions.length > 0) setVersions(versions);
 
             setLoading(false);
         };
@@ -64,24 +60,12 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const res = await fetch(`/api/scripts/by-id/${scriptId}`, {
-            method: "PATCH",
-            headers: { 
-                "x-api-key": API_KEY, 
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify({
-                ...formData,
-                current_version_number: Number(formData.current_version_number),
-            }),
-        });
+        const res = await updateScriptAction(scriptId, formData);
 
-        const json = await res.json();
-
-        if (json.message === "Script updated successfully") {
-            alert("Script updated successfully")
+        if (res === "SUCCESS") {
+            toast.success("Script updated successfully")
         } else {
-            alert(json.error || "Failed to update script");
+            toast.error("Failed to update script");
         }
     };
 
@@ -112,8 +96,8 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
                     <div>
                         <Label>Select Current Version</Label>
                         <Select
-                            value={formData.current_version_number.toString()}
-                            onValueChange={(v) => updateField("current_version_number", Number(v))}     
+                            value={formData.current_version}
+                            onValueChange={(v) => updateField("current_version", v)}     
                         >
                             <SelectTrigger className="w-[250px]">
                                 <SelectValue placeholder="Select version" />

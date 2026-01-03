@@ -5,7 +5,7 @@ import revitImage from "@/public/bim-icons/revit.png";
 import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, History } from "lucide-react";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VersionSheetContent } from "../../components/scripts/version-sheet-content";
 import { ScriptMinimal } from "@/lib/types/script";
+import ClientVersionSheet from "@/app/components/scripts/ClientVersionSheet";
 
 export type DynamoScript = {
     id: string;
@@ -137,21 +138,14 @@ export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
         header: () => <div className="text-center">Version</div>,
         cell: ({row}) => {
             return (
-                <div className="flex items-center justify-center">
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Badge variant={"outline"} className="cursor-pointer">V{row.original.current_version_number}</Badge>
-                        </SheetTrigger>
-                        <SheetContent className="w-[600px] sm:max-w-none overflow-y-auto">
-                            <SheetHeader>
-                                <SheetTitle>Version history</SheetTitle>
-                                <SheetDescription>{row.original.title}</SheetDescription>
-                            </SheetHeader>
-
-                            {/* Fetch and display versions */}
-                            <VersionSheetContent title={row.original.title} scriptOwnerId={row.original.owner_id} scriptId={row.original.id} currentUserId={currentUserId} />
-                        </SheetContent>
-                    </Sheet>       
+                <div className="flex items-center justify-center">                    
+                    <ClientVersionSheet 
+                        title={row.original.title} 
+                        currentVersionNumber={row.original.current_version_number} 
+                        scriptOwnerId={row.original.owner_id} 
+                        scriptId={row.original.id} 
+                        currentUserId={currentUserId} 
+                    />       
                 </div>
             );
         },

@@ -10,7 +10,7 @@ interface InlineUnifiedDiffProps {
     newValue: string;
     language?: string;
     title?: string;
-    darkMode?: Boolean
+    darkMode?: boolean;
 }
 
 export default function InlineUnifiedDiff({

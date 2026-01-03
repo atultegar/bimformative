@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { simpleBlogCard, tag } from "@/app/lib/interface";
+import { SimpleBlogCard, tag } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
 import Link from "next/link";
 import DateComponent from "@/app/components/Date";
@@ -21,7 +21,7 @@ async function getBlogsByTag(tag?: string) {
     const query = `*[_type == 'blog' && "${tag}" in tags[]->slug.current] | order(_createdAt desc) {
     title,
     smallDescription,
-    "currentSlug": slug.current,
+    "slug": slug.current,
     titleImage,
     date,
     "author": author->{"name": coalesce(name, "Anonymous"), picture},
@@ -73,7 +73,7 @@ export async function generateStaticParams() {
 export default async function TagPage({ params }: TagPageProps): Promise<JSX.Element> {
     const resolvedParams = await params;
     const { tag } = resolvedParams;
-    const data: simpleBlogCard[] = await getBlogsByTag(tag);
+    const data: SimpleBlogCard[] = await getBlogsByTag(tag);
     const allTags: tag[] = await getAllTags();
     
     return (

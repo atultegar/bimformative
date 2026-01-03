@@ -3,12 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import {getAllDynamoScripts} from "@/app/lib/api";
 import { auth } from "@clerk/nextjs/server";
 import { UserProfile } from "@clerk/nextjs";
 import UploadScript from "../components/UploadScript";
 import { User } from "../lib/interface";
-import { getScriptsCountByUserId, getUserById } from "@/lib/supabase/db";
+import { getUserById } from "@/lib/supabase/db";
 import { ClientDataTable } from "./client-data-table-wrapper";
 import { getAllScriptsByUserId, scriptsLikedByUserId } from "@/lib/services/scripts.service";
 
@@ -31,8 +30,6 @@ async function getCurrentUserId(): Promise<string> {
 export default async function Dashboard(): Promise<JSX.Element>{    
     const currentUserId = await getCurrentUserId();
     const currentUser: User = await getUserById(currentUserId);
-    const page = 1;
-    const limit = Number(await getScriptsCountByUserId(currentUserId));
 
     const data = await getAllScriptsByUserId(currentUserId);
     const likesRes = await scriptsLikedByUserId(currentUserId);

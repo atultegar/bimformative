@@ -1,6 +1,6 @@
 
 import Image from "next/image";
-import { fullBlog, simpleBlogCard } from "../../lib/interface";
+import { FullBlog, SimpleBlogCard } from "../../lib/interface";
 import { client, urlFor } from "../../lib/sanity";
 import { PortableText } from "@portabletext/react";
 import React from 'react';
@@ -10,7 +10,7 @@ import Link from "next/link";
 import CodeBlock from "@/app/components/CodeBlock";
 import { Metadata } from "next";
 import SocialShare from "@/app/components/SocialShare";
-import { getBlogData } from "@/app/lib/api";
+import { getBlogs, getBlogBySlug } from "@/lib/services/sanity.service";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -21,7 +21,7 @@ interface BlogArticleProps {
 
 export async function generateMetadata({params}: BlogArticleProps): Promise<Metadata> {
     const { slug } = await params;
-    const data: fullBlog = await getBlogData(slug);
+    const data: FullBlog = await getBlogBySlug(slug);
     return {
         title: data.title,
         description: data.smallDescription,
@@ -49,28 +49,17 @@ const serializers = {
     },
 };
 
-export async function generateStaticParams() {
-    const query = `
-        *[_type == 'blog'] | order(_createdAt desc) {
-        title,
-            smallDescription,
-            "currentSlug": slug.current,
-            titleImage,
-            date,
-            "author": author->{"name": coalesce(name, "Anonymous"), picture},
-            "tags": coalesce(tags, ["Untagged"]),
-        }`;
-
-    const blogs: simpleBlogCard[] = await client.fetch(query);
+export async function generateStaticParams() {    
+    const blogs: SimpleBlogCard[] = await getBlogs();
 
     return blogs.map((blog) => ({
-        slug: blog.currentSlug,
+        slug: blog.slug,
     }))
 }
 
 export default async function BlogArticle({params}: BlogArticleProps) {    
     const { slug } = await params;
-    const data: fullBlog = await getBlogData(slug);    
+    const data: FullBlog = await getBlogBySlug(slug);
     return (
         <div className="mt-8 max-w-3xl w-full px-4 md:px-8 mx-auto">
             <div className="max-w-4xl mx-auto flex justify-between items-center mb-5">
@@ -112,7 +101,7 @@ export default async function BlogArticle({params}: BlogArticleProps) {
                     style={{objectPosition: "center"}}
                     />
             </div>
-            <SocialShare url={data.currentSlug} title={data.title} />
+            <SocialShare url={data.slug} title={data.title} />
             {/* <div className="mt-5 max-w-4xl mx-auto flex flex-wrap gap-2">
                 {data.tags.map((tagItem, index) => (
                     <Badge

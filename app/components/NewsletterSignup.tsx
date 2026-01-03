@@ -1,49 +1,49 @@
 "use client";
-import React from "react";
+import React, { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {  FormEvent, useState } from "react";
-import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import newsletterimage from "@/public/newsletter-image.png";
 import Image from "next/image";
+import { subscribeAction } from "../actions/serverActions";
 
 export default function NewsletterSignup() {
     const [email, setEmail] = useState<string>("");
     const [status, setStatus] = useState<"success" | "error" | "loading" | "idle">("idle");
     const [responseMsg, setResponseMsg] = useState<string>("");
-    const [statusCode, setStatusCode] = useState<number>();
     const { toast } = useToast();
+    const [isPending, startTransition] = useTransition();
 
     async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setStatus("loading");
-        try {
-            const response = await axios.post("api/kitSubscribe", {email});
 
-            setStatus("success");
-            setStatusCode(response.status);
-            setEmail("");
-            setResponseMsg(response.data.message);
-            
-            toast({
-                description: response.data.message || "You've successfully subscribed!",
-            });
-            
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                setStatus("error");
-                setStatusCode(err.response?.status);
-                setResponseMsg(err.response?.data.error);
+        setStatus("loading");
+
+        startTransition(async () => {
+            try {
+                const result = await subscribeAction(email);
+
+                setStatus("success");
+                setEmail("");
+                setResponseMsg(result.message);
+                
+                toast({
+                    description: result.message,
+                });
+                
+            } catch (err: any) {
+                setStatus("error")
 
                 toast({
-                    description: err.response?.data?.error || "An unexpected error occurred.",
+                    description: 
+                        err?.message === "INVALID_EMAIL"
+                            ? "Please enter a valid email address"
+                            : "Subscription failed",
                     variant: "destructive",
                 });
             }
-        };
+        });        
     };
 
     return (
@@ -60,14 +60,11 @@ export default function NewsletterSignup() {
                         </p>
                         <div className="flex w-full max-w-md space-x-2 items-center mx-auto p-5">
                             <Input type="email" placeholder="Email" className="border rounded-l-md" value={email} onChange={(e) => setEmail(e.target.value)} disabled={status == "loading"} />
-                            <Button type="submit" className="rounded-r-md">Subscribe</Button>
+                            <Button type="submit" disabled={isPending} className="rounded-r-md">{isPending ? "Subscribing..." : "Subscribe"}</Button>
                         </div>
                     </div>                                    
                 </form>
-
-            </div>
-            
-        </section>
-        
+            </div>            
+        </section>        
     );
 };

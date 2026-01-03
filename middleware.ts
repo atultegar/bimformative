@@ -18,7 +18,7 @@ export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   // PUBLIC API → NO AUTH
-  if (isPublicApiRoute(pathname)) {
+  if (isPublicApiRoute(pathname) || pathname === "/api/webhooks/clerk") {
     return NextResponse.next();
   }
 
