@@ -286,7 +286,7 @@ export default function ScriptComparePage() {
                                 if(!oldNode || !newNode) return null;
 
                                 return (
-                                    <div>
+                                    <div key={nodeId}>
                                         {renderChangedNodeDiff(oldNode, newNode)}
                                     </div>
                                 )

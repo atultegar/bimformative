@@ -27,8 +27,16 @@ export default function ContactForm() {
   } = useForm<ContactPayload>({
     defaultValues: {
       newsletter: false,
+      turnstileToken: "",
     }
   });
+
+  // DEV MODE TURNSTILE BYPASS
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      setValue("turnstileToken", "dev-bypass", { shouldValidate: true });
+    }
+  }, [setValue]);
 
   async function onSubmit(data: ContactPayload) {
     setLoading(true);
@@ -93,21 +101,14 @@ export default function ContactForm() {
 
         {/* Turnstile CAPTCHA */}
         <div>
-          {process.env.NODE_ENV === "production" ? (
+          {process.env.NODE_ENV === "production" && (
             <Turnstile
               sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
               onVerify={(token) => {
                 setValue("turnstileToken", token, { shouldValidate: true });
               }}
             />
-          ) : (
-            <>
-              {/* DEV MODE: inject token into RHF */}
-              {useEffect(() => {
-                setValue("turnstileToken", "dev-bypass", { shouldValidate: true });
-              }, [])}
-            </>            
-          )}          
+          )}    
         </div>
 
         <Button type="submit" disabled={loading}>
