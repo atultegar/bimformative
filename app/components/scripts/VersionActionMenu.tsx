@@ -6,6 +6,7 @@ import { Download, LaptopMinimal, MoreHorizontal, ListX } from "lucide-react";
 import { handleScriptVersionDownload } from "@/app/actions/clientActions";
 import { MinimalVersion } from "@/lib/types/version";
 import { deleteVersionAction, setCurrentVersionAction } from "@/app/actions/serverActions";
+import { useRouter } from "next/navigation";
 
 export default function VersionActionMenu({ title, version, userId }: { title: string, version: MinimalVersion, userId: string }) {
     enum Dialogs {
@@ -13,6 +14,7 @@ export default function VersionActionMenu({ title, version, userId }: { title: s
         update = "updateDilaog",
     }
     const [dialog, setDialog] = useState<Dialogs | null>(null);
+    const router = useRouter();
     
     return (
         <>
@@ -25,7 +27,7 @@ export default function VersionActionMenu({ title, version, userId }: { title: s
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" side="bottom" forceMount className="z-[200]">
                     <DropdownMenuItem onClick={() => handleScriptVersionDownload(title, version.id)} 
                         className="cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800">
                         <Download />
@@ -67,7 +69,7 @@ export default function VersionActionMenu({ title, version, userId }: { title: s
                             onClick={async() => {
                                 setCurrentVersionAction(version.id, userId);
                                 setDialog(null);
-                                window.location.reload();
+                                router.refresh();                                
                             }}
                         >
                             Confirm

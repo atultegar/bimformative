@@ -10,7 +10,7 @@ import { handleScriptVersionDownload } from "@/app/actions/clientActions";
 import { MinimalVersion } from "@/lib/types/version";
 
 
-export const versionColumns = (title: string, isOwner: boolean, userId: string): ColumnDef<MinimalVersion>[] => [
+export const versionColumns = (title: string, canManageVersions: boolean, userId: string): ColumnDef<MinimalVersion>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -67,7 +67,7 @@ export const versionColumns = (title: string, isOwner: boolean, userId: string):
         cell: ({ row }) => {
             const version = row.original;
 
-            return isOwner ? (
+            return canManageVersions ? (
                 <VersionActionMenu title={title} version={version} userId={userId} />
             ) 
             : <Button size={"icon"} onClick={() => handleScriptVersionDownload(title, version.id)}>

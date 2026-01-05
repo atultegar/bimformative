@@ -54,3 +54,7 @@ videos/*
 !videos/*.js
 !videos/*.ts
 public/_next-video
+
+#code counter
+/.VSCodeCounter/*
+/.VSCodeCounter

@@ -3,16 +3,15 @@ import React, { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {  FormEvent, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import newsletterimage from "@/public/newsletter-image.png";
 import Image from "next/image";
 import { subscribeAction } from "../actions/serverActions";
+import { toast } from "sonner";
 
 export default function NewsletterSignup() {
     const [email, setEmail] = useState<string>("");
     const [status, setStatus] = useState<"success" | "error" | "loading" | "idle">("idle");
     const [responseMsg, setResponseMsg] = useState<string>("");
-    const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
     async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
@@ -28,20 +27,12 @@ export default function NewsletterSignup() {
                 setEmail("");
                 setResponseMsg(result.message);
                 
-                toast({
-                    description: result.message,
-                });
+                toast.success(result.message);
                 
             } catch (err: any) {
                 setStatus("error")
 
-                toast({
-                    description: 
-                        err?.message === "INVALID_EMAIL"
-                            ? "Please enter a valid email address"
-                            : "Subscription failed",
-                    variant: "destructive",
-                });
+                toast.error(err?.message === "INVALID_EMAIL" ? "Please enter a valid email address" : "Subscription failed");
             }
         });        
     };

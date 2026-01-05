@@ -1,0 +1,247 @@
+Date : 2026-01-05 10:38:31
+Directory : c:\Projects\NextJS\bimformative
+Total : 129 files,  899 codes, -3 comments, 84 blanks, all 980 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JSON           |          2 |      1,280 |          0 |          0 |      1,280 |
+| TypeScript     |         74 |         51 |         36 |         53 |        140 |
+| TypeScript JSX |         53 |       -432 |        -39 |         31 |       -440 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                         | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                            |        129 |        899 |         -3 |         84 |        980 |
+| . (Files)                                                                                    |          3 |      1,292 |         -1 |          7 |      1,298 |
+| app                                                                                          |         92 |     -1,847 |       -128 |       -264 |     -2,239 |
+| app (Files)                                                                                  |          3 |         -7 |          0 |          2 |         -5 |
+| app\actions                                                                                  |          3 |        238 |         33 |         77 |        348 |
+| app\api                                                                                      |         36 |     -1,461 |       -105 |       -327 |     -1,893 |
+| app\api (Files)                                                                              |          1 |        -17 |          0 |         -1 |        -18 |
+| app\api\blogs                                                                                |          2 |        -66 |         -3 |        -10 |        -79 |
+| app\api\blogs (Files)                                                                        |          1 |        -41 |         -2 |         -6 |        -49 |
+| app\api\blogs\tags                                                                           |          1 |        -25 |         -1 |         -4 |        -30 |
+| app\api\download                                                                             |          1 |        -29 |         -2 |        -12 |        -43 |
+| app\api\kitSubscribe                                                                         |          1 |        -53 |         -8 |        -15 |        -76 |
+| app\api\message                                                                              |          1 |       -104 |         -9 |        -25 |       -138 |
+| app\api\openapi                                                                              |          1 |          5 |          0 |          1 |          6 |
+| app\api\public                                                                               |          2 |         52 |          0 |          9 |         61 |
+| app\api\public\v1                                                                            |          2 |         52 |          0 |          9 |         61 |
+| app\api\public\v1\scripts                                                                    |          1 |         14 |          0 |          4 |         18 |
+| app\api\public\v1\search                                                                     |          1 |         38 |          0 |          5 |         43 |
+| app\api\resourceCount                                                                        |          1 |        -19 |          0 |         -2 |        -21 |
+| app\api\resources                                                                            |          1 |        -47 |         -2 |         -9 |        -58 |
+| app\api\roadmap                                                                              |          1 |        -25 |         -1 |         -4 |        -30 |
+| app\api\script-versions                                                                      |          3 |       -239 |        -17 |        -50 |       -306 |
+| app\api\script-versions\[versionId]                                                          |          3 |       -239 |        -17 |        -50 |       -306 |
+| app\api\script-versions\[versionId] (Files)                                                  |          1 |       -131 |        -10 |        -29 |       -170 |
+| app\api\script-versions\[versionId]\download                                                 |          1 |        -34 |         -2 |         -7 |        -43 |
+| app\api\script-versions\[versionId]\set-current                                              |          1 |        -74 |         -5 |        -14 |        -93 |
+| app\api\scripts                                                                              |         13 |       -946 |        -53 |       -205 |     -1,204 |
+| app\api\scripts (Files)                                                                      |          1 |        -67 |         -6 |        -12 |        -85 |
+| app\api\scripts\[slug]                                                                       |          3 |        -97 |         -1 |        -21 |       -119 |
+| app\api\scripts\[slug] (Files)                                                               |          1 |        -15 |          0 |         -4 |        -19 |
+| app\api\scripts\[slug]\download                                                              |          1 |        -47 |         -1 |        -10 |        -58 |
+| app\api\scripts\[slug]\versions                                                              |          1 |        -35 |          0 |         -7 |        -42 |
+| app\api\scripts\analyze                                                                      |          1 |        -40 |         -3 |        -12 |        -55 |
+| app\api\scripts\by-id                                                                        |          4 |       -371 |        -18 |        -76 |       -465 |
+| app\api\scripts\by-id\[scriptId]                                                             |          4 |       -371 |        -18 |        -76 |       -465 |
+| app\api\scripts\by-id\[scriptId] (Files)                                                     |          1 |       -282 |        -17 |        -58 |       -357 |
+| app\api\scripts\by-id\[scriptId]\get-versions                                                |          1 |        -24 |          0 |         -5 |        -29 |
+| app\api\scripts\by-id\[scriptId]\set-active-version                                          |          1 |        -21 |          0 |         -5 |        -26 |
+| app\api\scripts\by-id\[scriptId]\update                                                      |          1 |        -44 |         -1 |         -8 |        -53 |
+| app\api\scripts\publish                                                                      |          1 |       -175 |        -16 |        -42 |       -233 |
+| app\api\scripts\python-nodes                                                                 |          1 |        -36 |         -1 |         -6 |        -43 |
+| app\api\scripts\slugs                                                                        |          1 |        -14 |          0 |         -5 |        -19 |
+| app\api\scripts\upload                                                                       |          1 |       -146 |         -8 |        -31 |       -185 |
+| app\api\subscribe                                                                            |          1 |        -60 |         -9 |        -15 |        -84 |
+| app\api\upload                                                                               |          1 |        -36 |         -1 |        -13 |        -50 |
+| app\api\users                                                                                |          1 |        -30 |          0 |         -6 |        -36 |
+| app\api\v1                                                                                   |          4 |        152 |          0 |         30 |        182 |
+| app\api\v1\script-versions                                                                   |          1 |         46 |          0 |          9 |         55 |
+| app\api\v1\script-versions\[versionId]                                                       |          1 |         46 |          0 |          9 |         55 |
+| app\api\v1\script-versions\[versionId]\download                                              |          1 |         46 |          0 |          9 |         55 |
+| app\api\v1\scripts                                                                           |          2 |         80 |          0 |         17 |         97 |
+| app\api\v1\scripts\[slug]                                                                    |          1 |         46 |          0 |          9 |         55 |
+| app\api\v1\scripts\[slug]\download                                                           |          1 |         46 |          0 |          9 |         55 |
+| app\api\v1\scripts\analyze                                                                   |          1 |         34 |          0 |          8 |         42 |
+| app\api\v1\subscribe                                                                         |          1 |         26 |          0 |          4 |         30 |
+| app\api\webhooks                                                                             |          1 |          1 |          0 |          0 |          1 |
+| app\api\webhooks\clerk                                                                       |          1 |          1 |          0 |          0 |          1 |
+| app\blog                                                                                     |          2 |        -75 |         -1 |        -10 |        -86 |
+| app\blog (Files)                                                                             |          1 |        -65 |         -1 |         -9 |        -75 |
+| app\blog\[slug]                                                                              |          1 |        -10 |          0 |         -1 |        -11 |
+| app\canvas                                                                                   |          1 |        -30 |          0 |         -6 |        -36 |
+| app\components                                                                               |         32 |       -224 |        -53 |         27 |       -250 |
+| app\components (Files)                                                                       |         21 |       -330 |        -64 |         10 |       -384 |
+| app\components\navbar                                                                        |          2 |        143 |          2 |         13 |        158 |
+| app\components\scripts                                                                       |          8 |        -31 |         15 |         -2 |        -18 |
+| app\components\svg                                                                           |          1 |         -6 |         -6 |          6 |         -6 |
+| app\dashboard                                                                                |          2 |        -24 |         -1 |          2 |        -23 |
+| app\lib                                                                                      |          4 |       -133 |          0 |        -23 |       -156 |
+| app\resources                                                                                |          4 |       -236 |         -6 |        -20 |       -262 |
+| app\resources\dynamo-scripts                                                                 |          4 |       -236 |         -6 |        -20 |       -262 |
+| app\resources\dynamo-scripts (Files)                                                         |          2 |         -5 |         -2 |          0 |         -7 |
+| app\resources\dynamo-scripts\[slug]                                                          |          1 |        -23 |          0 |         -6 |        -29 |
+| app\resources\dynamo-scripts\by-id                                                           |          1 |       -208 |         -4 |        -14 |       -226 |
+| app\scriptcompare                                                                            |          1 |       -147 |         -5 |        -24 |       -176 |
+| app\search                                                                                   |          1 |         -3 |          1 |          0 |         -2 |
+| app\tools                                                                                    |          2 |        418 |          9 |         54 |        481 |
+| app\tools\dynanalyzer                                                                        |          1 |        157 |          0 |         14 |        171 |
+| app\tools\scriptcompare                                                                      |          1 |        261 |          9 |         40 |        310 |
+| app\upload                                                                                   |          1 |       -163 |          0 |        -16 |       -179 |
+| components                                                                                   |          5 |         55 |         16 |         19 |         90 |
+| components\ui                                                                                |          5 |         55 |         16 |         19 |         90 |
+| components\ui (Files)                                                                        |          1 |       -147 |         -1 |        -11 |       -159 |
+| components\ui\magicui                                                                        |          4 |        202 |         17 |         30 |        249 |
+| hooks                                                                                        |          1 |       -160 |         -3 |        -32 |       -195 |
+| lib                                                                                          |         26 |      1,543 |        112 |        350 |      2,005 |
+| lib (Files)                                                                                  |          1 |         22 |          4 |          6 |         32 |
+| lib\openapi                                                                                  |          4 |         82 |          0 |          4 |         86 |
+| lib\services                                                                                 |         14 |      1,277 |        108 |        327 |      1,712 |
+| lib\supabase                                                                                 |          1 |         15 |          0 |          1 |         16 |
+| lib\types                                                                                    |          6 |        147 |          0 |         12 |        159 |
+| sanity                                                                                       |          2 |         16 |          1 |          4 |         21 |
+| sanity\schemaTypes                                                                           |          2 |         16 |          1 |          4 |         21 |
+| sanity\schemaTypes\youTubeType                                                               |          2 |         16 |          1 |          4 |         21 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                     | language       | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Projects\NextJS\bimformative\app\actions\addscript.ts                                     | TypeScript     |        -28 |          0 |         -8 |        -36 |
+| c:\Projects\NextJS\bimformative\app\actions\clientActions.ts                                 | TypeScript     |         13 |          2 |          5 |         20 |
+| c:\Projects\NextJS\bimformative\app\actions\serverActions.ts                                 | TypeScript     |        253 |         31 |         80 |        364 |
+| c:\Projects\NextJS\bimformative\app\api\blogs\route.ts                                       | TypeScript     |        -41 |         -2 |         -6 |        -49 |
+| c:\Projects\NextJS\bimformative\app\api\blogs\tags\route.ts                                  | TypeScript     |        -25 |         -1 |         -4 |        -30 |
+| c:\Projects\NextJS\bimformative\app\api\download\route.ts                                    | TypeScript     |        -29 |         -2 |        -12 |        -43 |
+| c:\Projects\NextJS\bimformative\app\api\handleDownload.ts                                    | TypeScript     |        -17 |          0 |         -1 |        -18 |
+| c:\Projects\NextJS\bimformative\app\api\kitSubscribe\route.ts                                | TypeScript     |        -53 |         -8 |        -15 |        -76 |
+| c:\Projects\NextJS\bimformative\app\api\message\route.ts                                     | TypeScript     |       -104 |         -9 |        -25 |       -138 |
+| c:\Projects\NextJS\bimformative\app\api\openapi\route.ts                                     | TypeScript     |          5 |          0 |          1 |          6 |
+| c:\Projects\NextJS\bimformative\app\api\public\v1\scripts\route.ts                           | TypeScript     |         14 |          0 |          4 |         18 |
+| c:\Projects\NextJS\bimformative\app\api\public\v1\search\route.ts                            | TypeScript     |         38 |          0 |          5 |         43 |
+| c:\Projects\NextJS\bimformative\app\api\resourceCount\route.ts                               | TypeScript     |        -19 |          0 |         -2 |        -21 |
+| c:\Projects\NextJS\bimformative\app\api\resources\route.ts                                   | TypeScript     |        -47 |         -2 |         -9 |        -58 |
+| c:\Projects\NextJS\bimformative\app\api\roadmap\route.ts                                     | TypeScript     |        -25 |         -1 |         -4 |        -30 |
+| c:\Projects\NextJS\bimformative\app\api\script-versions\[versionId]\download\route.ts        | TypeScript     |        -34 |         -2 |         -7 |        -43 |
+| c:\Projects\NextJS\bimformative\app\api\script-versions\[versionId]\route.ts                 | TypeScript     |       -131 |        -10 |        -29 |       -170 |
+| c:\Projects\NextJS\bimformative\app\api\script-versions\[versionId]\set-current\route.ts     | TypeScript     |        -74 |         -5 |        -14 |        -93 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\[slug]\download\route.ts                     | TypeScript     |        -47 |         -1 |        -10 |        -58 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\[slug]\route.ts                              | TypeScript     |        -15 |          0 |         -4 |        -19 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\[slug]\versions\route.ts                     | TypeScript     |        -35 |          0 |         -7 |        -42 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\analyze\route.ts                             | TypeScript     |        -40 |         -3 |        -12 |        -55 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\by-id\[scriptId]\get-versions\route.ts       | TypeScript     |        -24 |          0 |         -5 |        -29 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\by-id\[scriptId]\route.ts                    | TypeScript     |       -282 |        -17 |        -58 |       -357 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\by-id\[scriptId]\set-active-version\route.ts | TypeScript     |        -21 |          0 |         -5 |        -26 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\by-id\[scriptId]\update\route.ts             | TypeScript     |        -44 |         -1 |         -8 |        -53 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\publish\route.ts                             | TypeScript     |       -175 |        -16 |        -42 |       -233 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\python-nodes\route.ts                        | TypeScript     |        -36 |         -1 |         -6 |        -43 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\route.ts                                     | TypeScript     |        -67 |         -6 |        -12 |        -85 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\slugs\route.ts                               | TypeScript     |        -14 |          0 |         -5 |        -19 |
+| c:\Projects\NextJS\bimformative\app\api\scripts\upload\route.ts                              | TypeScript     |       -146 |         -8 |        -31 |       -185 |
+| c:\Projects\NextJS\bimformative\app\api\subscribe\route.ts                                   | TypeScript     |        -60 |         -9 |        -15 |        -84 |
+| c:\Projects\NextJS\bimformative\app\api\upload\route.ts                                      | TypeScript     |        -36 |         -1 |        -13 |        -50 |
+| c:\Projects\NextJS\bimformative\app\api\users\route.ts                                       | TypeScript     |        -30 |          0 |         -6 |        -36 |
+| c:\Projects\NextJS\bimformative\app\api\v1\script-versions\[versionId]\download\route.ts     | TypeScript     |         46 |          0 |          9 |         55 |
+| c:\Projects\NextJS\bimformative\app\api\v1\scripts\[slug]\download\route.ts                  | TypeScript     |         46 |          0 |          9 |         55 |
+| c:\Projects\NextJS\bimformative\app\api\v1\scripts\analyze\route.ts                          | TypeScript     |         34 |          0 |          8 |         42 |
+| c:\Projects\NextJS\bimformative\app\api\v1\subscribe\route.ts                                | TypeScript     |         26 |          0 |          4 |         30 |
+| c:\Projects\NextJS\bimformative\app\api\webhooks\clerk\route.ts                              | TypeScript     |          1 |          0 |          0 |          1 |
+| c:\Projects\NextJS\bimformative\app\blog\[slug]\page.tsx                                     | TypeScript JSX |        -10 |          0 |         -1 |        -11 |
+| c:\Projects\NextJS\bimformative\app\blog\page.tsx                                            | TypeScript JSX |        -65 |         -1 |         -9 |        -75 |
+| c:\Projects\NextJS\bimformative\app\canvas\page.tsx                                          | TypeScript JSX |        -30 |          0 |         -6 |        -36 |
+| c:\Projects\NextJS\bimformative\app\components\AboutSection.tsx                              | TypeScript JSX |          1 |          0 |          0 |          1 |
+| c:\Projects\NextJS\bimformative\app\components\Blogs.tsx                                     | TypeScript JSX |         -1 |          0 |          0 |         -1 |
+| c:\Projects\NextJS\bimformative\app\components\CommentForm.tsx                               | TypeScript JSX |         56 |          6 |         15 |         77 |
+| c:\Projects\NextJS\bimformative\app\components\ContactForm.tsx                               | TypeScript JSX |        -62 |         -2 |         -5 |        -69 |
+| c:\Projects\NextJS\bimformative\app\components\DialogDelete.tsx                              | TypeScript JSX |        -34 |          0 |         -1 |        -35 |
+| c:\Projects\NextJS\bimformative\app\components\DialogDetails.tsx                             | TypeScript JSX |       -221 |         -3 |        -16 |       -240 |
+| c:\Projects\NextJS\bimformative\app\components\DialogEdit.tsx                                | TypeScript JSX |       -155 |          0 |         -6 |       -161 |
+| c:\Projects\NextJS\bimformative\app\components\DownloadButton.tsx                            | TypeScript JSX |          2 |          0 |          0 |          2 |
+| c:\Projects\NextJS\bimformative\app\components\Footer.tsx                                    | TypeScript JSX |          0 |        -18 |         -2 |        -20 |
+| c:\Projects\NextJS\bimformative\app\components\Hero.tsx                                      | TypeScript JSX |          1 |          0 |          0 |          1 |
+| c:\Projects\NextJS\bimformative\app\components\LatestBlogs.tsx                               | TypeScript JSX |          0 |          0 |         -1 |         -1 |
+| c:\Projects\NextJS\bimformative\app\components\LikeButton.tsx                                | TypeScript JSX |         46 |          4 |          7 |         57 |
+| c:\Projects\NextJS\bimformative\app\components\Navbar.tsx                                    | TypeScript JSX |        -74 |        -69 |          2 |       -141 |
+| c:\Projects\NextJS\bimformative\app\components\NewsletterSignup.tsx                          | TypeScript JSX |         -2 |          0 |         -1 |         -3 |
+| c:\Projects\NextJS\bimformative\app\components\ResourceHighlights.tsx                        | TypeScript JSX |         -6 |          9 |          2 |          5 |
+| c:\Projects\NextJS\bimformative\app\components\Roadmap.tsx                                   | TypeScript JSX |        -55 |          0 |         -1 |        -56 |
+| c:\Projects\NextJS\bimformative\app\components\RoadmapList.tsx                               | TypeScript JSX |         32 |          0 |          2 |         34 |
+| c:\Projects\NextJS\bimformative\app\components\UploadDialog.tsx                              | TypeScript JSX |        -11 |          6 |         -5 |        -10 |
+| c:\Projects\NextJS\bimformative\app\components\UploadVersion.tsx                             | TypeScript JSX |        136 |          3 |         16 |        155 |
+| c:\Projects\NextJS\bimformative\app\components\UserActionMenu.tsx                            | TypeScript JSX |         21 |          0 |          5 |         26 |
+| c:\Projects\NextJS\bimformative\app\components\UserMenu.tsx                                  | TypeScript JSX |         -4 |          0 |         -1 |         -5 |
+| c:\Projects\NextJS\bimformative\app\components\navbar\NavbarClient.tsx                       | TypeScript JSX |        125 |          2 |         13 |        140 |
+| c:\Projects\NextJS\bimformative\app\components\navbar\navigation.config.ts                   | TypeScript     |         18 |          0 |          0 |         18 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\ClientVersionSheet.tsx                | TypeScript JSX |         17 |          0 |          1 |         18 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\CompareVersionDialog.tsx              | TypeScript JSX |         -6 |          0 |          0 |         -6 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\EditDialog.tsx                        | TypeScript JSX |        -14 |         14 |          5 |          5 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\UpdateDialog.tsx                      | TypeScript JSX |        -15 |          1 |         -2 |        -16 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\VersionActionMenu.tsx                 | TypeScript JSX |        -12 |          0 |         -4 |        -16 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\version-columns.tsx                   | TypeScript JSX |          2 |          0 |          0 |          2 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\version-sheet-content.tsx             | TypeScript JSX |         -4 |          0 |         -2 |         -6 |
+| c:\Projects\NextJS\bimformative\app\components\scripts\version-table.tsx                     | TypeScript JSX |          1 |          0 |          0 |          1 |
+| c:\Projects\NextJS\bimformative\app\components\svg\ScriptViewCanvas.tsx                      | TypeScript JSX |         -6 |         -6 |          6 |         -6 |
+| c:\Projects\NextJS\bimformative\app\dashboard\page.tsx                                       | TypeScript JSX |        -11 |          0 |          3 |         -8 |
+| c:\Projects\NextJS\bimformative\app\dashboard\usercolumns.tsx                                | TypeScript JSX |        -13 |         -1 |         -1 |        -15 |
+| c:\Projects\NextJS\bimformative\app\layout.tsx                                               | TypeScript JSX |         -3 |          0 |          1 |         -2 |
+| c:\Projects\NextJS\bimformative\app\lib\api.ts                                               | TypeScript     |       -155 |          0 |        -23 |       -178 |
+| c:\Projects\NextJS\bimformative\app\lib\blog.ts                                              | TypeScript     |        -16 |          0 |         -3 |        -19 |
+| c:\Projects\NextJS\bimformative\app\lib\interface.ts                                         | TypeScript     |         42 |          0 |          4 |         46 |
+| c:\Projects\NextJS\bimformative\app\lib\sanityQueries.ts                                     | TypeScript     |         -4 |          0 |         -1 |         -5 |
+| c:\Projects\NextJS\bimformative\app\page.tsx                                                 | TypeScript JSX |         -3 |          0 |          0 |         -3 |
+| c:\Projects\NextJS\bimformative\app\resources\dynamo-scripts\[slug]\page.tsx                 | TypeScript JSX |        -23 |          0 |         -6 |        -29 |
+| c:\Projects\NextJS\bimformative\app\resources\dynamo-scripts\by-id\page.tsx                  | TypeScript JSX |       -208 |         -4 |        -14 |       -226 |
+| c:\Projects\NextJS\bimformative\app\resources\dynamo-scripts\columns.tsx                     | TypeScript JSX |         -9 |         -1 |         -4 |        -14 |
+| c:\Projects\NextJS\bimformative\app\resources\dynamo-scripts\page.tsx                        | TypeScript JSX |          4 |         -1 |          4 |          7 |
+| c:\Projects\NextJS\bimformative\app\scriptcompare\page.tsx                                   | TypeScript JSX |       -147 |         -5 |        -24 |       -176 |
+| c:\Projects\NextJS\bimformative\app\search\page.tsx                                          | TypeScript JSX |         -3 |          1 |          0 |         -2 |
+| c:\Projects\NextJS\bimformative\app\sitemap.ts                                               | TypeScript     |         -1 |          0 |          1 |          0 |
+| c:\Projects\NextJS\bimformative\app\tools\dynanalyzer\page.tsx                               | TypeScript JSX |        157 |          0 |         14 |        171 |
+| c:\Projects\NextJS\bimformative\app\tools\scriptcompare\page.tsx                             | TypeScript JSX |        261 |          9 |         40 |        310 |
+| c:\Projects\NextJS\bimformative\app\upload\page.tsx                                          | TypeScript JSX |       -163 |          0 |        -16 |       -179 |
+| c:\Projects\NextJS\bimformative\components\ui\code-comparison.tsx                            | TypeScript JSX |       -147 |         -1 |        -11 |       -159 |
+| c:\Projects\NextJS\bimformative\components\ui\magicui\aurora-text.tsx                        | TypeScript JSX |         38 |          0 |          6 |         44 |
+| c:\Projects\NextJS\bimformative\components\ui\magicui\number-ticker.tsx                      | TypeScript JSX |         60 |          0 |          9 |         69 |
+| c:\Projects\NextJS\bimformative\components\ui\magicui\shine-border.tsx                       | TypeScript JSX |         42 |         17 |          5 |         64 |
+| c:\Projects\NextJS\bimformative\components\ui\magicui\text-reveal.tsx                        | TypeScript JSX |         62 |          0 |         10 |         72 |
+| c:\Projects\NextJS\bimformative\hooks\use-toast.ts                                           | TypeScript     |       -160 |         -3 |        -32 |       -195 |
+| c:\Projects\NextJS\bimformative\lib\openapi\base.ts                                          | TypeScript     |         22 |          0 |          1 |         23 |
+| c:\Projects\NextJS\bimformative\lib\openapi\index.ts                                         | TypeScript     |         15 |          0 |          1 |         16 |
+| c:\Projects\NextJS\bimformative\lib\openapi\paths.ts                                         | TypeScript     |         26 |          0 |          0 |         26 |
+| c:\Projects\NextJS\bimformative\lib\openapi\schemas.ts                                       | TypeScript     |         19 |          0 |          2 |         21 |
+| c:\Projects\NextJS\bimformative\lib\services\comments.select.ts                              | TypeScript     |         12 |          0 |          0 |         12 |
+| c:\Projects\NextJS\bimformative\lib\services\comments.service.ts                             | TypeScript     |         52 |          0 |         19 |         71 |
+| c:\Projects\NextJS\bimformative\lib\services\contact.service.ts                              | TypeScript     |         72 |          4 |         11 |         87 |
+| c:\Projects\NextJS\bimformative\lib\services\dynalyzer.service.ts                            | TypeScript     |         32 |          2 |          9 |         43 |
+| c:\Projects\NextJS\bimformative\lib\services\kit.service.ts                                  | TypeScript     |         39 |          2 |          9 |         50 |
+| c:\Projects\NextJS\bimformative\lib\services\likes.service.ts                                | TypeScript     |         29 |          3 |          8 |         40 |
+| c:\Projects\NextJS\bimformative\lib\services\profile.select.ts                               | TypeScript     |          6 |          0 |          0 |          6 |
+| c:\Projects\NextJS\bimformative\lib\services\profiles.service.ts                             | TypeScript     |         12 |          0 |          3 |         15 |
+| c:\Projects\NextJS\bimformative\lib\services\sanity.service.ts                               | TypeScript     |        233 |          8 |         27 |        268 |
+| c:\Projects\NextJS\bimformative\lib\services\scripts.select.ts                               | TypeScript     |         59 |          2 |          6 |         67 |
+| c:\Projects\NextJS\bimformative\lib\services\scripts.service.ts                              | TypeScript     |        509 |         57 |        160 |        726 |
+| c:\Projects\NextJS\bimformative\lib\services\security.service.ts                             | TypeScript     |         30 |          0 |          8 |         38 |
+| c:\Projects\NextJS\bimformative\lib\services\versions.select.ts                              | TypeScript     |          9 |          0 |          0 |          9 |
+| c:\Projects\NextJS\bimformative\lib\services\versions.service.ts                             | TypeScript     |        183 |         30 |         67 |        280 |
+| c:\Projects\NextJS\bimformative\lib\supabase\storage.ts                                      | TypeScript     |         15 |          0 |          1 |         16 |
+| c:\Projects\NextJS\bimformative\lib\types\comment.ts                                         | TypeScript     |         12 |          0 |          0 |         12 |
+| c:\Projects\NextJS\bimformative\lib\types\contact.ts                                         | TypeScript     |          8 |          0 |          0 |          8 |
+| c:\Projects\NextJS\bimformative\lib\types\kit.ts                                             | TypeScript     |         10 |          0 |          1 |         11 |
+| c:\Projects\NextJS\bimformative\lib\types\resources.ts                                       | TypeScript     |         16 |          0 |          1 |         17 |
+| c:\Projects\NextJS\bimformative\lib\types\script.ts                                          | TypeScript     |         92 |          0 |         10 |        102 |
+| c:\Projects\NextJS\bimformative\lib\types\version.ts                                         | TypeScript     |          9 |          0 |          0 |          9 |
+| c:\Projects\NextJS\bimformative\lib\utils.ts                                                 | TypeScript     |         22 |          4 |          6 |         32 |
+| c:\Projects\NextJS\bimformative\middleware.ts                                                | TypeScript     |         12 |         -1 |          7 |         18 |
+| c:\Projects\NextJS\bimformative\package-lock.json                                            | JSON           |      1,277 |          0 |          0 |      1,277 |
+| c:\Projects\NextJS\bimformative\package.json                                                 | JSON           |          3 |          0 |          0 |          3 |
+| c:\Projects\NextJS\bimformative\sanity\schemaTypes\youTubeType\YouTubePreview.tsx            | TypeScript JSX |         21 |          1 |          4 |         26 |
+| c:\Projects\NextJS\bimformative\sanity\schemaTypes\youTubeType\index.ts                      | TypeScript     |         -5 |          0 |          0 |         -5 |
+| Total                                                                                        |                |        899 |         -3 |         84 |        980 |
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

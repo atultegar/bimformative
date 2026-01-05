@@ -5,7 +5,7 @@ import { VersionTable } from "./version-table";
 import { getScriptVersionsAction } from "@/app/actions/serverActions";
 import { MinimalVersion } from "@/lib/types/version";
 
-export function VersionSheetContent({ title, scriptOwnerId, scriptId, currentUserId }: { title: string, scriptOwnerId: string, scriptId: string, currentUserId: string }) {
+export function VersionSheetContent({ title, scriptId, currentUserId, canManageVersions }: { title: string, scriptId: string, currentUserId: string, canManageVersions: boolean }) {
     const [versions, setVersions] = useState<MinimalVersion[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -26,5 +26,5 @@ export function VersionSheetContent({ title, scriptOwnerId, scriptId, currentUse
 
     if (loading) return <p className="py-4">Loading...</p>
 
-    return <VersionTable title={title} scriptOwnerId={scriptOwnerId} versions={versions} currentUserId={currentUserId}/>;
+    return <VersionTable title={title} versions={versions} currentUserId={currentUserId} canManageVersions={canManageVersions} />;
 }

@@ -85,11 +85,11 @@ export async function setCurrentVersion(versionId: string, userId: string) {
 
     // 2. Fetch related script
     const { data: script, error: scriptErr } = await supabase
-        .from("dynscripts")
+        .from("dynscripts_with_current_version")
         .select(SCRIPT_OWNER_FIELDS)
         .eq("id", version.script_id)
         .single();
-
+        
     if (scriptErr ||!script) throw new Error("SCRIPT_NOT_FOUND");
 
     // 3. Prevent setting if userId === ownerId

@@ -23,7 +23,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/
 import { FaPython } from "react-icons/fa6";
 import CodeBlock from "@/app/components/CodeBlock";
 import CommentForm from "@/app/components/CommentForm";
-import ClientVersionSheet from "@/app/components/scripts/ClientVersionSheet";
+import VersionSheet from "@/app/components/scripts/VersionSheet";
 import { auth } from "@clerk/nextjs/server";
 import { getScriptBySlug, getScriptSlugs, pythonScriptsByVersionId, scriptLikedByUserId } from "@/lib/services/scripts.service";
 import { ScriptSlug } from "@/app/lib/interface";
@@ -102,7 +102,7 @@ export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
 
     return (
         <div className="mx-auto w-[1920px] items-center">
-            <section className="grid grid-cols-1 md:grid-cols-12 gap-6 px-6 py-10 bg-gray-100 dark:bg-black">
+            <section className="grid grid-cols-1 md:grid-cols-12 gap-6 px-6 py-6 bg-transparent">
 
                 {/* LEFT SIDEBAR */}
                 <Card className="md:col-span-4 lg:col-span-3 h-[800px] sticky top-6 shadow-md border">
@@ -112,7 +112,7 @@ export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
                             <CardTitle className="text-xl font-semibold leading-tight">
                                 {dynScript.title}                                                               
                             </CardTitle>
-                            <ClientVersionSheet
+                            <VersionSheet
                                 title={dynScript.title}
                                 scriptId={dynScript.id}
                                 currentVersionNumber={dynScript.version_number}
@@ -223,7 +223,7 @@ export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
                     </CardContent>
 
                     <CardFooter className="flex items-center justify-between px-6 py-4">
-                        <ClientVersionSheet
+                        <VersionSheet
                                 title={dynScript.title}
                                 scriptId={dynScript.id}
                                 currentVersionNumber={dynScript.version_number}
@@ -255,7 +255,7 @@ export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
                 </Card>
 
             </section>
-            <section className="px-6 bg-gray-100 dark:bg-black">
+            <section className="px-6 pb-6 bg-transparent">
                 <Card className="shadow-md border">
                     <CommentForm scriptId={dynScript.id} userId={currentUserId} />
                 </Card>

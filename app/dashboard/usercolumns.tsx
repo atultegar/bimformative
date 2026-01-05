@@ -5,18 +5,16 @@ import revitImage from "@/public/bim-icons/revit.png";
 import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, History } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import Link from "next/link";
 import DownloadButton from "@/app/components/DownloadButton";
 import LikeButton from "@/app/components/LikeButton";
 import UserActionMenu from "../components/UserActionMenu";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { VersionSheetContent } from "../components/scripts/version-sheet-content";
 import { ScriptDashboard } from "@/lib/types/script";
-import ClientVersionSheet from "../components/scripts/ClientVersionSheet";
+import VersionSheet from "../components/scripts/VersionSheet";
 
 export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[] => [
     {
@@ -101,11 +99,10 @@ export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[]
         header: () => <div className="text-center">Version</div>,
         cell: ({row}) => {
             const version = row.getValue<number>("current_version_number");
-            const slug = row.original.slug;
 
             return (
                 <div className="flex items-center justify-center">
-                    <ClientVersionSheet 
+                    <VersionSheet 
                         title={row.original.title} 
                         currentVersionNumber={version} 
                         scriptOwnerId={row.original.owner_id} 

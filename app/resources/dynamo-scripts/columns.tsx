@@ -5,7 +5,7 @@ import revitImage from "@/public/bim-icons/revit.png";
 import civil3dImage from "@/public/bim-icons/civil3d.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, History } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import youtubeColor from "@/public/tech-icons/youtube-color.svg";
 import youtubeDark from "@/public/tech-icons/youtube-black.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,29 +13,9 @@ import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import DownloadButton from "@/app/components/DownloadButton";
 import LikeButton from "@/app/components/LikeButton";
-import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { VersionSheetContent } from "../../components/scripts/version-sheet-content";
 import { ScriptMinimal } from "@/lib/types/script";
-import ClientVersionSheet from "@/app/components/scripts/ClientVersionSheet";
+import VersionSheet from "@/app/components/scripts/VersionSheet";
 
-export type DynamoScript = {
-    id: string;
-    slug: string;
-    title: string;
-    script_type: string;
-    description: string;
-    current_version_number: number;
-    dynamo_version: string;
-    owner_id: string;
-    owner_first_name: string;
-    owner_last_name: string;
-    owner_avatar_url: string;
-    downloads_count: number;
-    likes_count: number;
-    demo_link: string | null;
-    dyn_file_url: string | null;
-};
 
 export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
     // TITLE
@@ -139,7 +119,7 @@ export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
         cell: ({row}) => {
             return (
                 <div className="flex items-center justify-center">                    
-                    <ClientVersionSheet 
+                    <VersionSheet 
                         title={row.original.title} 
                         currentVersionNumber={row.original.current_version_number} 
                         scriptOwnerId={row.original.owner_id} 

@@ -15,23 +15,21 @@ import { MinimalVersion } from "@/lib/types/version";
 
 interface Props {
     title: string;
-    scriptOwnerId: string;
     versions: MinimalVersion[];
     currentUserId: string;
+    canManageVersions: boolean;
 }
 
-export function VersionTable({ title, scriptOwnerId, versions, currentUserId }: Props) {
+export function VersionTable({ title, versions, currentUserId, canManageVersions }: Props) {
     const [rowSelection, setRowSelection] = React.useState({});
 
     const sortedVersions = React.useMemo(() => {
         return [...versions].sort((a, b) => b.version_number - a.version_number);
     }, [versions]);
 
-    const isOwner = scriptOwnerId === currentUserId;
-
     const table = useReactTable({
         data: sortedVersions,
-        columns: versionColumns(title, isOwner, currentUserId),
+        columns: versionColumns(title, canManageVersions, currentUserId),
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         enableRowSelection: true,
