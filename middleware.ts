@@ -8,65 +8,47 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 const isPublicApiRoute = (pathname: string) =>
-  pathname.startsWith("/api/public");
+  pathname.startsWith("/api/public") || 
+  pathname === "/api/webhooks/clerk";
 
 const isPrivateApiRoute = (pathname: string) =>
-  pathname.startsWith("/api") && !pathname.startsWith("/api/public");
+  pathname.startsWith("/api") && !isPublicApiRoute(pathname);
 
-// ---- MAIN MIDDLEWARE ---- //
-export function middleware(req: NextRequest) {
+// ---- CLERK MIDDLEWARE ---- //
+export default clerkMiddleware(async (auth, req ) => {
   const pathname = req.nextUrl.pathname;
 
-  // PUBLIC API → NO AUTH
-  if (isPublicApiRoute(pathname) || pathname === "/api/webhooks/clerk") {
+  /* ----------- PUBLIC API -----------*/
+  if (isPublicApiRoute(pathname)) {
     return NextResponse.next();
   }
 
-  // DEV MASTER KEY (DEV ONLY)
+  /* ----------- DEV MASTER KEY -----------*/
   if (process.env.NODE_ENV === "development") {
     const devKey = req.headers.get("x-dev-key");
-
-    if (devKey && devKey === process.env.DEV_MODE_MASTER_KEY) {      
+    if (devKey === process.env.DEV_MODE_MASTER_KEY) {
       return NextResponse.next();
     }
   }
 
-  // PRIVATE API SECURITY - Either CLerk or API Key
+  /* ----------- PRIVATE API -----------*/
   if (isPrivateApiRoute(pathname)) {
     const apiKey = req.headers.get("x-api-key");
 
-    if (apiKey && apiKey === process.env.API_ALLOWED_KEY) {
-      return NextResponse.next;
+    if (apiKey === process.env.API_ALLOWED_KEY) {
+      return NextResponse.next();
     }
 
-    // Otherwise Clerk must handle it
-    // Let clerkMiddleware run
-    return NextResponse.next();
-  }  
-
-  // UI Routes fall through to Clerk
-  return NextResponse.next();
-}
-
-
-
-// ---- CLERK MIDDLEWARE WRAPPER ---- //
-export default clerkMiddleware(async (auth, req ) => {
-  const pathname = req.nextUrl.pathname;
-
-  // Protect UI routes (NOT API routes)
-  if(isProtectedRoute(req)) {
     await auth.protect();
-    return;
+    return NextResponse.next();
   }
 
-  // Protect private APIs if no API key was provided
-  if (isPrivateApiRoute(pathname)) {
-    const apiKey = req.headers.get("x-api-key");
-    if(!apiKey) {
-      await auth.protect();
-    }
+  /* ----------- UI ROUTES -----------*/
+  if (isProtectedRoute(req)) {
+    await auth.protect();
   }
+
+  return NextResponse.next();
 });
 
 // ---- MATCH CONFIG ---- //
