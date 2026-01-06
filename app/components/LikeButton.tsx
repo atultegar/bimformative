@@ -4,10 +4,13 @@ import React, { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { ThumbsUp } from "lucide-react";
 import { postLikeAction } from "../actions/serverActions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import SimpleTooltip from "@/components/ui/SimpleTooltip";
 
 type LikeButtonProps = {
     scriptId: string;
-    userId: string;
+    userId: string | null;
     likesCount: number;
     likedByUser: boolean,
     variant?: "full" | "icon";
@@ -20,6 +23,7 @@ export default function LikeButton({
     likedByUser,
     variant = "icon"
 } : LikeButtonProps) {
+    const router = useRouter();
     const [likes, setLikes] = useState<number>(likesCount);
     const [liked, setLiked] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition();
@@ -31,28 +35,40 @@ export default function LikeButton({
     }, [likesCount, likedByUser]);    
     
     const handleLike = () => {
-        startTransition(async () => {
-            const optimisticLiked = !liked;
-            const optimisticLikes = likes + (optimisticLiked ? 1 : -1);
+        if (!userId) {
+            router.push("/sign-in?redirect_url=/resources/dynamo-script")
+            return;
+        }
 
-            setLiked(optimisticLiked);
-            setLikes(optimisticLikes);
+        const prevLiked = liked;
+        const prevLikes = likes;
+
+        const optimisticLiked = !liked;
+        const optimisticLikes = Math.max(
+            0,
+            likes + (optimisticLiked ? 1 : -1)
+        );
+
+        setLiked(optimisticLiked);
+        setLikes(optimisticLikes);
+
+        startTransition(async () => {
 
             try {
-                const data = await postLikeAction(scriptId, userId);
+                const res = await postLikeAction(scriptId, userId);
                 
-                if (typeof data.likes === "number") {
-                    setLikes(data.likes);
+                if (typeof res?.likes === "number") {
+                    setLikes(res.likes);
                 }
-                if (typeof data.liked === "boolean") {
-                    setLiked(data.liked);
+                if (typeof res?.liked === "boolean") {
+                    setLiked(res.liked);
                 }
             } catch (err) {
-                console.error("Like failed", err);
+                toast.error(`Like failed: ${err}`);
 
                 // Rollback optimistic update
-                setLikes(likes);
-                setLiked(liked);
+                setLikes(prevLikes);
+                setLiked(prevLiked);
             }
         });
     };
@@ -60,41 +76,32 @@ export default function LikeButton({
     const baseClasses = "transition-opacity hover:opacity-80 hover:-translate-y-0.5 ease-in-out";
 
     // Full version
-    if (variant === "full") {
-        return (
-            <Button
-                variant={"secondary"}
-                size={"sm"}
-                onClick={handleLike}
-                disabled={isPending}
-                className={`${baseClasses} flex items-center gap-2`}>
-                    <ThumbsUp
-                        size={18}
-                        className={liked ? "text-blue-600" : "text-gray-400"}
-                    />
-                    <span>Like</span>
-                    <span className="text-xs bg-black/20 rounded px-1 pu-0.5">
-                        {isPending ? "..." : likes}
-                    </span>
-            </Button>
-        );
-    }
-
-    // Icon-only version
-    return (
+    const button = (
         <Button
-            variant={"ghost"}
-            size={"icon"}
+            variant={variant === "full" ? "secondary" : "ghost"}
+            size={variant === "full" ? "sm" : "icon"}
             onClick={handleLike}
             disabled={isPending}
-            className={`${baseClasses} relative flex items-center`}>
+            className="transition-opacity hover:opacity-80 hover:-translate-y-0.5 ease-in-out flex items-center gap-2" >
                 <ThumbsUp
                     size={18}
                     className={liked ? "text-blue-600" : "text-gray-400"}
                 />
+                {variant === "full" && <span>Like</span>}
+                
                 <span className="text-xs opacity-80">
                     {isPending ? "..." : likes}
                 </span>
         </Button>
-    );
+    )
+
+    if (!userId) {
+        return (
+            <SimpleTooltip label="Sign-in to like this script">
+                {button}
+            </SimpleTooltip>
+        );
+    }
+
+    return button;
 }

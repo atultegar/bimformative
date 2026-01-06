@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "./components/Navbar";
 import { Toaster } from "sonner";
+import CookieBanner from "./components/CookieBanner";
 
 // Load the Inter font with the 'swap' display strategy
 const inter = Inter({subsets: ["latin"], display: "swap"});
@@ -40,23 +41,28 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange>
-          {/* <NotificationBar /> */}
-          <Navbar />
-          <main className="w-full h-full mx-auto">{children}</main>
-          <Toaster richColors expand={true} />
-          <Footer />
-          <Analytics />
-          <SpeedInsights />        
-        </ThemeProvider>        
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
+          <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+            {/* <NotificationBar /> */}
+            <Navbar />
+            <main className="w-full h-full mx-auto">{children}</main>
+            <Toaster richColors expand />
+            <Footer />
+
+            {/* Tracking */}
+            <Analytics />
+            <SpeedInsights />
+
+            {/* Cookie Consent */}
+            <CookieBanner />        
+          </ThemeProvider>        
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

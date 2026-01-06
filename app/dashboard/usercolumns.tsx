@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScriptDashboard } from "@/lib/types/script";
 import VersionSheet from "../components/scripts/VersionSheet";
 
-export const usercolumns = (currentUserId: string): ColumnDef<ScriptDashboard>[] => [
+export const usercolumns = (currentUserId: string | null): ColumnDef<ScriptDashboard>[] => [
     {
         accessorKey: "is_public",
         header: ({ column }) => {

@@ -14,7 +14,7 @@ export function ClientDataTable({
     page: number;
     limit: number;
     total: number;
-    currentUserId: string;
+    currentUserId: string | null;
  }) {
     const resolvedColumns = columns(currentUserId);
     return (

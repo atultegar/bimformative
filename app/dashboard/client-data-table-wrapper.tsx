@@ -8,7 +8,7 @@ export function ClientDataTable({
     currentUserId,
  }: {
     data: any[];
-    currentUserId: string;
+    currentUserId: string | null;
  }) {
     const resolvedColumns = usercolumns(currentUserId);
     return (

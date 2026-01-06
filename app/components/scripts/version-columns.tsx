@@ -5,7 +5,7 @@ import VersionActionMenu from "@/app/components/scripts/VersionActionMenu";
 import { MinimalVersion } from "@/lib/types/version";
 import VersionDownloadButton from "./VersionDownloadButton";
 
-export const versionColumns = (title: string, canManageVersions: boolean, userId: string): ColumnDef<MinimalVersion>[] => [
+export const versionColumns = (title: string, canManageVersions: boolean, userId: string | null): ColumnDef<MinimalVersion>[] => [
     {
         id: "select",
         header: ({ table }) => (

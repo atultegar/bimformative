@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import TooltipButton from "@/components/ui/TooltipButton";
 
 type DownloadButtonProps = {
-    userId: string;
+    userId: string | null;
     slug: string;
     downloadsCount: number;
     variant?: "full" | "icon";

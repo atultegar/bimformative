@@ -14,16 +14,14 @@ import { getAllScriptsByUserId, scriptsLikedByUserId } from "@/lib/services/scri
 const DEV_BYPASS = process.env.NODE_ENV === "development";
 const DEV_USER_ID = process.env.DEV_FAKE_USER_ID as string ?? "dev-user";
 
-async function getCurrentUserId(): Promise<string> {
-    if (DEV_BYPASS) {
-        return DEV_USER_ID;
-    }
+async function getCurrentUserId(): Promise<string | null> {
+    
 
     const { userId } = await auth();
-    if (!userId) {
-        return "guest";
+    if (userId && DEV_BYPASS) {
+        return DEV_USER_ID;
     }
-    return userId;
+    return userId ?? null;
 }
 
 

@@ -17,7 +17,7 @@ import { ScriptMinimal } from "@/lib/types/script";
 import VersionSheet from "@/app/components/scripts/VersionSheet";
 
 
-export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
+export const columns = (currentUserId: string | null): ColumnDef<ScriptMinimal>[] => [
     // TITLE
     {
         accessorKey: "title",

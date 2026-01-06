@@ -36,16 +36,14 @@ interface ScriptPageProps {
     params: Promise<{ slug: string}>;
 }
 
-async function getCurrentUserId(): Promise<string> {
-    if (DEV_BYPASS) {
-        return DEV_USER_ID;
-    }
-
+async function getCurrentUserId(): Promise<string | null> {
+    
     const { userId } = await auth();
-    if (!userId) {
-        return "guest";
-    }
-    return userId;
+
+    if (userId && DEV_BYPASS) {
+        return DEV_USER_ID;
+    }    
+    return userId ?? null;
 }
 
 export async function generateStaticParams() {

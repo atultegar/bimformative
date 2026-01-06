@@ -16,7 +16,7 @@ import { MinimalVersion } from "@/lib/types/version";
 interface Props {
     title: string;
     versions: MinimalVersion[];
-    currentUserId: string;
+    currentUserId: string | null;
     canManageVersions: boolean;
 }
 

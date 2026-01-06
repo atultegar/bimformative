@@ -19,7 +19,7 @@ type Props = {
     scriptId: string;
     currentVersionNumber: number | string;
     scriptOwnerId: string;
-    currentUserId: string;
+    currentUserId: string | null;
     variant?: "badge" | "button";
 };
 

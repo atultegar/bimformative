@@ -24,17 +24,14 @@ export const metadata: Metadata = {
     title : "Dynamo Scripts"
 }
 
-async function getCurrentUserId(): Promise<string> {
-    
-    if (DEV_BYPASS) {
+async function getCurrentUserId(): Promise<string | null> {    
+    const { userId } = await auth();
+
+    if (userId && DEV_BYPASS) {
         return DEV_USER_ID;
     }
-
-    const { userId } = await auth();
-    if (!userId) {
-        return "guest";
-    }
-    return userId;
+    
+    return userId ?? null;
 }
 
 export default async function DynamoScriptPage({
@@ -53,13 +50,17 @@ export default async function DynamoScriptPage({
         { page, limit }
     )
 
-    const likesRes = await scriptsLikedByUserId(currentUserId);
-    
-    const likedSet = new Set(likesRes.map(l => l.script_id));
+    // Only fetch likes if logged in
+    const likedSet = new Set<string>();
+
+    if (currentUserId) {
+        const likesRes = await scriptsLikedByUserId(currentUserId);
+        likesRes.forEach(l => likedSet.add(l.script_id));
+    }
 
     const scriptData = result.data.map(s => ({
         ...s,
-        liked_by_user: likedSet.has(s.id),
+        liked_by_user: currentUserId ? likedSet.has(s.id) : false,
     }));
     
     return (

@@ -2,7 +2,8 @@ import { User } from "@/app/lib/interface";
 import { supabaseServer } from "./server";
 import { NextResponse } from "next/server";
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string | null) {
+    if (!userId) return null;
     const supabase = supabaseServer();
 
     const { data: userData, error: userDataErr } = await supabase

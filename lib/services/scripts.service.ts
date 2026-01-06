@@ -89,7 +89,8 @@ export async function getPublicScriptsPaged(
 }
 
 // GET ALL SCRIPTS BY USER - FOR USER DASHBOARD
-export async function getAllScriptsByUserId(userId: string) {
+export async function getAllScriptsByUserId(userId: string | null) {
+    if (!userId) return [];
     const supabase = supabaseServer();
 
     const { data, error } = await supabase
@@ -118,7 +119,7 @@ export async function getPublicScriptsByUserId(userId: string) {
 }
 
 // SCRIPT BY SLUG
-export async function getScriptBySlug(slug: string, userId?: string) {
+export async function getScriptBySlug(slug: string, userId?: string | null) {
     const supabase = supabaseServer();
 
     const { data, error } = await supabase
@@ -271,7 +272,8 @@ export async function scriptDownloadUrlOnly(userId: string, slug: string) {
 }
 
 // ALL SCRIPTS LIKED BY USERID
-export async function scriptsLikedByUserId(userId: string) {
+export async function scriptsLikedByUserId(userId: string | null) {
+    if (!userId) return [];
     const supabase = supabaseServer();
 
     const { data: scripts, error } = await supabase
@@ -285,7 +287,7 @@ export async function scriptsLikedByUserId(userId: string) {
 }
 
 // SCRIPT LIKED BY USERID
-export async function scriptLikedByUserId(userId: string, scriptId: string) {
+export async function scriptLikedByUserId(userId: string | null, scriptId: string) {
     const supabase = supabaseServer();
 
     const { data, error } = await supabase
