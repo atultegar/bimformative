@@ -6,6 +6,7 @@ import { Download } from "lucide-react";
 import { handleScriptFileDownload } from "@/app/actions/clientActions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import TooltipButton from "@/components/ui/TooltipButton";
 
 type DownloadButtonProps = {
     userId: string;
@@ -44,7 +45,8 @@ export default function DownloadButton({userId, slug, downloadsCount, variant = 
     // Full version
     if (variant === "full") {
         return (
-            <Button
+            <TooltipButton
+                tooltip={userId ? "Download script" : "Sign in to download"}
                 variant={"default"}
                 size={"sm"}
                 onClick={handleDownload}
@@ -56,13 +58,14 @@ export default function DownloadButton({userId, slug, downloadsCount, variant = 
                 <span className="text-xs bg-black/20 rounded px-1 py-0.5">
                     {isPending ? "..." : downloads}
                 </span>
-            </Button>
+            </TooltipButton>
         );
     }
 
     // Icon-only version
     return (
-        <Button
+        <TooltipButton
+            tooltip={userId ? "Download script" : "Sign in to download"}
             variant={"ghost"}
             size={"icon"}
             onClick={handleDownload}
@@ -72,6 +75,6 @@ export default function DownloadButton({userId, slug, downloadsCount, variant = 
                 <span className="text-xs opacity-80">
                     {isPending ? "..." : downloads}
                 </span>                
-        </Button>
+        </TooltipButton>
     );
 }

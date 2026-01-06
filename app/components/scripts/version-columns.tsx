@@ -1,14 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, Download, LaptopMinimal, ListX, MoreHorizontal } from "lucide-react";
-import { ScriptVersion } from "@/app/lib/interface";
 import VersionActionMenu from "@/app/components/scripts/VersionActionMenu";
-import { handleScriptVersionDownload } from "@/app/actions/clientActions";
 import { MinimalVersion } from "@/lib/types/version";
-
+import VersionDownloadButton from "./VersionDownloadButton";
 
 export const versionColumns = (title: string, canManageVersions: boolean, userId: string): ColumnDef<MinimalVersion>[] => [
     {
@@ -68,11 +63,11 @@ export const versionColumns = (title: string, canManageVersions: boolean, userId
             const version = row.original;
 
             return canManageVersions ? (
-                <VersionActionMenu title={title} version={version} userId={userId} />
+                <VersionActionMenu title={title} version={version} userId={userId ?? ""} />
             ) 
-            : <Button size={"icon"} onClick={() => handleScriptVersionDownload(title, version.id, userId)}>
-                <Download />
-            </Button>;
+            : (
+                <VersionDownloadButton title={title} versionId={version.id} userId={userId} />
+            );
         },
     },
 ];

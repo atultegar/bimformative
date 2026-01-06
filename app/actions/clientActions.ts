@@ -105,13 +105,8 @@ export async function handleScriptFileDownload(userId: string, slug: string) {
     }
 }
 
-export async function handleScriptVersionDownload(title: string, versionId: string, userId: string) {
-    const router = useRouter();
-    if (!userId) {
-            router.push(`/sign-in?redirect_url=/resources/dynamo-scripts`);
-            return;
-        };
-
+export async function handleScriptVersionDownload(title: string, versionId: string) {
+    
     try {
         const res = await fetch(`/api/v1/script-versions/${versionId}/download`, {
             method: "GET",

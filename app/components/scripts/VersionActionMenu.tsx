@@ -7,6 +7,7 @@ import { handleScriptVersionDownload } from "@/app/actions/clientActions";
 import { MinimalVersion } from "@/lib/types/version";
 import { deleteVersionAction, setCurrentVersionAction } from "@/app/actions/serverActions";
 import { useRouter } from "next/navigation";
+import SimpleTooltip from "@/components/ui/SimpleTooltip";
 
 export default function VersionActionMenu({ title, version, userId }: { title: string, version: MinimalVersion, userId: string }) {
     enum Dialogs {
@@ -15,20 +16,33 @@ export default function VersionActionMenu({ title, version, userId }: { title: s
     }
     const [dialog, setDialog] = useState<Dialogs | null>(null);
     const router = useRouter();
+
+    const onDownload = async () => {
+        if (!userId) {
+            router.push(
+                `/sign-in?redirect_url=/resources/dynamo-scripts`
+            );
+            return;
+        }
+
+        await handleScriptVersionDownload(title, version.id);
+    }
     
     return (
         <>
             {/* Main actions dropdown */}
             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
+                <SimpleTooltip label="Manage version">
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                </SimpleTooltip>                
 
                 <DropdownMenuContent align="end" side="bottom" forceMount className="z-[200]">
-                    <DropdownMenuItem onClick={() => handleScriptVersionDownload(title, version.id)} 
+                    <DropdownMenuItem onClick={onDownload} 
                         className="cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800">
                         <Download />
                         Download
