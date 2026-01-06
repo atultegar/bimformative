@@ -4,6 +4,8 @@ import React, { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { handleScriptFileDownload } from "@/app/actions/clientActions";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type DownloadButtonProps = {
     userId: string;
@@ -13,6 +15,7 @@ type DownloadButtonProps = {
 };
 
 export default function DownloadButton({userId, slug, downloadsCount, variant = "icon" } : DownloadButtonProps) {
+    const router = useRouter();
     const [downloads, setDownloads] = useState<number>(downloadsCount);
     const [isPending, startTransition] = useTransition();
     
@@ -21,12 +24,18 @@ export default function DownloadButton({userId, slug, downloadsCount, variant = 
     }, [downloadsCount]);
 
     const handleDownload = () => {
+        // User not logged in
+        if (!userId) {
+            router.push(`/sign-in?redirect_url=/resources/dynamo-scripts/${slug}`);
+            return;
+        };
+        
         startTransition(async () => {
             try {
                 await handleScriptFileDownload(userId, slug);
                 setDownloads(downloadsCount + 1);
             } catch (error) {
-                console.error("Error downloading script.", error);
+                toast.error(`Error downloading script. ${error}`);
             }            
         })
     };

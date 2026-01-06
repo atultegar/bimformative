@@ -124,7 +124,7 @@ export const columns = (currentUserId: string): ColumnDef<ScriptMinimal>[] => [
                         currentVersionNumber={row.original.current_version_number} 
                         scriptOwnerId={row.original.owner_id} 
                         scriptId={row.original.id} 
-                        currentUserId={currentUserId} 
+                        currentUserId={currentUserId}
                     />       
                 </div>
             );

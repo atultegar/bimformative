@@ -70,7 +70,7 @@ export const versionColumns = (title: string, canManageVersions: boolean, userId
             return canManageVersions ? (
                 <VersionActionMenu title={title} version={version} userId={userId} />
             ) 
-            : <Button size={"icon"} onClick={() => handleScriptVersionDownload(title, version.id)}>
+            : <Button size={"icon"} onClick={() => handleScriptVersionDownload(title, version.id, userId)}>
                 <Download />
             </Button>;
         },

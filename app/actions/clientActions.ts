@@ -7,6 +7,7 @@ import {
     getFileDownloadUrl, 
     updateDownloadCount, 
     updateLikeCount} from "./serverActions";
+import { useRouter } from "next/navigation";
 
 const DEV_KEY = process.env.DEV_MODE_MASTER_KEY as string;
 
@@ -104,7 +105,13 @@ export async function handleScriptFileDownload(userId: string, slug: string) {
     }
 }
 
-export async function handleScriptVersionDownload(title: string, versionId: string) {
+export async function handleScriptVersionDownload(title: string, versionId: string, userId: string) {
+    const router = useRouter();
+    if (!userId) {
+            router.push(`/sign-in?redirect_url=/resources/dynamo-scripts`);
+            return;
+        };
+
     try {
         const res = await fetch(`/api/v1/script-versions/${versionId}/download`, {
             method: "GET",
