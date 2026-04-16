@@ -17,11 +17,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TagsInput } from "@/components/ui/tags-input";
 
 import { ScriptDashboard, ScriptUpdate } from "@/lib/types/script";
 import { getScriptVersionsAction, updateScriptAction } from "@/app/actions/serverActions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 
 type Version = {
     id: string;
@@ -46,7 +48,8 @@ export default function EditDialog({
             description: "",
             script_type: "",
             tags: [],
-            current_version: "",
+            current_version: script.current_version_number.toString(),
+            is_public: false
         },
     });
 
@@ -64,6 +67,7 @@ export default function EditDialog({
                 script_type: script.script_type,
                 tags: script.tags,
                 current_version: script.current_version_number.toString(),
+                is_public: script.is_public
             });
         });
     }, [open, script, form])
@@ -126,11 +130,11 @@ export default function EditDialog({
                                             className="flex gap-6"
                                         >
                                             {["revit", "civil3d"].map((t) => (
-                                                <FormItem key={t} className="flex items-center gap-2">
+                                                <FormItem key={t} className="flex items-center space-x-3">
                                                     <FormControl>
                                                         <RadioGroupItem value={t} />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal capitalize">
+                                                    <FormLabel className="capitalize">
                                                         {t}
                                                     </FormLabel>
                                                 </FormItem>
@@ -177,14 +181,15 @@ export default function EditDialog({
                                     <FormLabel>Current Version</FormLabel>
                                     <FormControl>
                                         <Select
-                                            value={field.value}
-                                            onValueChange={field.onChange}
+                                            value={field.value?.toString()}
+                                            onValueChange={(val) => field.onChange(Number(val))}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select version" />
                                             </SelectTrigger>
 
                                             <SelectContent>
+                                                <SelectGroup>                                                
                                                 {versions && versions.length > 0 ? (
                                                     versions.map((v) => (
                                                         <SelectItem
@@ -199,9 +204,26 @@ export default function EditDialog({
                                                         No versions found
                                                     </div>
                                                 )}
+                                                </SelectGroup>
                                             </SelectContent>
-                                        </Select>
+                                        </Select>                                       
+
                                     </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="is_public"
+                            render={({field}) => (
+                                <FormItem className="space-y-2 rounded-md border p-4">
+                                    <div className="flex flex-row items-center space-x-3">
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        <FormLabel>
+                                            Public
+                                        </FormLabel>
+                                    </div>  
                                 </FormItem>
                             )}
                         />

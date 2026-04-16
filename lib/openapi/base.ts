@@ -8,8 +8,8 @@ export const baseOpenApi: OpenAPIObject = {
         description: "Public & authenticated API for BIMformative scripts",
     },
     servers: [
-        { url: "https://bimformative.com/api", description: "Production server" },
-        { url: "http://localhost:3000/api", description: "Local server" },
+        { url: "https://bimformative.com", description: "Production server" },
+        { url: "http://localhost:3000", description: "Local server" },
     ],
     components: {
         securitySchemes: {

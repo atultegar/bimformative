@@ -9,52 +9,150 @@ import { Separator } from "@/components/ui/separator";
 import { navigationItems } from "./navbar/navigation.config";
 
 export function Footer() {
+    const productLinks = [
+        { name: "Explore Scripts", href: "/resources/dynamo-scripts" },
+        { name: "Download Extension", href: "/download-extension" },
+        { name: "Docs", href: "/docs" },
+        { name: "Roadmap", href: "/roadmap" },
+    ];
+
+    const resourceLinks = [
+        { name: "Blog", href: "/blog" },
+        { name: "Video Tutorials", href: "/resources/video-tutorials" },
+        { name: "Python Scripts", href: "/resources/python-scripts" },
+        { name: "C# Snippets", href: "/resources/csharp-snippets" },
+    ];
+
+    const companyLinks = [
+        { name: "About", href: "/about" },
+        { name: "Contact", href: "/contact" },
+        { name: "Disclaimer", href: "/disclaimer" },
+        { name: "Privacy Policy", href: "/privacy-policy" },
+    ];
+
     return (
-        <footer className="relative w-full mb-2 mt-0 bg-gray-100 dark:bg-black">
-            <div className="w-full px-8 mx-auto max-w-7xl py-5">
-                <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2 border-t border-gray-300 dark:border-stone-600">
-                    <h5 className="mb-2 text-xl font-semibold text-primary py-2 flex flex-wrap gap-2">
-                        <Image src={logo} alt="logo" className="w-8 h-8 block dark:hidden"/>
-                        <Image src={darklogo} alt="darklogo" className="w-8 h-8 hidden dark:block"/>
-                        BIMformative
-                    </h5>
-                    <div className="grid justify-between grid-cols-3 gap-4 py-2">
-                        <ul className="lg:mb-5 flex flex-wrap">
-                            <p className="block mb-1 text-base font-semibold text-primary">
-                                Quick Links
-                            </p>
-                            <li className="lg:inline-flex">
-                                {navigationItems.map((item, index) => (
-                                    <div key={index} className="py-2">
-                                        <Link href={item.href} className="block text-slate-500 py-1 hover:text-primary focus:text-gray-700 text-sm mr-12">
+        <footer className="relative mt-0 w-full border-t border-gray-200 bg-slate-50 dark:border-white/10 dark:bg-black">
+            <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+                {/* Top section */}
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+                    {/* Brand block */}
+                    <div className="lg:col-span-5">
+                        <Link href="/" className="inline-flex items-center gap-3">
+                            <Image src={logo} alt="BIMformative logo" className="h-9 w-9 block dark:hidden"/>
+                            <Image src={darklogo} alt="BIMformative dark logo" className="h-9 w-9 hidden dark:block"/>
+                            <span className="text-xl font-semibold tracking-tight">
+                                BIMformative
+                            </span>
+                        </Link>
+
+                        <p className="mt-5 max-w-md text-sm leading-7 text-slate-600 dark:text-slate-400">
+                            A platform for sharing, managing, and version-controlling visual scripting
+                            workflows for BIM automation. Built for Dynamo today, with more connected
+                            automation workflows ahead
+                        </p>
+
+                        <div className="mt-6 flex items-center gap-4">
+                            {socialMedia.map((item, index) => (
+                                <Link
+                                    key={index}
+                                    href={item.link}
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    className="rounded-md p-2 text-slate-500 transition-all hover:bg-slate-200/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/20 dark:hover:text-white"
+                                >
+                                    <Image
+                                        src={item.icon}
+                                        alt="Social icon"
+                                        className="h-5 w-5 dark:invert"
+                                        />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Links */}
+                    <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:col-span-7">
+                        <div>
+                            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-900 dark:text-primary-foreground">
+                                Product
+                            </h3>
+                            <ul className="mt-4 space-y-3">
+                                {productLinks.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="text-sm text-slate-600 transition-colors hover:text-primary"
+                                        >
                                             {item.name}
                                         </Link>
-                                    </div>
+                                    </li>
                                 ))}
-                            </li>
-                        </ul>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-900 dark:text-primary-foreground">
+                                Resources
+                            </h3>
+                            <ul className="mt-4 space-y-3">
+                                {resourceLinks.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="text-sm text-slate-600 transition-colors hover:text-primary"
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-900 dark:text-primary-foreground">
+                                Company
+                            </h3>
+                            <ul className="mt-4 space-y-3">
+                                {companyLinks.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="text-sm text-slate-600 transition-colors hover:text-primary"
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div className="flex flex-col items-center justify-center w-full py-4 mt-8 border-t border-gray-300 dark:border-stone-600 md:flex-row md:justify-between">
-                    <p className="block text-sm text-center text-slate-500 md:mb-0">
-                        Copyright &copy; {new Date().getFullYear()} BIMformative. All rights reserved.
-                    </p>
-                    <div className="flex h-5 items-center space-x-4 text-sm text-slate-500 md:mb-0">
-                        <Link href="/disclaimer" className="hover:text-primary focus:text-gray-700">Disclaimer</Link>
-                        <Separator orientation="vertical" />
-                        <Link href="/privacy-policy" className="hover:text-primary focus:text-gray-700">Privacy Policy</Link>
-                    </div>
-                    <div className=" flex sm:flex mb-1 gap-4 text-slate-600 dark:text-slate-300 sm:justify-center">
-                        {socialMedia.map((item, index)=> (
-                            <div key={index}>
-                                <Link href={item.link} rel="noopener noreferrer" target="_blank" className="block transition-opacity text-inherit hover:opacity-80 opacity-50 hover:-translate-y-0.5 ease-in-out">
-                                    <Image src={item.icon} alt="Icon" className="w-5 h-5 dark:invert"/>
-                                </Link>
-                            </div>
-                        ))}                                
+
+                {/* Bottom bar */}
+                <div className="mt-12 border-t border-gray-200 pt-6 dark:border-white/10">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <p className="text-sm text-slate-500 dark:text-slate-500">
+                            © {new Date().getFullYear()} BIMformative. All rights reserved.
+                        </p>
+
+                        <div className="flex h-5 items-center gap-4 text-sm text-slate-500 dark:text-slate-500">
+                            <Link
+                                href="/disclaimer"
+                                className="transition-color hover:text-primary"
+                            >
+                                Disclaimer
+                            </Link>
+                            <Separator orientation="vertical" />
+                            <Link
+                                href="/privacy-policy"
+                                className="transition-color hover:text-primary"
+                            >
+                                Privacy Policy
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
         </footer>
-    )
+    );
 }

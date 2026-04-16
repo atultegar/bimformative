@@ -1,5 +1,6 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { PROFILE_MINIMAL_FIELDS } from "./profile.select";
+import { ApiError } from "../api/errors";
 
 export async function getProfileById(profileId: string) {
     const supabase = supabaseServer()
@@ -9,7 +10,7 @@ export async function getProfileById(profileId: string) {
         .eq("id", profileId)
         .single();
 
-    if (error || !data) throw new Error("PROFILE NOT FOUND");
+    if (error || !data) throw new ApiError("PROFILE NOT FOUND", "Profile not found", 404);
 
     return data;
 }

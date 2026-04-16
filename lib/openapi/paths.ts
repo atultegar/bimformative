@@ -1,7 +1,7 @@
 export const paths = {
-    "/public/v1/scripts": {
+    "/api/public/v1/scripts": {
         get: {
-            tags: ["Scripts"],
+            tags: ["PublicScripts"],
             summary: "List public scripts",
             responses: {
                 200: {
@@ -23,4 +23,28 @@ export const paths = {
             },
         },
     },
+    "/api/v1/scripts": {
+        get: {
+            tags: ["UserScripts"],
+            summary: "List of scripts by user",
+            responses: {
+                200: {
+                    description : "List of scripts by user",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    scripts: {
+                                        type: "array",
+                                        items: { $ref: "#/components/schemas/ScriptMinimal" },
+                                    },
+                                },
+                            },
+                        },
+                    }
+                }
+            }
+        }
+    }
 }

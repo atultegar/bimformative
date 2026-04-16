@@ -1,3 +1,4 @@
+import { handleApiError, successResponse } from "@/lib/api/responses";
 import { searchResources } from "@/lib/services/sanity.service";
 import { getPublicScriptsPaged } from "@/lib/services/scripts.service";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
             getPublicScriptsPaged({ search: query }, { page, limit }),
         ]);
 
-        return NextResponse.json({
+        return successResponse({
             query,
             sanity: {
                 data: sanityResult.results,
@@ -24,20 +25,9 @@ export async function GET(req: NextRequest) {
                 limit: sanityResult.limit,
                 totalPages: sanityResult.totalPages,
             },
-            scripts: {
-                data: scriptsResult.data,
-                total: scriptsResult.total,
-                page: scriptsResult.page,
-                limit: scriptsResult.limit,
-                totalPages: scriptsResult.totalPages,
-            }
+            scripts: scriptsResult,
         });
-    } catch (err: any) {
-        console.error("Unified search failed:", err);
-        
-        return NextResponse.json(
-            { error: err.message }, 
-            { status: 500 }
-        );
+    } catch (err: unknown) {
+        return handleApiError(err);
     }
 }

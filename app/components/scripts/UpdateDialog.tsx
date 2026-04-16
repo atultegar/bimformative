@@ -19,7 +19,8 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
         description: "",
         script_type: "",
         tags: [] as string[],
-        current_version: "",
+        current_version: "0",
+        is_public: false
     });
 
     useEffect(() => {
@@ -40,6 +41,7 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
                     script_type: script.script_type,
                     tags: script.tags ?? [],
                     current_version: script.current_version_number,
+                    is_public: script.is_public,
                 });
             }
 
@@ -96,7 +98,7 @@ const UpdateDialog = ({ scriptId, submitHandler }: { scriptId: string, submitHan
                     <div>
                         <Label>Select Current Version</Label>
                         <Select
-                            value={formData.current_version}
+                            value={formData.current_version.toString()}
                             onValueChange={(v) => updateField("current_version", v)}     
                         >
                             <SelectTrigger className="w-[250px]">

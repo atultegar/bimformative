@@ -12,11 +12,34 @@ export const SCRIPT_MINIMAL_FIELDS = `
     owner_avatar_url,
     demo_link,
     downloads_count,
-    likes_count
+    likes_count,
+    updated_at
 `;
 
 // Full script detail - for detail page
 export const SCRIPT_DETAIL_FIELDS = `*`;
+
+export const SCRIPT_DETAIL_MINIMUM = `
+    id,
+    owner_id,
+    title,
+    slug,
+    description,
+    script_type,
+    current_version_number,
+    owner_first_name,
+    owner_last_name,
+    owner_avatar_url,
+    demo_link,
+    downloads_count,
+    likes_count,
+    updated_at,
+    tags,
+    dynamo_version,
+    is_player_ready,
+    external_packages,
+    is_public    
+`
 
 export const SCRIPT_OWNER_FIELDS = `
     id,
@@ -30,7 +53,8 @@ export const SCRIPT_OWNER_FIELDS = `
     downloads_count,
     likes_count,
     is_public,
-    tags
+    tags,
+    updated_at
 `;
 
 export const SCRIPT_SLUG_ONLY = `

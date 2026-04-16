@@ -60,3 +60,10 @@ export function buildComparableMap(nodes: any[]) {
 
   return map;
 }
+
+export function normalizeScriptType(type: string): string {
+  return type
+    .toLowerCase()
+    .replace(/\s+/g, "") // remove spaces
+    .replace(/[^a-z0-9]/g, "") // remove special characters if any
+}

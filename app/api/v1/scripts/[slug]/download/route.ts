@@ -1,31 +1,14 @@
 import { NextResponse } from "next/server";
 import { scriptDownload } from "@/lib/services/scripts.service";
-import { auth } from "@clerk/nextjs/server";
-
-const DEV_MODE = process.env.NODE_ENV === "development";
-const DEV_FAKE_USER_ID = process.env.DEV_FAKE_USER_ID ?? null;
+import { getUserId } from "@/lib/auth/getUserId";
+import { handleApiError, unauthorizedResponse } from "@/lib/api/responses";
 
 export async function GET(req: Request, ctx: RouteContext<"/api/v1/scripts/[slug]/download">) {
     const { slug } = await ctx.params;
 
-    let userId: string | null = null;
-
-    if (DEV_MODE && DEV_FAKE_USER_ID) {
-        userId = DEV_FAKE_USER_ID;
-    } else {
-        const authResult = await auth();
-        userId = authResult.userId;
-    }
-
-    if (!userId) {
-        return NextResponse.json(
-            {
-                error: "UNAUTHORIZED",
-                message: "You must be signed in to download this script.",
-            },
-            { status: 401 } 
-        );
-    }
+    const userId = await getUserId(req);
+        
+    if(!userId) return unauthorizedResponse("Authentication required");
 
     try {
         const { stream, filename } = await scriptDownload(slug, userId);
@@ -38,18 +21,6 @@ export async function GET(req: Request, ctx: RouteContext<"/api/v1/scripts/[slug
             },
         });
     } catch (err: unknown) {
-        const message = err instanceof Error ? err.message: "Download failed";
-
-        const statusMap: Record<string, number> = {
-            FILE_NOT_FOUND: 404,
-            FORBIDDEN: 403,
-            SIGNED_URL_FAILED: 500,
-            FILE_FETCH_FAILED: 500,
-        };
-
-        return NextResponse.json(
-            { error: message },
-            { status: statusMap[message] ?? 500 }            
-        );
+        return handleApiError(err);
     }
 }

@@ -18,4 +18,3 @@ export const ScriptMinimalSchema = {
         likes_count: { type: "integer" },
     },
 };
-    

@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 // ---- ROUTE MATCHERS ---- //
-const isProtectedRoute = createRouteMatcher([
+const isProtectedUIRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/profile(.*)",
 ]);
@@ -11,14 +11,14 @@ const isPublicApiRoute = (pathname: string) =>
   pathname.startsWith("/api/public") || 
   pathname === "/api/webhooks/clerk";
 
-const isPrivateApiRoute = (pathname: string) =>
-  pathname.startsWith("/api") && !isPublicApiRoute(pathname);
+const isApiRoute = (pathname: string) =>
+  pathname.startsWith("/api");
 
 // ---- CLERK MIDDLEWARE ---- //
-export default clerkMiddleware(async (auth, req ) => {
+export default clerkMiddleware(async (auth, req: NextRequest ) => {
   const pathname = req.nextUrl.pathname;
 
-  /* ----------- PUBLIC API -----------*/
+  /* ----------- PUBLIC API (NO AUTH) -----------*/
   if (isPublicApiRoute(pathname)) {
     return NextResponse.next();
   }
@@ -31,20 +31,36 @@ export default clerkMiddleware(async (auth, req ) => {
     }
   }
 
-  /* ----------- PRIVATE API -----------*/
-  if (isPrivateApiRoute(pathname)) {
+  /* ----------- API ROUTES -----------*/
+  if (isApiRoute(pathname)) {
+        
+    // 1. Server-to-server API key
     const apiKey = req.headers.get("x-api-key");
-
     if (apiKey === process.env.API_ALLOWED_KEY) {
       return NextResponse.next();
     }
 
-    await auth.protect();
+    // 2. Desktop app JWT (Bearer token)
+    const authHeader = req.headers.get("authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      return NextResponse.next();
+    }
+
+    // 3. Web app Clerk session (cookie)
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+        
     return NextResponse.next();
   }
 
   /* ----------- UI ROUTES -----------*/
-  if (isProtectedRoute(req)) {
+  if (isProtectedUIRoute(req)) {
     await auth.protect();
   }
 

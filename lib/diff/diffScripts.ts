@@ -66,3 +66,79 @@ export function diffScripts(oldNodes: Node[], newNodes: Node[]): DiffResult {
         changedNodes,
     };
 }
+
+export function versionCompare(oldNodes: Node[], newNodes: Node[]): DiffResult {
+    const oldMap = new Map(oldNodes.map((n) => [n.Id, n]));
+    const newMap = new Map(newNodes.map((n) => [n.Id, n]));
+    
+    const oldIds = new Set(oldNodes.map((n) => n.Id));
+    const newIds = new Set(newNodes.map((n) => n.Id))
+
+    const removedNodeIds = new Set([...oldIds].filter((id) => !newIds.has(id)));
+
+    const addedNodeIds = new Set([...newIds].filter((id) => !oldIds.has(id)));
+    console.log(addedNodeIds);
+
+    const changedNodeIds = new Set<string>();
+    const changedNodes: { oldNode: Node; newNode: Node}[] = [];
+
+    const nodeTypesWithInputValues = new Set([
+        "CodeBlockNode",
+        "StringInputNode",
+        "NumberInputNode",
+        "BooleanInputNode",
+    ]);
+
+    // Detect changed nodes
+    for (const id of oldIds) {
+        if (!newIds.has(id)) continue;
+
+        const oldNode = oldMap.get(id)!;
+        const newNode = newMap.get(id)!;
+
+        let hasChanged = false;
+
+        // NodeType changed
+        if (oldNode.NodeType !== newNode.NodeType) {
+            hasChanged = true;
+        }
+
+        //CASE 1: NodeType has InputValue → compare InputValue
+        else if (nodeTypesWithInputValues.has(oldNode.NodeType)) {
+            if (oldNode.InputValue !== newNode.InputValue) {
+                hasChanged = true;
+            }
+        }
+
+        //CASE 2: PythonScriptNode → compare Code field
+        else if (oldNode.NodeType === "PythonScriptNode") {
+            if (oldNode.Code !== newNode.Code) {
+                hasChanged = true;
+            }
+        }
+
+        else {
+            const oldStr = JSON.stringify(oldNode);
+            const newStr = JSON.stringify(newNode);
+
+            if (oldStr !== newStr) {
+                hasChanged = true;
+            }
+        }
+
+        if (hasChanged) {
+            changedNodeIds.add(id.toString());
+            changedNodes.push({ oldNode, newNode });
+        }
+
+    }
+
+    return {
+        oldNodes,
+        newNodes,
+        removedNodeIds,
+        addedNodeIds,
+        changedNodeIds,
+        changedNodes
+    };
+}

@@ -22,6 +22,7 @@ import { ContactPayload } from "@/lib/types/contact";
 import { headers } from "next/headers";
 import { submitContactMessage } from "@/lib/services/contact.service";
 import { toast } from "sonner";
+import { handleApiError } from "@/lib/api/responses";
 
 
 const FUNCTION_URL = process.env.AZURE_FUNCTION_URL;
@@ -508,12 +509,18 @@ export async function updateScriptStatusAction(scriptId: string, isPublic: boole
     if (!userId) throw new Error("UNAUTHORIZED");
 
     if (isPublic) {
-        const res = await updateScriptPrivate(scriptId, userId);
-        return res.message;
+        try {
+            return await updateScriptPrivate(scriptId, userId);
+        } catch (ex: unknown) {
+            return handleApiError(ex);
+        }
     }
 
-    const publicRes = await updateScriptPublic(scriptId, userId);
-    return publicRes.message;
+    try {
+        return await updateScriptPublic(scriptId, userId);
+    } catch (err: unknown) {
+        return handleApiError(err);
+    }
 }
 
 // UPDATE SCRIPT DATA

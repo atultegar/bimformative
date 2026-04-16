@@ -8,6 +8,20 @@ export type PaginationParams = {
     limit?: number;
 }
 
+export type PublicScriptSortField = 
+| "title"
+| "updated_at"
+| "downloads_count"
+| "likes_count"
+| "owner_first_name";
+
+export type SortOrder = "asc" | "desc";
+
+export interface SortParams {
+    field?: PublicScriptSortField;
+    order?: SortOrder;
+}
+
 export type ScriptMinimal = {
     id: string;
     owner_id: string;
@@ -66,6 +80,7 @@ export type ScriptUpdate = {
     script_type: string;
     tags: string[];
     current_version: string;
+    is_public: boolean;
 }
 
 export type ScriptPublish = {
@@ -91,6 +106,7 @@ export type PublishScriptInput = {
 
 export type PublishScriptResult = {
     scriptId: string;
+    slug: string;
     version: number;
     downloadUrl: string | null;
     versionRow: any;

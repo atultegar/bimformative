@@ -23,7 +23,7 @@ export default function UserActionMenu({script}: {script: ScriptDashboard}) {
         startTransition(async () => {
             const res = await updateScriptStatusAction(script.id, script.is_public);
 
-            if (res === "SUCCESS") {
+            if (res) {
                 toast.success(script.is_public ? "Script set to private" : "Script set to public");
                 router.refresh();
             } else {

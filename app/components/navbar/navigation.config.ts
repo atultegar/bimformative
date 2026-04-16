@@ -1,7 +1,5 @@
 export const navigationItems = [
     { name: 'Home', href: '/' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Docs', href: '/docs' },
     {
         name: 'Resources',
         href: '/resources',
@@ -12,7 +10,9 @@ export const navigationItems = [
             { name: "Video Tutorials", href: '/resources/video-tutorials', description: "In-depth video tutorials" },
             { name: "Other Assets", href: '/resources/other-assets', description: "Other assets for BIM" },
         ],
-    },
+    },        
+    { name: 'Docs', href: '/docs' },
+    { name: 'Blog', href: '/blog' },
     { name: 'Tools', href: '/tools' },
     { name: 'About', href: '/about' },
 ];

@@ -1,28 +1,107 @@
+"use client";
+
 import React from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { FaGithub, FaLinkedin } from "react-icons/fa6";
+import { Layers3 } from "lucide-react";
 import profilePic from "@/public/profile-pic.png";
 import Image from "next/image";
 
 export default function MeetTheDeveloper() {
     return (
-        <section className="relative bg-gray-50 dark:bg-gray-900 py-12 px-6 sm:px-12 lg:px-24">
-            <div className="max-w-7xl mx-auto text-center">
-                <h2 className="text-3xl sm:text-4xl font-semibold text-blue-600 dark:text-blue-400">
-                    Meet the Mind Behind
-                </h2>
-                <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-gray-100">BIMformative</h2>
-                <div className="flex flex-row items-center justify-center mt-2">                    
-                    <p className="text-xl sm:text-xl lg:text-2xl font-semibold tracking-wide mt-5 text-center scroll-m-20">
-                        I&apos;m Atul Tegar, a self-taught BIM developer and problem solver at heart. Over the years, I&apos;ve dedicated myself to tackling the unique challenges
-                        of BIM for Infrastructure. From designing cutting-edge Dynamo scripts to developing custom add-ins, Dynamo packages, my goals has been to simplify workflows
-                        and enhance productivity. <br />
-                        <br />
-                        This website - and everything on it - was created by me, fueled by countless hours of learning, coding, and passion. I built this platform from scratch using
-                        online resources, turning a vision into reality.
+        <section className="relative mt-8 overflow-hidden rounded-2xl border border-white/10 bg-gray-100/80 p-8 dark:bg-white/5 lg:p-10">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5" />
+
+            <div className="realtive grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+                {/* Text */}
+                <div>
+                    <div className="inline-flex items-center rounded-full border border-cyan-500/20 bg-cyan-500/5 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-cyan-500">
+                        Platform Builder
+                    </div>
+
+                    <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+                        Atul Tegar
+                    </h2>
+
+                    <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
+                        BIM developer focused on automation, workflow design, and technical
+                        tooling for the AEC industry. With a background in Civil and
+                        infrastructure projects, I work at the intersection of BIM,
+                        visual scripting, and software development.
                     </p>
-                    <Image src={profilePic} alt="Atul Tegar" className="rounded-full mt-2 mx-auto" width={300} height={300} />
-                    
+
+                    <p className="mt-4 max-w-3xl text-base leading-8 text-muted-foreground">
+                        BIMformative is being developed as a structured platform for sharing,
+                        managing, and versioning visual scripting workflows - starting with
+                        Dynamo and expanding toward a more connected automation ecosystem.
+                    </p>
+
+                    <div className="mt-6 flex flex-wrap gap-2">
+                        {[
+                            "Dynamo",
+                            "Revit API",
+                            "Civil 3D API",
+                            "C#",
+                            "Python",
+                            "Next.js",
+                            ".NET",
+                            "Workflow Automation",
+                        ].map((item) => (
+                            <span
+                                key={item}
+                                className="rounded-full border border.white/10 bg-white/40 px-3 py-1 text-sm text-slate-700 dark:bg-black/20 dark:text-slate-300"
+                            >
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+
+                    <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <Button asChild variant={"outline"}>
+                            <Link
+                                href="https://www.linkedin.com/in/atultegar/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <FaLinkedin className="mr-2 h-8 w-8" />
+                                LinkedIn
+                            </Link>                            
+                        </Button>
+
+                        <Button asChild variant={"outline"}>
+                            <Link
+                                href="https://github.com/atultegar"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <FaGithub className="mr-2 h-8 w-8" />
+                                GitHub
+                            </Link>                            
+                        </Button>
+                    </div>
+
+                    <div className="mt-6 inline-flex items-center text-sm text-muted-foreground">
+                        <Layers3 className="mr-2 h-4 w-4 text-cyan-500" />
+                        Built with Next.js + .NET and designed for scalable BIM workflows
+                    </div>
                 </div>
-            </div>
+
+                {/* Image */}
+                <div className="flex justify-center lg:justify-end">
+                    <div className="relative">
+                        <div className="absolute inset-0 rounded-full bg-cyan-500/10 blur-3xl" />
+                            <Image
+                                src={profilePic}
+                                alt="Atul Tegar"
+                                width={280}
+                                height={280}
+                                className="relative rounded-full border border-white/10 object-cover shadow-2xl"
+                                priority
+                             />
+                    </div>
+                </div>
+            </div>            
         </section>
-    )
+    );
 }

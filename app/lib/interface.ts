@@ -212,11 +212,15 @@ export interface ScriptSlug {
 };
 
 export interface PaginatedResult<T> {
-    data: T[];
+    scripts: T[];
     page: number;
     limit: number;
     total: number;
     totalPages: number;
+}
+
+export interface OwnerResult<T> {
+    scripts: T[]
 }
 
 export interface PublicScript {
@@ -233,6 +237,22 @@ export interface PublicScript {
     demo_link: string;
     downloads_count: number;
     likes_count: number;
+}
+
+export interface OwnerScript {
+    id: string;
+    owner_id: string;
+    title: string;
+    slug: string;
+    description: string;
+    script_type: string;
+    current_version_number: number;
+    demo_link: string;
+    downloads_count: number;
+    likes_count: number;
+    is_public: boolean;
+    tags: string[];
+    updated_at: string;
 }
 
 export interface SanitySearchParams {

@@ -1,4 +1,6 @@
+import { randomUUID } from "crypto";
 import { supabaseServer } from "./server";
+import { ApiError } from "../api/errors";
 
 const supabase = supabaseServer();
 
@@ -57,4 +59,55 @@ export async function createSignedUrl(publicUrl: string){
     } catch (error) {
         return null;
     }
+}
+
+export async function uploadFileTemp(file: File){
+    const uploadId = `upl_${randomUUID()}`;
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+    const storagePath = `temp/${uploadId}.dyn`;
+
+    const { error: uploadError } = await supabase.storage
+        .from("dynamo-scripts")
+        .upload(storagePath, fileBuffer, {
+            contentType: file.type || "application/json",
+            cacheControl: "3600",
+            upsert: true,
+        });
+
+    if (uploadError) throw new ApiError("UPLOAD_ERROR", uploadError.message, 500);
+    
+    return {
+        uploadId,
+        storagePath,
+    };
+}
+
+// Get file by storagePath
+export async function fileByStoragePath(
+    storagePath: string
+): Promise<File> {
+    const { data: signed, error: urlError } = await supabase.storage
+            .from("dynamo-scripts")
+            .createSignedUrl(storagePath, 60);
+
+    if (urlError) throw urlError;
+
+    if (!signed?.signedUrl) throw new Error("SIGNED_URL_FAILED");    
+    
+    const res = await fetch(signed.signedUrl);
+
+    if (!res.ok) throw new Error(`FILE_FETCH_FAILED (${res.status})`);
+
+    const arrayBuffer = await res.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // derive filename from storage path
+    const fileName = 
+    storagePath.split("/").pop() ?? "script.dyn";
+
+    return new File([buffer], fileName, {
+        type: res.headers.get("content-type") ?? "application/octet-stream",
+        lastModified: Date.now(),
+    });
 }

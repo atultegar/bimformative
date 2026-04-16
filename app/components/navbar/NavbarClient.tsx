@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
+import logoLight from "@/public/logo-light-2.png"
+import logoDark from "@/public/logo-dark-2.png"
 
 import { 
     NavigationMenu, 
@@ -43,40 +47,33 @@ type Props = {
 
 export default function NavbarClient({ navigationItems }: Props) {
     const pathname = usePathname();
-    const [scrolled, setScrolled] = useState(false);
-
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 10);
-        onScroll();
-        window.addEventListener("scroll", onScroll);
-    }, []);
 
     return (
         <>
             {/* Desktop Navigation */}
-            <div className="hidden sm:flex justify-center items-center col-span-6">
+            <div className="hidden md:col-span-6 lg:flex items-center justify-center">
                 <NavigationMenu>
-                    <NavigationMenuList>
+                    <NavigationMenuList className="gap-1">
                         {navigationItems.map((item) => (
                             <NavigationMenuItem key={item.name}>
                                 {item.submenu ? (
                                     <>
-                                        <NavigationMenuTrigger>
+                                        <NavigationMenuTrigger className={cn("bg-transparent text-sm")}>
                                             {item.name}
                                         </NavigationMenuTrigger>
                                         <NavigationMenuContent>
-                                            <ul className="grid w-[500px] gap-3 p-4 md:grid-cols-2">
+                                            <ul className="grid w-[560px] gap-3 p-4 md:grid-cols-2">
                                                 {item.submenu.map((sub) => (
                                                     <li key={sub.href}>
                                                         <NavigationMenuLink asChild>
                                                             <Link
                                                                 href={sub.href}
-                                                                className="block rounded-md p-3 hover:bg-muted"
+                                                                className="block rounded-xl border border-transparent p-3 transition-colors hover:border-white/10 hover:bg-muted"
                                                             >
-                                                                <div className="text-sm font-medium">
+                                                                <div className="text-sm font-medium text-foreground">
                                                                     {sub.name}
                                                                 </div>
-                                                                <p className="text-sm text-muted-foreground">
+                                                                <p className="mt-1 text-sm leading-6 text-muted-foreground">
                                                                     {sub.description}
                                                                 </p>
                                                             </Link>
@@ -91,8 +88,9 @@ export default function NavbarClient({ navigationItems }: Props) {
                                         <Link
                                             href={item.href}
                                             className={cn(
+                                                "bg-transparent text-sm hover:bg-white/5",
                                                 navigationMenuTriggerStyle(),
-                                                pathname === item.href && "font-semibold"
+                                                pathname === item.href && "bg-gray-500/10 dark:bg-white/10 font-medium"
                                             )}
                                         >
                                             {item.name}
@@ -106,15 +104,17 @@ export default function NavbarClient({ navigationItems }: Props) {
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center justify-end gap-2 col-span-6 md:col-span-3">
-                <Link
-                    href="/contact"
-                    className="hidden sm:inline-flex relative overflow-hidden rounded-md border-1 border-primary px-4 py-2 text-primary font-medium group"
+            <div className="col-span-6 md:col-span-9 lg:col-span-3 flex items-center justify-end gap-2">
+                <Button
+                    asChild
+                    size={"sm"}
+                    className="hidden sm:inline-flex"
                 >
-                    <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-primary top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease" />
-                    <span className="relative text-primary transition duration-300 group-hover:text-white ease">Contact Us</span>
-                </Link>
+                    <Link href="/download-extension">Download Extension</Link>
+                </Button>
+
                 <ModeToggle />
+
                 <div className="sm:hidden">
                     <MobileMenu />
                 </div>

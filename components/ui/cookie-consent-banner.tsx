@@ -104,7 +104,7 @@ const CookieConsentBanner = React.forwardRef<HTMLDivElement, CookieConsentProps>
                 {description}
               </CardDescription>
               <p className="text-xs text-muted-foreground">
-                By clicking <span className="font-medium">`&quot;`Accept`&quot;`</span>, you
+                By clicking <span className="font-medium">&quot;Accept&quot;</span>, you
                 agree to our use of cookies.
               </p>
               <a

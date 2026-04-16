@@ -1,42 +1,38 @@
+import { ApiError } from "@/lib/api/errors";
+import { handleApiError, successResponse } from "@/lib/api/responses";
 import { analyzeDynamoJson, parseDynamoJsonFromFile } from "@/lib/services/dynalyzer.service";
-import { NextRequest, NextResponse } from "next/server";
+import { uploadFileTemp } from "@/lib/supabase/storage";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+
+export const runtime = "nodejs";
+export async function POST(req: Request, ctx: RouteContext<"/api/v1/scripts/analyze">) {      
     try {
-        const formData = await request.formData();
-        const file = formData.get("file") as File | null;
+        const formData = await req.formData();
+        
+        const file = formData.get("file");
 
+        if(!(file instanceof File)) {
+            console.error("Invalid file received:", file);
+            throw new ApiError("FILE_REQUIRED", "File required", 400);
+        }
+
+        const uploadResult = await uploadFileTemp(file);
         const parsedJson = await parseDynamoJsonFromFile(file!);
 
         if (!parsedJson) {
-            return NextResponse.json(
-                { error: "Parsed JSON error" },
-                { status: 400 }
-            )
+            throw new ApiError("PARSED_JSON_ERROR", "Parsed JSON error", 400);            
         }
 
-        const result = await analyzeDynamoJson(parsedJson);
+        const analyzeResult = await analyzeDynamoJson(parsedJson);
+        
+        return successResponse({
+            uploadId: uploadResult.uploadId,
+            storagePath: uploadResult.storagePath,
+            scriptData: analyzeResult.scriptData,
+        });
 
-        return NextResponse.json(
-            { success: true, ...result },
-            { status: 200 }
-        );
-
-    } catch (err: any) {
-        const message =
-            err.message === "FILE_REQUIRED" ? "File is required" :
-            err.message === "INVALID_DYNAMO_JSON" ? "Invalid Dynamo JSON content":
-            err.message === "AZURE_FUNCTION_NOT_CONFIGURED" ? "Analyzer not configured":
-            err.message?.startsWith("ANALYZER_ERROR") ? err.message:
-            "Analyze failed";
-
-        const status = 
-            err.message === "FILE_REQUIRED" ? 400 :
-            err.message === "INVALID_DYNAMO_JSON" ? 400 :
-            err.message === "AZURE_FUNCTION_NOT_CONFIGURED" ? 500:
-            err.message?.startsWith("ANALYZER_ERROR") ? 500:
-            500;
-
-        return NextResponse.json({ error: message }, { status });
+    } catch (err: unknown) {
+        return handleApiError(err);
     }
 }
