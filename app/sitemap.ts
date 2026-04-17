@@ -83,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.8,
         },
         {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL}/projects`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/tools`,
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 0.5,
