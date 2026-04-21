@@ -1,34 +1,59 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExtensionDownloadRecord, getActiveExtensionDownloads } from "@/lib/services/extension-downloads.services";
 import { Boxes, Download, Wrench } from "lucide-react";
 import Link from "next/link";
 
-const extensionGroups = [
-    {
-        title: "Dynamo for Revit",
-        description: "Download the BIMformative extension for Dynamo running inside Revit",
-        versions: [
-            { version: "Revit 2023", href: "/downloads/bimformative-revit-2023.zip" },
-            { version: "Revit 2024", href: "/downloads/bimformative-revit-2024.zip" },
-            { version: "Revit 2025", href: "/downloads/bimformative-revit-2025.zip" },
-            { version: "Revit 2026", href: "/downloads/bimformative-revit-2026.zip" },
-        ],
-    },
-    {
-        title: "Dynamo for Civil 3D",
-        description: "Download the BIMformative extension for Dynamo running inside Civil 3D",
-        versions: [
-            { version: "Civil 3D 2023", href: "/downloads/bimformative-c3d-2023.zip" },
-            { version: "Civil 3D 2024", href: "/downloads/bimformative-c3d-2024.zip" },
-            { version: "Civil 3D 2025", href: "/downloads/bimformative-c3d-2025.zip" },
-            { version: "Civil 3D 2026", href: "/downloads/bimformative-c3d-2026.zip" },
-        ],
-    },
-];
+type ExtensionGroup = {
+    title: string;
+    description: string;
+    versions: ExtensionDownloadRecord[];
+}
 
-export default function DownloadExtensionPage() {
+function groupExtensions(data: ExtensionDownloadRecord[]): ExtensionGroup[] {
+    const revit = data.filter((item) => item.product === "revit");
+    const civil3d = data.filter((item) => item.product === "civil3d");
+    const grasshopper = data.filter((item) => item.product === "grasshopper");
+
+    const groups: ExtensionGroup[] = [];
+
+    if (revit.length > 0) {
+        groups.push({
+            title: "Dynamo for Revit",
+            description: "Download the BIMformative extension for Dynamo running inside Revit",
+            versions: revit,
+        });
+    }
+
+    if (civil3d.length > 0) {
+        groups.push({
+            title: "Dynamo for Civil 3D",
+            description: "Download the BIMformative extension for Dynamo running inside Civil 3D",
+            versions: civil3d,
+        });
+    }
+
+    if (grasshopper.length > 0) {
+        groups.push({
+            title: "Grasshopper",
+            description: "Download the BIMformative extension for Grasshopper workflows",
+            versions: grasshopper,
+        });
+    }
+
+    return groups;
+}
+
+function getVersionLabel(item: ExtensionDownloadRecord) {
+    if (item.product === "revit") return `Revit ${item.host_version}`;
+    if (item.product === "civil3d") return `Civil 3D ${item.host_version}`;
+    return `Grasshopper ${item.host_version}`;
+}
+
+export default async function DownloadExtensionPage() {
+    const data = await getActiveExtensionDownloads();
+    const extensionGroups = groupExtensions(data);
+
     return (
         <main className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
             {/* Hero */}
@@ -72,18 +97,24 @@ export default function DownloadExtensionPage() {
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                                 {group.versions.map((item) => (
                                     <div
-                                        key={item.version}
+                                        key={item.id}
                                         className="rounded-xl border border-white/10 bg-slate-950/40 p-5"
                                     >
                                         <h3 className="text-lg font-semibold">
-                                            {item.version}
+                                            {getVersionLabel(item)}
                                         </h3>
                                         <p className="mt-2 text-sm text-gray-400">
                                             Download the extension package for this version
                                         </p>
 
+                                        {item.file_version && (
+                                            <p className="mt-2 text-xs text-gray-500">
+                                                Extension v{item.file_version}
+                                            </p>
+                                        )}
+
                                         <Button asChild className="mt-5 w-full">
-                                            <Link href={item.href}>
+                                            <Link href={`/api/public/v1/extensions/download?id=${item.id}`}>
                                                 <Download className="mr-2 h-4 w-4" />
                                                 Download
                                             </Link>
