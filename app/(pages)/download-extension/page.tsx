@@ -4,6 +4,9 @@ import { ExtensionDownloadRecord, getActiveExtensionDownloads } from "@/lib/serv
 import { Boxes, Download, Wrench } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type ExtensionGroup = {
     title: string;
     description: string;
