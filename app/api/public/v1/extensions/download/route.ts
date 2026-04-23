@@ -3,7 +3,6 @@ import { ApiError } from "@/lib/api/errors";
 import { handleApiError } from "@/lib/api/responses";
 import { getUserId } from "@/lib/auth/getUserId";
 import { createSignedDownloadUrl, getActiveExtensionById, incrementDownloadCount, logDownload } from "@/lib/services/extension-downloads.services";
-import { createSignedUrl } from "@/lib/supabase/storage";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, ctx:RouteContext<"/api/public/v1/extensions/download">){

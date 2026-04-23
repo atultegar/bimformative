@@ -1,3 +1,4 @@
+import { DownloadExtensionButton } from "@/app/components/DownloadExtensionButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExtensionDownloadRecord, getActiveExtensionDownloads } from "@/lib/services/extension-downloads.services";
@@ -116,12 +117,7 @@ export default async function DownloadExtensionPage() {
                                             </p>
                                         )}
 
-                                        <Button asChild className="mt-5 w-full">
-                                            <Link href={`/api/public/v1/extensions/download?id=${item.id}`}>
-                                                <Download className="mr-2 h-4 w-4" />
-                                                Download
-                                            </Link>
-                                        </Button>
+                                        <DownloadExtensionButton id={item.id} />
                                     </div>
                                 ))}
                             </div>
