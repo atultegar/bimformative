@@ -1,78 +1,76 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
-import ProgressBar from "./ProgressBar";
-import { getRoadmapItemsAction } from "../actions/serverActions";
-import { RoadmapItem } from "@/lib/types/resources";
-import RoadmapList from "./RoadmapList";
+import { Brain, Globe, Rocket, Wrench } from "lucide-react";
+import { RoadmapRecord } from "@/lib/services/roadmap.service";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { PageBanner } from "./PageBanner";
 
-type RoadmapType = "addin" | "dynamoscript" | "other";
-
-type RoadmapState = Record<RoadmapType, RoadmapItem[]>;
-
-const INITIAL_STATE: RoadmapState = {
-    addin: [],
-    dynamoscript: [],
-    other: [],
+const iconMap = {
+    rocket: Rocket,
+    wrench: Wrench,
+    brain: Brain,
+    globe: Globe,
 };
 
-export default function Roadmap() {
-    const [items, setItems] = useState<RoadmapState>(INITIAL_STATE);
+const statusMap = {
+    live: "Live",
+    in_progress: "In Progress",
+    planned: "Planned",
+    vision: "Vision",
+};
 
-    useEffect(() => {
-        async function loadRoadmap() {
-            const data = await getRoadmapItemsAction();
-
-            const grouped: RoadmapState = {
-                addin: [],
-                dynamoscript: [],
-                other: [],
-            };
-
-            for (const item of data) {
-                const itemType = (item.type === "addin" || item.type === "dynamoscript" || item.type === "other")
-                    ? (item.type as RoadmapType)
-                    : "other";
-                grouped[itemType] = [...grouped[itemType], item];
-            }
-
-            setItems(grouped);
-        }
-
-        loadRoadmap();
-    } , []);
-    
+export default function Roadmap({ items }: { items: RoadmapRecord[] }) {
     return (
-        <section className="max-w-7xl mx-auto mt-10 p-10 min-h-[600px]">
-            <h2 className="text-center text-4xl font-semibold">Our Roadmap</h2>
+        <section className="relative mx-auto max-w-7xl px-4 pb-24 lg:px-8">
+            <PageBanner title="Roadmap" description="Building the future of BIM automation workflows" />
+            
+            <div className="relative mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                {items.map((item, index) => {
+                    const Icon = iconMap[item.icon] || Rocket;
 
-            <p className="text-center text-muted-foreground p-5 w-[75%] mx-auto">
-                Join us on our journey to revolutionize BIM for Infrastructure with cutting-edge resources and tools, including tailored add-ins, Dynamo scripts, custom subassemblies, and Python automation.
-            </p>
+                    return (
+                        <motion.div
+                            key={item.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: index * 0.1 }}
+                        >
+                            <Card className="group relative h-full overflow-hidden border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30">
+                                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 transition duration-500 group-hover:opacity-100" />
 
-            <div className="flex justify-center">
-                <Tabs defaultValue="addins" className="mt-5 w-[80%]">
-                    <TabsList className="w-full justify-evenly">
-                        <TabsTrigger value="addins">Add-ins</TabsTrigger>
-                        <TabsTrigger value="dynamoscripts">Dynamo Scripts</TabsTrigger>
-                        <TabsTrigger value="others">Others</TabsTrigger>
-                    </TabsList>
+                                <CardContent className="relative p-6">
+                                    <div className="mb-4 flex items-center justify-between">
+                                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-500/10 ring-1 ring-cyan-400/10">
+                                            <Icon className="h-5 w-5 text-cyan-400" />
+                                        </div>
+                                        <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-2.5 py-1 text-xs text-cyan-400">
+                                            {statusMap[item.status]}
+                                        </span>
+                                    </div>
 
-                    <TabsContent value="addins">
-                        <RoadmapList items={items.addin} />
-                    </TabsContent>
+                                    <h3 className="text-xl font-semibold">
+                                        {item.title}
+                                    </h3>
+                                    <p className="mt-1 text-sm text-muted-foreground">
+                                        {item.subtitle}
+                                    </p>
 
-                    <TabsContent value="dynamoscripts">
-                        <RoadmapList items={items.dynamoscript} />
-                    </TabsContent>
-
-                    <TabsContent value="others">
-                        <RoadmapList items={items.other} />
-                    </TabsContent>     
-                </Tabs>
+                                    <ul className="mt-5 space-y-2 text-sm text-gray-300">
+                                        {item.points.map((point, i) => (
+                                            <li key={i} className="flex items-start gap-2">
+                                                <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                                                <span>{point}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    );
+                })}
             </div>
         </section>
-    )
+    );
 }
