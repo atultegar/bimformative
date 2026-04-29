@@ -457,6 +457,7 @@ export async function getScriptByIdAction(scriptId: string) {
     return await getScriptById(scriptId);
 }
 
+
 // GET SCRIPT VERSIONS
 export async function getScriptVersionsAction(scriptId: string): Promise<MinimalVersion[]> {
     const versions = await getAllVersions(scriptId);

@@ -27,6 +27,9 @@ import VersionSheet from "@/app/components/scripts/VersionSheet";
 import { auth } from "@clerk/nextjs/server";
 import { getScriptBySlug, getScriptSlugs, pythonScriptsByVersionId, scriptLikedByUserId } from "@/lib/services/scripts.service";
 import { ScriptSlug } from "@/app/lib/interface";
+import { ApiError } from "@/lib/api/errors";
+import { notFound, redirect } from "next/navigation";
+import { handleApiError } from "@/lib/api/responses";
 
 
 const DEV_BYPASS = process.env.NODE_ENV === "development";
@@ -37,12 +40,12 @@ interface ScriptPageProps {
 }
 
 async function getCurrentUserId(): Promise<string | null> {
+    if (DEV_BYPASS && DEV_USER_ID) {
+        return DEV_USER_ID;
+    }
     
     const { userId } = await auth();
 
-    if (userId && DEV_BYPASS) {
-        return DEV_USER_ID;
-    }    
     return userId ?? null;
 }
 
@@ -53,34 +56,85 @@ export async function generateStaticParams() {
         slug: s.slug,
     }));
 }
-''
+
+async function getScriptOrHandle(slug: string, userId: string | null) {
+    const res = await getScriptBySlug(slug, userId);
+
+
+    if (res instanceof ApiError) {
+        if (res.status === 404){
+            notFound();
+        }
+
+        if (res.status === 401) {
+            redirect(`/sign-in?redirect_url=/resources/dynamo-scripts/${slug}`);
+        }
+
+        if (res.status === 403) {
+            return null;
+        }
+    }
+
+    return res;
+}
 export async function generateMetadata({ params }: ScriptPageProps): Promise<Metadata> {
     const scriptParams = await params;
     
     const userId = await getCurrentUserId();
-    const script = await getScriptBySlug(scriptParams.slug, userId);
 
-    return {
-        title: `${script.title} | Free Dynamo Scripts | BIMformative`,
-        description: script.description ?? "Dynamo Script on BIMformative",
-        keywords: `free dynamo scripts, dynamo revit, dynamo automation, BIM scripts, Revit scripts, Civil 3D scripts, ${script.tags ? script.tags.join(", "): ""}` ,
-        robots: "index, follow",
-        openGraph: {
-            images: {
-                url: "https://www.bimformative.com/dynamo.png"
-            },
-            url: script.dyn_file_url,
-            description: `Get ${script.title} for free. Perfect for Dynamo and ${script.script_type} workflows.`
+    try {
+        const script = await getScriptBySlug(scriptParams.slug, userId);
 
+        return {
+            title: `${script.title} | Free Dynamo Scripts | BIMformative`,
+            description: script.description ?? "Dynamo Script on BIMformative",
+            keywords: `free dynamo scripts, dynamo revit, dynamo automation, BIM scripts, Revit scripts, Civil 3D scripts, ${script.tags ? script.tags.join(", "): ""}` ,
+            robots: script.is_public ? "index, follow" : "noindex, nofollow",
+            openGraph: {
+                images: {
+                    url: "https://www.bimformative.com/dynamo.png"
+                },
+                url: script.dyn_file_url,
+                description: `Get ${script.title} for free. Perfect for Dynamo and ${script.script_type} workflows.`
+
+            }
         }
-    }
+    } catch {
+        return {
+            title: "Script not available | BIMformative",
+            robots: "noindex, nofollow",
+        };
+    }    
 }
 
 export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
     const currentUserId = await getCurrentUserId();
     const scriptParam = await params;
-    const dynScript  = await getScriptBySlug(scriptParam.slug, currentUserId);
-    const likedByUser = await scriptLikedByUserId(currentUserId, dynScript.id);
+
+    const dynScript = await getScriptOrHandle(scriptParam.slug, currentUserId);
+
+    console.log(dynScript.code);
+
+    if (!dynScript) {
+        return (
+            <div className="min-h-[600px] flex items-center justify-center px-6">
+                <Card className="max-w-md w-full text-center">
+                    <CardHeader>
+                        <CardTitle>Private script</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-muted-foreground">
+                            You do not have permission to view this script.
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+    
+    const likedByUser = currentUserId
+        ? await scriptLikedByUserId(currentUserId, dynScript.id)
+        : false;
 
     const imageMapping: any = {
         revit: { src: revitImage, alt: "Revit" },
@@ -94,180 +148,254 @@ export default async function ScriptDetailsPage({ params }: ScriptPageProps) {
     
     const versionId = dynScript.version_id;
     
-    const pyRes = await pythonScriptsByVersionId(versionId);
-
-    const pyNodes = pyRes ?? null;
+    const pyNodes = versionId
+        ? await pythonScriptsByVersionId(versionId)
+        : [];
 
     return (
-        <div className="mx-auto w-[1920px] items-center">
-            <section className="grid grid-cols-1 md:grid-cols-12 gap-6 px-6 py-6 bg-transparent">
-
-                {/* LEFT SIDEBAR */}
-                <Card className="md:col-span-4 lg:col-span-3 h-[800px] sticky top-6 shadow-md border">
-                    <CardHeader>
-                        <div className="flex items-center gap-3">
-                            <Image src={dynamoImage} alt="Dynamo" className="w-8 h-8" />
-                            <CardTitle className="text-xl font-semibold leading-tight">
-                                {dynScript.title}                                                               
-                            </CardTitle>
-                            <VersionSheet
-                                title={dynScript.title}
-                                scriptId={dynScript.id}
-                                currentVersionNumber={dynScript.version_number}
-                                scriptOwnerId={dynScript.owner_id}
-                                currentUserId={currentUserId} 
-                            />                   
+        <main className="mx-auto max-w-7xl px-4 py.-8 md:px-8">
+            {/* Header */}
+            <section className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 ring-1 ring-cyan-400/10">
+                            <Image src={dynamoImage} alt="Dynamo" className="h-7 w-7" />
                         </div>
-                        
-                        {/* <CardDescription>{dynScript.description}</CardDescription> */}
+
+                        <div>
+                            <div className="mb-2 flex flex-wrap items-center gap-2">
+                                <Badge variant="secondary">V{dynScript.version_number}</Badge>
+                                {dynScript.script_type && (
+                                    <Badge variant="outline">{dynScript.script_type}</Badge>
+                                )}
+                                {dynScript.is_player_ready && (
+                                    <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/10">
+                                        Player Ready
+                                    </Badge>
+                                )}
+                            </div>
+
+                            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                                {dynScript.title}
+                            </h1>
+
+                            <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground md:text-base">
+                                {dynScript.description}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                        <VersionSheet
+                            title={dynScript.title}
+                            scriptId={dynScript.id}
+                            currentVersionNumber={dynScript.version_number}
+                            scriptOwnerId={dynScript.owner_id}
+                            currentUserId={currentUserId}
+                            variant="button"
+                        />
+
+                        <LikeButton
+                            variant="full"
+                            scriptId={dynScript.id}
+                            likesCount={dynScript.likes_count}
+                            likedByUser={likedByUser}
+                            userId={currentUserId}
+                        />
+
+                        <DownloadButton
+                            userId={currentUserId}
+                            slug={dynScript.slug}
+                            downloadsCount={dynScript.downloads_count}
+                            variant="full"
+                        />
+                    </div>
+                </div>                
+            </section>
+
+            {/* Main Layout */}
+            <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                {/* Canvas / Preview */}
+                <Card className="overflow-hidden border-white/10 bg-white/5 backdrop-blur-sm lg:col-span-8 xl:col-span-9">
+                    <CardHeader className="border-b border-white/10">
+                        <CardTitle className="text-lg">Graph Preview</CardTitle>
                     </CardHeader>
 
-                    <CardContent>
-                        <ScrollArea className="h-[620px] pr-4">
-                            {/* Description */}
-                            <Section title="Description">
-                                <p>{dynScript.description}</p>
-                            </Section>
-                            {/* Tags */}
-                            <Section title="Tags">
-                                <div className="flex flex-wrap gap-2">
-                                    {dynScript.tags?.length > 0 ? (
-                                        dynScript.tags.map((tag: string, i: number) => (
-                                            <Badge key={i} variant="secondary">{tag}</Badge>
-                                        ))
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">No tags added.</p>
-                                    )}
-                                </div>
-                            </Section>                        
-
-                            {/* Script Type */}
-                            <Section title="Script Type">
-                                <div className="flex items-center gap-2">
-                                    {scriptTypeImg && (
-                                        <Image src={scriptTypeImg.src} alt={scriptTypeImg.alt} className="w-7 h-7" />
-                                    )}
-                                    <span>{dynScript.script_type}</span>
-                                </div>
-                            </Section>
-
-                            {/* Author */}
-                            <Section title="Author">
-                                <div className="flex items-center gap-3">
-                                    <Avatar>
-                                        <AvatarImage src={dynScript.owner_avatar_url} />
-                                        <AvatarFallback>
-                                            {String(dynScript.owner_first_name || "?").slice(0, 2).toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <span>{dynScript.owner_first_name} {dynScript.owner_last_name}</span>
-                                </div>
-                            </Section>
-
-                            {/* Dynamo Version */}
-                            <Section title="Dynamo Version">
-                                <span>{dynScript.dynamo_version}</span>
-                            </Section>
-
-                            {/* Player Ready */}
-                            <Section title="Dynamo Player Ready">
-                                {dynScript.is_player_ready ? (
-                                    <CheckCircle className="w-5 h-5 text-green-500" />
-                                ) : (
-                                    <XCircle className="w-5 h-5 text-red-500" />
-                                )}
-                            </Section>
-
-                            {/* Python Nodes */}
-                            <Section title="Python Nodes">
-                                <div className="flex flex-col place-items-start gap-2">
-                                    {pyNodes.length > 0 ? (
-                                        pyNodes.map((p:any, i: number) => (
-                                            <div key={i}>
-                                                <Dialog>
-                                                    <DialogTrigger asChild>
-                                                        <Button size={"sm"}>
-                                                            <FaPython className="w-6 h-6" />
-                                                            Python Node - {p.order_index + 1}
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="max-w-7xl max-h-[80vh] bg-transparent border-none">
-                                                        <DialogTitle></DialogTitle>
-                                                        <CodeBlock language="python" code={p.python_code} title={p.order_index + 1} />
-                                                    </DialogContent>
-                                                </Dialog>
-                                            </div>
-                                            
-                                        ))
-                                    ) : (
-                                        <p></p>
-                                    )}
-                                </div>
-                            </Section>
-
-                            {/* External Packages */}
-                            <Section title="External Packages">
-                                {dynScript.external_packages?.length > 0 ? (
-                                    <ul className="list-disc pl-5 space-y-1">
-                                        {dynScript.external_packages.map((pkg: string, i: number) => (
-                                            <li key={i}>{pkg}</li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p className="text-gray-500 text-sm">No external packages used.</p>
-                                )}
-                            </Section>
-                        </ScrollArea>
-                    </CardContent>
-
-                    <CardFooter className="flex items-center justify-between px-6 py-4">
-                        <VersionSheet
-                                title={dynScript.title}
-                                scriptId={dynScript.id}
-                                currentVersionNumber={dynScript.version_number}
-                                scriptOwnerId={dynScript.owner_id}
-                                currentUserId={currentUserId}
-                                variant="button"
-                            />                     
-                        <LikeButton variant="full" scriptId={dynScript.id} likesCount={dynScript.likes_count} likedByUser={likedByUser} userId={currentUserId} />
-                        <DownloadButton userId={currentUserId} slug={dynScript.slug} downloadsCount={dynScript.downloads_count} variant="full" />
-                    </CardFooter>
-                </Card>
-
-                {/* RIGHT CANVAS PANEL */}
-                <Card className="md:col-span-8 lg:col-span-9 h-[800px] shadow-md border">
-                    <CardContent className="pt-6 flex justify-center items-center h-full">
+                    <CardContent className="flex min-h-[620px] items-center justify-center p-4">
                         {nodes?.length > 0 ? (
-                            <SVGCanvasD3 
-                                nodes={nodes}
-                                connectors={connectors}
-                                canvasWidth={1350}
-                                canvasHeight={750}
-                            />
+                            <div className="h-full w-full overflow-auto rounded-xl border boder-white/10 bg-slate-950/40">
+                                <SVGCanvasD3
+                                    nodes={nodes}
+                                    connectors={connectors}
+                                    canvasWidth={1200}
+                                    canvasHeight={650}
+                                />
+                            </div>
+
                         ) : (
-                            <p className="text-gray-400 text-lg">
-                                No graph preview available.
-                            </p>
+                            <div className="text-center text-muted-foreground">
+                                <p className="text-lg font-medium">No graph preview available</p>
+                                <p className="mt-2 text-sm">
+                                    This script does not include visual graph data yet.
+                                </p>
+                            </div>
                         )}
                     </CardContent>
                 </Card>
 
+                {/* Details */}
+                <aside className="space-y-6 lg:col-span-4 xl:col-span-3">
+                    <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
+                        <CardHeader>
+                            <CardTitle className="text-lg">Script Details</CardTitle>
+                        </CardHeader>
+
+                        <CardContent className="space-y-6">
+                            <InfoSection title="Author">
+                                <div className="flex items-center gap-3">
+                                    <Avatar>
+                                        <AvatarImage src={dynScript.owner_avatar_url} />
+                                        <AvatarFallback>
+                                            {String(dynScript.owner_first_name || "?")
+                                            .slice(0, 2)
+                                            .toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="text-sm font-medium">
+                                            {dynScript.owner_first_name} {dynScript.owner_last_name}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">Script Creator</p>
+                                    </div>
+                                </div>
+                            </InfoSection>
+
+                            <InfoSection title="Platform">
+                                <div className="flex items-center gap-2">
+                                    {scriptTypeImg && (
+                                        <Image
+                                            src={scriptTypeImg.src}
+                                            alt={scriptTypeImg.alt}
+                                            className="h-6 w-6"
+                                        />
+                                    )}
+                                    <span className="text-sm">{dynScript.script_type}</span>
+                                </div>
+                            </InfoSection>
+
+                            <InfoSection title="Dynamo Version">
+                                <span>{dynScript.dynamo_version || "Not specified"}</span>
+                            </InfoSection>
+
+                            <InfoSection title="Dynamo Player">
+                                <div className="flex items-center gap-2">
+                                    {dynScript.is_player_ready ? (
+                                        <>
+                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                            <span className="text-sm">Ready</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <XCircle className="h-4 w-4 text-red-500" />
+                                            <span className="text-sm">Not Ready</span>
+                                        </>
+                                    )}
+
+                                </div>
+                            </InfoSection>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
+                        <CardHeader>
+                            <CardTitle className="text-lg">Tags</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-wrap gap-2">
+                                {dynScript.tags?.length > 0 ? (
+                                    dynScript.tags.map((tag: string, i: number) => (
+                                        <Badge key={i} variant="default">
+                                            {tag}
+                                        </Badge>
+                                    ))
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">No tags added.</p>   
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-white/10 bg-white/5 backdrop-blur-sm">
+                        <CardHeader>
+                            <CardTitle>Python Nodes</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {pyNodes.length > 0 ? (
+                                <div className="space-y-2">
+                                    {pyNodes.map((p:any, i: number) => (
+                                        <Dialog key={i}>
+                                            <DialogTrigger asChild>
+                                                <Button size="sm" variant="outline" className="w-full justify-start">
+                                                    <FaPython className="mr-2 h-4 w-4" />
+                                                    Python Node {p.order_index + 1}
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className="max-h-[80vh] max-w-7xl border-white/10 bg-background">
+                                                <DialogTitle>Python Node {p.order_index + 1}</DialogTitle>
+                                                <CodeBlock
+                                                    language="python"
+                                                    code={p.python_code}
+                                                    title={p.order_index + 1}
+                                                    />
+                                            </DialogContent>
+                                        </Dialog>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-sm text-muted-foreground">No Python nodes found.</p>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    <Card className=" border-white/10 bg-white/5 backdrop-blur-sm">
+                        <CardHeader>
+                            <CardTitle className="text-lg">External Packages</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {dynScript.external_packages?.length > 0 ? (
+                                <ul className="space-y-2 text-sm text-muted-foreground">
+                                    {dynScript.external_packages.map((pkg: string, i: number) => (
+                                        <li key={i} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                                            {pkg}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-sm text-muted-foreground">
+                                    No external packages used.
+                                </p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </aside>
             </section>
-            <section className="px-6 pb-6 bg-transparent">
-                <Card className="shadow-md border">
-                    <CommentForm scriptId={dynScript.id} userId={currentUserId} />
-                </Card>
-            </section>
-        </div>
-        
+        </main>        
     );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function InfoSection({
+    title,
+    children,
+}: {
+    title: string;
+    children: React.ReactNode;
+}) {
     return (
-        <div className="mb-6">
-            <h4 className="text-sm font-semibold mb-1 text-gray-700">{title}</h4>
-            <div className="text-sm">{children}</div>
+        <div>
+            <h4 className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                {title}
+            </h4>
+            <div>{children}</div>
         </div>
     );
 }

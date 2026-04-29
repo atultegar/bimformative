@@ -146,9 +146,15 @@ export async function getScriptBySlug(slug: string, userId?: string | null) {
 
     if (error || !data) return new ApiError("SCRIPT_NOT_FOUND", "Script not found", 404);
 
+    const isOwner = userId && data.owner_id === userId;
+
     // Privacy rule centralized
-    if (!data.is_public && data.owner_id !== userId) {
-        throw unauthorizedResponse("FORBIDDEN");
+    if (!data.is_public && !isOwner) {
+        throw new ApiError(
+            userId ? "FORBIDDEN" : "UNAUTHORIZED",
+            userId ? "You don not have access to this script." : "Please sign in to view this script.",
+            userId ? 403 : 401
+        );
     }
 
     return data;    
@@ -412,9 +418,9 @@ export async function pythonScriptsByVersionId(versionId: string) {
         .eq("script_version_id", versionId)
         .order("order_index", { ascending: true });
 
-    if (error || !data) throw new ApiError("PYTHON SCRIPTS NOT FOUND", "Python scripts not found", 404);
+    if (error) throw new ApiError("PYTHON SCRIPTS NOT FOUND", "Python scripts not found", 404);
 
-    return data;
+    return data ?? [];
 }
 
 // MAKE SCRIPT PUBLIC
