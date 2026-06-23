@@ -89,7 +89,7 @@ export async function createSignedDownloadUrl(storagePath: string, expiresInSeco
         .createSignedUrl(storagePath, expiresInSeconds);
 
     if (error || !data) {
-        throw new ApiError("FAILED_TO_CREATE_SIGNEDURL", `Failed to create signed URL: ${error?.message ?? "UNknown error"}`);
+        throw new ApiError("FAILED_TO_CREATE_SIGNEDURL", `Failed to create signed URL: ${error?.message ?? "Unknown error"}`);
     }
 
     return data.signedUrl;

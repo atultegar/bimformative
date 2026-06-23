@@ -62,11 +62,11 @@ export default async function DownloadExtensionPage() {
         <main className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
             {/* Hero */}
             <section className="mx-auto max-w-3xl text-center">
-                <div className="mb-6 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-gray-300 backdrop-blur-sm">
+                <div className="mb-6 inline-flex items-center rounded-full border border-gray-400 dark:border-white/10 bg-gray-500/10 dark:bg-white/5 px-4 py-1.5 text-sm text-gray-800 dark:text-gray-300 backdrop-blur-sm">
                     BIMformative Extension
                 </div>
 
-                <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
                     Download BIMformative Extension
                 </h1>
 
@@ -85,7 +85,7 @@ export default async function DownloadExtensionPage() {
                 {extensionGroups.map((group) => (
                     <Card
                         key={group.title}
-                        className="border-white/10 bg-white/5 backdrop-blur-sm"
+                        className="dark:border-white/10 dark:bg-white/5 backdrop-blur-sm"
                     >
                         <CardHeader>
                             <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-500/10 ring-1 ring-cyan-400/10">
@@ -102,7 +102,7 @@ export default async function DownloadExtensionPage() {
                                 {group.versions.map((item) => (
                                     <div
                                         key={item.id}
-                                        className="rounded-xl border border-white/10 bg-slate-950/40 p-5"
+                                        className="rounded-xl border dark:border-white/10 dark:bg-slate-950/40 p-5"
                                     >
                                         <h3 className="text-lg font-semibold">
                                             {getVersionLabel(item)}

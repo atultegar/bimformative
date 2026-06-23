@@ -1,0 +1,27 @@
+export class GhSemanticAdapter {
+    extract(parsedGraph: any) {
+        const nodes = parsedGraph.Nodes ?? [];
+
+        const nodeTypes = [...new Set(
+            nodes.map((n: any) => n.nodeType)
+        )];
+
+        return {
+            nodeTypes,
+
+            totalNodes: nodes.length,
+            
+            hasPython: nodes.some((n: any) =>
+            n.NodeType?.toLowerCase().includes("python") 
+            ),
+
+            hasCSharp: nodes.some((n: any) =>
+            n.NodeType?.toLowerCase().includes("csharp") 
+            ),
+
+            hasClusters: nodes.some((n: any) =>
+            n.NodeType?.toLowerCase().includes("cluster") 
+            ),
+        };
+    }
+}

@@ -2,7 +2,6 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { SCRIPT_MINIMAL_FIELDS, SCRIPT_DETAIL_FIELDS, SCRIPT_OWNER_FIELDS, SCRIPT_SLUG_ONLY, SCRIPT_DOWNLOAD_FIELDS, PYTHON_SCRIPTS_FIELDS, SCRIPT_DETAIL_MINIMUM } from "./scripts.select";
 import { PaginationParams, PublicScriptFilters, PublishScriptInput, PublishScriptResult, ScriptUpdate, SortParams } from "@/lib/types/script";
 import { createSignedUrl } from "@/lib/supabase/storage";
-import { error } from "console";
 import { generateSlug } from "../utils";
 import { deleteAllVersions, getAllVersions } from "./versions.service";
 import { OwnerResult, OwnerScript, PaginatedResult, PublicScript, ScriptSlug } from "@/app/lib/interface";

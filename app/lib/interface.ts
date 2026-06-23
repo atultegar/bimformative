@@ -268,3 +268,91 @@ export interface SanitySearchResult<T = any> {
     total: number;
     totalPages: number;
 }
+
+export interface GHNode {
+    Id: string;
+    Name: string;
+    NickName?: string;
+    Category?: string;
+    SubCategory?: string;
+    NodeType: string;
+    FullTypeName?: string;
+    AssemblyName?: string;
+    RenderKind?: GHRenderKind;    
+    X: number;
+    Y: number;
+    Width: number;
+    Height: number;
+    Inputs?: Array<GHPort> | null;
+    Outputs?: Array<GHPort> | null;
+    
+    Value?: any;
+    Code?: string | null;
+    Bounds?: GHBounds;
+    IsSpecialObject?: boolean;
+    IsCluster?: boolean;    
+}
+
+export interface GHConnector {
+    Id: string;
+    StartNodeId: string;
+    StartPortId: string;
+    EndNodeId: string;
+    EndPortId: string;
+    StartX: number;
+    StartY: number;
+    EndX: number;
+    EndY: number;
+    WireType?: "default" |"faint" | "hidden";
+    IsSelected?: boolean;
+    IsRelayConnection?: boolean;
+}
+
+export interface GHInputOutput {
+    Id: string;
+    Name: string;
+    Type: string;
+    X: number;
+    Y: number;
+}
+
+export interface GHPort {
+    Id: string;
+    Name: string;
+    NickName?: string;
+    Direction: string;
+    ParentNodeId: string;
+    X: number;
+    Y: number;
+    DataType?:string | null;
+    AccessType?: string | null;
+    IsConnected?: boolean;
+}
+
+export interface GhNodeRenderer {
+    canRender(node: GHNode): boolean;
+
+    render(
+        g: d3.Selection<SVGGElement, unknown, null, undefined>,
+        node: GHNode,
+        state: string
+    ): void;
+}
+
+export type GHRenderKind = 
+    | "component"
+    | "param"
+    | "slider"
+    | "panel"
+    | "relay"
+    | "group"
+    | "scribble"
+    | "graphMapper"
+    | "cluster";
+
+export interface GHBounds {
+    MinX: number;
+    MinY: number;
+    MaxX: number;
+    MaxY: number;
+}
